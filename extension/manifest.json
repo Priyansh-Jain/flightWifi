@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "FlightWifi (working title)",
+  "version": "0.0.1",
+  "description": "See who runs the wifi on every flight, and whether you can actually work on it, before you book.",
+  "permissions": ["alarms", "storage"],
+  "background": { "service_worker": "dev-reload.js" },
+  "content_scripts": [
+    {
+      "matches": ["https://www.google.com/travel/flights*"],
+      "js": ["data/registry.js", "content.js"],
+      "css": ["chip.css"],
+      "run_at": "document_end"
+    }
+  ]
+}

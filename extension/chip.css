@@ -1,0 +1,421 @@
+/* Palette, shared with the GetStopover extension so the two products read as siblings.
+   Each tone declares its light triple plus the dark accent as an r,g,b list, because dark mode
+   derives all three values from that one colour: solid text, 24% fill, 38% border. The table below
+   is the only place a colour is written down; the theme bindings further down rebind, never repeat. */
+.fw-fast {
+  --fw-l-fg: #0d652d;
+  --fw-l-bg: #e6f4ea;
+  --fw-l-bd: #a8dab5;
+  --fw-d: 134, 239, 172;
+}
+
+.fw-ok {
+  --fw-l-fg: #1e40af;
+  --fw-l-bg: #dbeafe;
+  --fw-l-bd: #bfdbfe;
+  --fw-d: 147, 197, 253;
+}
+
+.fw-part {
+  --fw-l-fg: #92400e;
+  --fw-l-bg: #fef3c7;
+  --fw-l-bd: #fde68a;
+  --fw-d: 252, 211, 77;
+}
+
+.fw-none {
+  --fw-l-fg: #b91c1c;
+  --fw-l-bg: #fee2e2;
+  --fw-l-bd: #fecaca;
+  --fw-d: 252, 165, 165;
+}
+
+.fw-unknown {
+  --fw-l-fg: #334155;
+  --fw-l-bg: #f1f5f9;
+  --fw-l-bd: #e2e8f0;
+  --fw-d: 203, 213, 225;
+}
+
+/* light is the default binding */
+.fw-chip,
+.fw-tip-tag,
+.fw-tip-head {
+  --fw-fg: var(--fw-l-fg);
+  --fw-bg: var(--fw-l-bg);
+  --fw-bd: var(--fw-l-bd);
+}
+
+/* content.js stamps fw-dark/fw-light from a luminance probe, because Google Flights has its own
+   in-page toggle and the OS preference is not authoritative. The media query only covers the few
+   milliseconds before that first probe runs, and yields to an explicit fw-light. */
+@media (prefers-color-scheme: dark) {
+  :root:not(.fw-light) .fw-chip,
+  :root:not(.fw-light) .fw-tip-tag,
+  :root:not(.fw-light) .fw-tip-head {
+    --fw-fg: rgb(var(--fw-d));
+    --fw-bg: rgba(var(--fw-d), 0.24);
+    --fw-bd: rgba(var(--fw-d), 0.38);
+  }
+}
+
+.fw-dark .fw-chip,
+.fw-dark .fw-tip-tag,
+.fw-dark .fw-tip-head {
+  --fw-fg: rgb(var(--fw-d));
+  --fw-bg: rgba(var(--fw-d), 0.24);
+  --fw-bd: rgba(var(--fw-d), 0.38);
+}
+
+.fw-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 100%;
+  padding: 2px 8px 2px 7px;
+  box-sizing: border-box;
+  border-radius: 6px;
+  background: var(--fw-bg);
+  color: var(--fw-fg);
+  border: 1px solid var(--fw-bd);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: 0.1px;
+  white-space: normal;
+  vertical-align: middle;
+  cursor: default;
+}
+
+/* a hint that there is more behind the chip, which only appears once the pointer is already on it,
+   so it costs nothing at rest and never widens a chip during scanning */
+.fw-chip::after {
+  content: "";
+  flex: none;
+  width: 0;
+  height: 10px;
+  margin-left: 0;
+  opacity: 0;
+  background: currentColor;
+  -webkit-mask: var(--fw-chevron) no-repeat center / contain;
+  mask: var(--fw-chevron) no-repeat center / contain;
+  transition: width 120ms ease, margin-left 120ms ease, opacity 120ms ease;
+  --fw-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z'/%3E%3C/svg%3E");
+}
+
+.fw-chip:hover::after {
+  width: 9px;
+  margin-left: 1px;
+  opacity: 0.75;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fw-chip::after {
+    transition: none;
+  }
+}
+
+.fw-chip::before {
+  content: "";
+  flex: none;
+  width: 12px;
+  height: 12px;
+  background: currentColor;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-image: var(--fw-glyph);
+  mask-image: var(--fw-glyph);
+}
+
+.fw-fast,
+.fw-ok,
+.fw-part,
+.fw-unknown {
+  --fw-glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3a4.237 4.237 0 0 0-6 0zm-4-4l2 2a7.074 7.074 0 0 1 10 0l2-2C15.14 9.14 8.87 9.14 5 13z'/%3E%3C/svg%3E");
+}
+
+.fw-none {
+  --fw-glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M22.99 9C19.15 5.16 13.8 3.76 8.84 4.78l2.52 2.52c3.47-.17 6.99 1.05 9.63 3.7l2-2zm-4 4c-1.29-1.29-2.84-2.13-4.49-2.56l3.53 3.53.96-.97zM2 3.05L5.07 6.1C3.6 6.82 2.22 7.78 1 9l1.99 2c1.24-1.24 2.67-2.16 4.2-2.77l2.24 2.24C7.81 10.89 6.27 11.73 5 13v.01L6.99 15c1.36-1.36 3.14-2.04 4.92-2.06L18.98 20l1.27-1.26L3.29 1.79 2 3.05zM9 17l3 3 3-3c-1.65-1.66-4.34-1.66-6 0z'/%3E%3C/svg%3E");
+}
+
+/* placement: beside the airline name on a collapsed row, on its own line inside the
+   ~100px amenity column when the card is expanded */
+.fw-sum {
+  margin: 0 0 0 8px;
+}
+
+/* fallback placement when the airline cell has no room left; block-level so it takes its own line */
+.fw-sum-block {
+  display: flex;
+  width: fit-content;
+  margin: 3px 0 0;
+}
+
+.fw-row {
+  list-style: none;
+  margin: 1px 0 3px;
+  padding: 0;
+}
+
+.fw-stack {
+  display: inline-flex;
+  align-items: flex-start;
+  margin: 3px 0 2px;
+}
+
+.fw-stack::before {
+  margin-top: 2px;
+}
+
+.fw-inline {
+  margin: 3px 1px 2px 3px;
+}
+
+/* hover card */
+.fw-tip {
+  display: none;
+  position: fixed;
+  z-index: 2147483647;
+  width: 360px;
+  max-width: calc(100vw - 24px);
+  padding: 12px 14px 13px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  background: #fff;
+  color: #202124;
+  border: 1px solid #dadce0;
+  box-shadow: 0 4px 6px rgba(32, 33, 36, 0.1), 0 8px 24px rgba(32, 33, 36, 0.16);
+  font-size: 12px;
+  line-height: 1.5;
+  font-weight: 400;
+  letter-spacing: 0.1px;
+  pointer-events: none;
+}
+
+.fw-tip-head {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--fw-fg);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.fw-tip-dot {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.fw-tip-why {
+  margin: 3px 0 10px;
+  color: #5f6368;
+}
+
+.fw-tip-legs {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.fw-tip-leg {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.fw-tip-tag {
+  flex: none;
+  padding: 1px 7px;
+  border-radius: 5px;
+  background: var(--fw-bg);
+  color: var(--fw-fg);
+  border: 1px solid var(--fw-bd);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.fw-tip-grid {
+  display: grid;
+  grid-template-columns: 68px 1fr;
+  gap: 6px 10px;
+  align-items: baseline;
+  padding-top: 9px;
+  border-top: 1px solid #e8eaed;
+}
+
+/* what you can and cannot do, as a glance rather than a sentence */
+.fw-cap {
+  display: inline-block;
+  margin: 0 8px 0 0;
+  white-space: nowrap;
+}
+
+.fw-cap::before {
+  margin-right: 4px;
+  font-weight: 700;
+}
+
+.fw-cap-good::before {
+  content: "✓";
+  color: #0d652d;
+}
+
+.fw-cap-bad::before {
+  content: "✕";
+  color: #b91c1c;
+}
+
+.fw-cost {
+  display: block;
+  font-weight: 700;
+}
+
+.fw-pts {
+  margin: 3px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fw-pts li {
+  position: relative;
+  padding-left: 11px;
+  margin-top: 2px;
+}
+
+.fw-pts li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.45;
+}
+
+.fw-tip-info {
+  margin-top: 10px;
+  padding: 7px 9px;
+  border-radius: 6px;
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+/* provenance is a footnote: present, checkable, and not competing with the answer */
+.fw-tip-src {
+  margin-top: 9px;
+  padding-top: 8px;
+  border-top: 1px solid #e8eaed;
+  color: #9aa0a6;
+  font-size: 11px;
+}
+
+.fw-tip-src::before {
+  content: "ⓘ";
+  margin-right: 4px;
+}
+
+.fw-tip-k {
+  color: #80868b;
+  font-size: 11px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.fw-tip-v {
+  color: #3c4043;
+  overflow-wrap: anywhere;
+}
+
+.fw-tip-note {
+  margin-top: 9px;
+  padding-top: 8px;
+  border-top: 1px solid #e8eaed;
+  color: #80868b;
+  font-style: italic;
+}
+
+/* the card's own surface, matching the GetStopover tooltip */
+@media (prefers-color-scheme: dark) {
+  :root:not(.fw-light) .fw-tip {
+    background: #3c4043;
+    color: #e8eaed;
+    border-color: #5f6368;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.45);
+  }
+
+  :root:not(.fw-light) .fw-tip-why,
+  :root:not(.fw-light) .fw-tip-k,
+  :root:not(.fw-light) .fw-tip-note {
+    color: #bdc1c6;
+  }
+
+  :root:not(.fw-light) .fw-tip-v {
+    color: #e8eaed;
+  }
+
+  :root:not(.fw-light) .fw-tip-grid,
+  :root:not(.fw-light) .fw-tip-note,
+  :root:not(.fw-light) .fw-tip-src {
+    border-color: #5f6368;
+  }
+
+  :root:not(.fw-light) .fw-cap-good::before {
+    color: #86efac;
+  }
+
+  :root:not(.fw-light) .fw-cap-bad::before {
+    color: #fca5a5;
+  }
+
+  :root:not(.fw-light) .fw-tip-info {
+    background: rgba(147, 197, 253, 0.18);
+    color: #93c5fd;
+  }
+}
+
+.fw-dark .fw-tip {
+  background: #3c4043;
+  color: #e8eaed;
+  border-color: #5f6368;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.fw-dark .fw-tip-why,
+.fw-dark .fw-tip-k,
+.fw-dark .fw-tip-note {
+  color: #bdc1c6;
+}
+
+.fw-dark .fw-tip-v {
+  color: #e8eaed;
+}
+
+.fw-dark .fw-tip-grid,
+.fw-dark .fw-tip-note,
+.fw-dark .fw-tip-src {
+  border-color: #5f6368;
+}
+
+.fw-dark .fw-cap-good::before {
+  color: #86efac;
+}
+
+.fw-dark .fw-cap-bad::before {
+  color: #fca5a5;
+}
+
+.fw-dark .fw-tip-info {
+  background: rgba(147, 197, 253, 0.18);
+  color: #93c5fd;
+}
