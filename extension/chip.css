@@ -148,11 +148,12 @@
   margin: 0 0 0 8px;
 }
 
-/* fallback placement when the airline cell has no room left; block-level so it takes its own line */
-.fw-sum-block {
-  display: flex;
-  width: fit-content;
-  margin: 3px 0 0;
+/* compact form for a cell with no room for the label: the coloured glyph alone still carries the
+   tier, and the hover card carries the words */
+.fw-sum-min {
+  font-size: 0;
+  gap: 0;
+  padding: 2px 5px;
 }
 
 .fw-row {

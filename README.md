@@ -28,6 +28,7 @@ The chip is styled to sit inside Google's own visual language rather than shout 
 - **Amber is rationed.** It is the only colour that asks the reader to stop, so it is reserved for the one case that earns it: part of the fleet has no wifi at all and the schedule will not say which aircraft turns up. A slow-but-working satellite is information, not a warning, so GEO and A2G read blue. Before this split, 142 of 207 wifi-carrying rules were amber, which made the colour mean nothing; it is now 20 of 237 airlines.
 - **A real hover card, not `title=`.** A native tooltip waits half a second, cannot be styled and cannot hold a table, which defeats the point of answering the question without expanding the card. One `position: fixed` node on `<body>` keeps it entirely outside Google's layout. It follows the chip on scroll rather than hiding, because Google Flights fires scroll on its inner containers constantly and hiding on any scroll tore the card away the moment it appeared.
 - **Two placements.** Google's amenity lines are flex `<li>`s inside a `<ul>`, so a chip appended into that row gets squeezed beside the label. There the chip is inserted as its **own row** in the list (`.fw-row`) where it gets the full column width; in the collapsed airline row it sits inline next to the carrier name, which has ~180px of unused width.
+- **The collapsed chip never leaves the name line.** The columns row is height-capped at 42px and the card is a grid whose next row can hold Google's own full-width CO2e badge, so there is no free line under the airline name: both "append below the cell" and "wrap inside the cell" put the chip exactly on top of that badge (verified by rect, both at the same y). When the full label does not fit beside the name, the chip collapses to the coloured glyph alone (`.fw-sum-min`, hover card and aria-label still carry the verdict); the last-resort fallback tucks it beside the times on line one. On live pages the glyph form absorbed every tight cell, including the "Operated by ..." rows.
 - **Shared palette with the GetStopover extension.** Same tones, same 24% fill in dark mode, so the two products read as siblings rather than as two unrelated tools: green `#86efac`, amber `#fcd34d`, red `#fca5a5`, grey `#cbd5e1`, plus a blue `#93c5fd` for the "works, just basic" tier that GetStopover has no equivalent of. `chip.css` writes each colour exactly once, as a light triple plus a dark `r,g,b` list; the theme bindings rebind three variables rather than restating the table.
 - **Both themes.** Google Flights ships its own light/dark toggle, so `prefers-color-scheme` is not authoritative. `readTheme()` walks up from `<body>` for the first *opaque* background and takes its luminance, falling back to text colour, which is never transparent. Skipping transparent backgrounds matters: reading `rgba(0,0,0,0)` as a colour scores it as black and flips a light page to dark. The result is stamped as `fw-dark` / `fw-light` on `<html>`, driven by a `MutationObserver` on `<html>`/`<body>` class+style plus the `prefers-color-scheme` change event, so a toggle repaints in ~250ms instead of waiting for the next sweep. `getComputedStyle` forces a style recalc, so the sweep keeps only a rare backstop call.
 
@@ -61,11 +62,36 @@ That leaves one gap the reader will still hit, so the card names it: the per-leg
 
 ```
 extension/
-  manifest.json        MV3, content script on google.com/travel/flights only
-  content.js           observer + parser + chip renderer
+  manifest.json        MV3; google.com/travel/flights + skyscanner .net/.com/.co.uk/.co.in
+  core.js              site-agnostic: verdicts, name resolution, rollups, hover card, theme
+  google.js            Google Flights adapter: collapsed rows + expanded per-leg panels
+  skyscanner.js        Skyscanner adapter: result tickets, fleet-level only
   chip.css             verdict chip styling
   data/registry.js     WIFI_REGISTRY: airline → fleet rules → provider/orbit/access
+  icons/               generated from ../icons/icon.html
 ```
+
+## Google Flights bridge: exact aircraft on the collapsed list
+
+`google-bridge.js` runs in the MAIN world at `document_start` and reads the two places Google's own itinerary payload is reachable: the server-rendered `ds:1` AF_initDataCallback blob (URL-entered searches) and the page's `/_/FlightsFrontendUi/data/` response as it crosses the page's own `fetch`/XHR (in-page searches). **It never issues a request**: it only reads replies the page already fetched for itself, and nothing leaves the browser. Segment records are recognised by feature (one aircraft string, two IATA codes, two clock arrays, one carrier+number pair), not by index, and grouped by their parent array, so the blob schema and the response schema both parse. The result is republished through a hidden div, because DOM is shared between worlds and closures are not (and because Trusted Types makes `script.textContent` a guarded sink on Google pages).
+
+`google.js` matches cards by first-departure + last-arrival clock time, then stop count, then carrier overlap; only a unique match is used, so an ambiguous card keeps its fleet verdict. Matched cards get **aircraft-exact verdicts collapsed**: `data-fw-src="bridge"`, hover shows the actual type, no "expand for exact" banner. Two honesty rules layered on top:
+
+- **Google's carriers outrank the card text.** The payload's per-segment codes caught "Batik Air" on DEL-SIN actually being OD Batik Air Malaysia while the name resolver read Indonesian ID: the wrong airline's data on the chip. When the bridge's carrier is unregistered, the chip is **suppressed entirely** rather than left showing the misattributed fleet verdict.
+- **The done-marker is only set on a real decision.** The bridge publishes before Google hydrates the cards; marking a skeleton li as processed froze the whole list chipless once (v53's first cut). Cards are only marked once a chip is placed or suppressed.
+
+Sort and filter changes re-render client-side from memory (no refetch), so already-placed chips survive them; new searches fire a fresh response through the wrap.
+
+## Skyscanner
+
+Two surfaces with different ceilings:
+
+- **Results list**: never names the aircraft, so tickets get **fleet-level verdicts**, the same rollup Google's collapsed rows use. Carrier names resolve from three sources in order: logo `img[alt]`, the multi-airline label ("IndiGo + Scoot"), and the card's accessible text ("Flight with Air India, Scoot").
+- **Booking page** (`/config/`): the per-leg panel names the metal ("A321 (narrowbody)" in `SegmentAmenityInfo`), so each segment gets an **exact aircraft-level chip beside its flight number** ("IndiGo 6E5007 → No Wi-Fi", "Scoot TR751 → Email & browsing"). The flight-number code is the primary carrier signal, and the regex allows digit-leading IATA codes ("6E5007") while lowercase exclusion keeps durations ("1h 05") out; the airline-name fallback only applies on single-carrier legs, so an unregistered code on a mixed leg can never borrow another carrier's verdict. If the aircraft is not in the DOM yet the chip is fleet-level with an "Open Show info" hint and upgrades in place when it appears.
+
+There is no amenity fallback on either surface, so an airline the registry has not sourced gets **no chip** rather than a guess (live example: "BatikAir Malaysia" is OD, a different airline from the registry's Indonesian ID, and stays chipless until OD is researched).
+
+**Aircraft on the results list is impossible, audited 2026-08-06, do not re-litigate.** On a fresh results page (BLR-DXB, no itinerary opened) the aircraft exists nowhere: visible DOM, hidden leaves, attributes and script tags all zero; the page's single Redux store walked structurally (28,887 objects including Maps/Sets) has zero aircraft-like keys and zero true value matches (76 regex hits all classified: "7x7" digit runs inside carrier ids, ad UUIDs and DoubleClick URLs); ticket component fiber props zero; localStorage, sessionStorage, IndexedDB and CacheStorage all empty of it. The results search endpoint is `/g/radar/api/v2/web-unified-search/`, and its normalized segment schema is exactly 11 fields (times, places, duration, carrier ids, flight number). Positive control proving the probes work: `shared.flightBookingPanel` gains `amenity_info.transportDescription` ("A320neo (narrowbody)") for exactly the segments of an itinerary once its `/config/` page fires the booking-panel fetch. Getting aircraft onto the list would therefore mean prefetching that per-itinerary endpoint for every visible result: active scraping of a rate-limited, captcha-guarded API, ruled out on CWS posture, ToS and user-session safety. The store does expose per-segment `operating_carrier_id` + IATA `alt_id`, so a main-world bridge (the GetStopover pattern) could upgrade results-list carrier accuracy (codeshares, wet-leases) without touching the network; that is the one enhancement available there.
 
 ## Coverage model: every airline gets an answer
 
@@ -98,12 +124,16 @@ The registry is generated, not hand-edited: `scratchpad/merge_registry.py` merge
 
 chrome://extensions → Developer mode → Load unpacked → select `extension/`. Search any route on Google Flights, expand a result.
 
+## Packaging
+
+`./build.sh` stages a production copy under `dist/staging/` and zips it to `dist/flightwifi-<version>.zip`. The dev tree keeps its hot-reloader and instrumentation untouched; the build strips them from the copy: `dev-reload.js`, `reload-token.txt`, the `background` + `permissions` manifest keys, `FW_TRACE`, and every `data-fw-*` attribute write. It then verifies the staged file parses, the manifest carries no permissions, and no instrumentation survived, before zipping. The packaged extension requests **zero permissions**: one content script on `https://www.google.com/travel/flights*`, nothing else.
+
 ## Before launch
 
-- [ ] Name + domain (rename = find-replace "FlightWifi" across repo, same procedure that renamed ForgeKit)
+- [x] Icons (16/32/48/128, generated from `icons/icon.html` by headless Chrome, wired into the manifest)
+- [x] Packaging script with strip verification (`build.sh`)
+- [ ] Name (ships as "FlightWifi" — the build drops the "(working title)" suffix; rename = find-replace across repo)
+- [ ] CWS listing: screenshots (1280×800), description copy, privacy declarations, single-purpose statement
 - [ ] Selector resilience pass (Google Flights DOM changes; the parser is text-regex based on purpose, but the li/aria-expanded anchors need a fallback sweep)
-- [ ] Chip rendering QA across locales (the amenity text "Wi-Fi" appears in localized UIs too)
-- [ ] CWS listing assets, single-purpose description (verdict feeder, no accounts, no tracking)
-- [ ] REMOVE the dev hot-reloader before packaging: delete `dev-reload.js` + `reload-token.txt` and the `background` key + `permissions` from manifest.json (dev-only; bump the token file's content to trigger a self-reload during development)
-- [ ] REMOVE the debug instrumentation before packaging: `FW_TRACE`, the `data-fw-debug`/`data-fw-err` attribute writes, and the `data-fw-carrier`/`data-fw-src`/`data-fw-ac` chip attributes in content.js
+- [ ] Chip rendering QA across locales (non-English UIs degrade gracefully to registry-only verdicts: airline and aircraft names are locale-independent, Google's amenity text is not)
 - [ ] Work the `needs_verification` queue (137 of 237 entries, mostly time-bombed rollout facts; biggest expiry: Qatar narrowbodies end-2026, Korean Air Starlink go-live, EVA free-promo end date)

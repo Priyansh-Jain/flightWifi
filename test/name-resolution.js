@@ -13,7 +13,7 @@ global.WIFI_REGISTRY = JSON.parse(
   registrySrc.slice(registrySrc.indexOf("{"), registrySrc.lastIndexOf("};", registrySrc.indexOf("const VERDICTS")) + 1)
 );
 
-const contentSrc = fs.readFileSync(path.join(root, "extension/content.js"), "utf8");
+const contentSrc = fs.readFileSync(path.join(root, "extension/core.js"), "utf8");
 // everything above the hover card is pure logic: declarations plus two index builds over the
 // registry, nothing that touches the DOM at load, so it evaluates as-is
 const head = contentSrc.slice(0, contentSrc.indexOf("/* ---------- hover card ----------"));
