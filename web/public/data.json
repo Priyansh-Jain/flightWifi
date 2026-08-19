@@ -1,8 +1,8 @@
 {
  "name": "FlightWifi airline wifi registry",
  "license": "CC-BY-4.0",
- "attribution": "FlightWifi, https://flightwifi.io",
- "compiled": "2026-08-18",
+ "attribution": "FlightWifi, https://flightwifi.app",
+ "compiled": "2026-08-19",
  "airlines": {
   "TK": {
    "airline": "Turkish Airlines",
@@ -28,6 +28,10 @@
    ]
   },
   "EK": {
+   "starlink": {
+    "status": "flying",
+    "access": "free"
+   },
    "airline": "Emirates",
    "rules": [
     {
@@ -46,6 +50,10 @@
    ]
   },
   "QR": {
+   "starlink": {
+    "status": "flying",
+    "access": "free"
+   },
    "airline": "Qatar Airways",
    "rules": [
     {
@@ -85,6 +93,10 @@
    ]
   },
   "UA": {
+   "starlink": {
+    "status": "flying",
+    "access": "free_with_account"
+   },
    "airline": "United",
    "rules": [
     {
@@ -179,11 +191,15 @@
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
-    "https://news.delta.com/delta-takes-fast-free-wi-fi-international",
+    "https://www.delta.com/us/en/onboard/inflight-entertainment/onboard-wifi",
     "https://traveltomorrow.com/delta-installs-free-wi-fi-on-1000th-plane-entire-fleet-to-be-equipped-in-2026/"
    ]
   },
   "BA": {
+   "starlink": {
+    "status": "flying",
+    "access": "free"
+   },
    "airline": "British Airways",
    "rules": [
     {
@@ -201,6 +217,10 @@
    ]
   },
   "LH": {
+   "starlink": {
+    "status": "announced",
+    "access": "free_with_account"
+   },
    "airline": "Lufthansa",
    "rules": [
     {
@@ -219,6 +239,10 @@
    ]
   },
   "AA": {
+   "starlink": {
+    "status": "announced",
+    "access": "unannounced"
+   },
    "airline": "American Airlines",
    "rules": [
     {
@@ -244,6 +268,10 @@
    ]
   },
   "AS": {
+   "starlink": {
+    "status": "flying",
+    "access": "free_with_account"
+   },
    "airline": "Alaska Airlines",
    "rules": [
     {
@@ -285,6 +313,10 @@
    ]
   },
   "WN": {
+   "starlink": {
+    "status": "flying",
+    "access": "free_with_account"
+   },
    "airline": "Southwest",
    "rules": [
     {
@@ -304,6 +336,10 @@
    ]
   },
   "F9": {
+   "starlink": {
+    "status": "announced",
+    "access": "unannounced"
+   },
    "airline": "Frontier",
    "rules": [
     {
@@ -322,6 +358,10 @@
    ]
   },
   "HA": {
+   "starlink": {
+    "status": "flying",
+    "access": "free_with_account"
+   },
    "airline": "Hawaiian Airlines",
    "rules": [
     {
@@ -350,6 +390,10 @@
    ]
   },
   "AC": {
+   "starlink": {
+    "status": "flying",
+    "access": "free_with_account"
+   },
    "airline": "Air Canada",
    "rules": [
     {
@@ -376,6 +420,10 @@
    ]
   },
   "WS": {
+   "starlink": {
+    "status": "flying",
+    "access": "free_with_account"
+   },
    "airline": "WestJet",
    "rules": [
     {
@@ -426,6 +474,10 @@
    "needs_verification": true
   },
   "CM": {
+   "starlink": {
+    "status": "flying",
+    "access": "paid"
+   },
    "airline": "Copa Airlines",
    "rules": [
     {
@@ -758,6 +810,10 @@
    ]
   },
   "NZ": {
+   "starlink": {
+    "status": "flying",
+    "access": "free_with_account"
+   },
    "airline": "Air New Zealand",
    "rules": [
     {
@@ -813,6 +869,10 @@
    "needs_verification": true
   },
   "SQ": {
+   "starlink": {
+    "status": "announced",
+    "access": "unannounced"
+   },
    "airline": "Singapore Airlines",
    "rules": [
     {
@@ -928,6 +988,10 @@
    "needs_verification": true
   },
   "KE": {
+   "starlink": {
+    "status": "announced",
+    "access": "free"
+   },
    "airline": "Korean Air",
    "rules": [
     {
@@ -963,6 +1027,10 @@
    "needs_verification": true
   },
   "OZ": {
+   "starlink": {
+    "status": "announced",
+    "access": "free"
+   },
    "airline": "Asiana Airlines",
    "rules": [
     {
@@ -1186,6 +1254,10 @@
    "needs_verification": true
   },
   "AF": {
+   "starlink": {
+    "status": "flying",
+    "access": "free_with_account"
+   },
    "airline": "Air France",
    "rules": [
     {
@@ -1238,6 +1310,10 @@
    "needs_verification": true
   },
   "IB": {
+   "starlink": {
+    "status": "flying",
+    "access": "free"
+   },
    "airline": "Iberia",
    "rules": [
     {
@@ -1257,6 +1333,10 @@
    ]
   },
   "VS": {
+   "starlink": {
+    "status": "flying",
+    "access": "free_with_account"
+   },
    "airline": "Virgin Atlantic",
    "rules": [
     {
@@ -1290,6 +1370,10 @@
    ]
   },
   "LX": {
+   "starlink": {
+    "status": "announced",
+    "access": "free_with_account"
+   },
    "airline": "SWISS",
    "rules": [
     {
@@ -1319,6 +1403,10 @@
    ]
   },
   "OS": {
+   "starlink": {
+    "status": "announced",
+    "access": "free_with_account"
+   },
    "airline": "Austrian Airlines",
    "rules": [
     {
@@ -1348,6 +1436,10 @@
    "needs_verification": true
   },
   "SN": {
+   "starlink": {
+    "status": "announced",
+    "access": "free_with_account"
+   },
    "airline": "Brussels Airlines",
    "rules": [
     {
@@ -1366,6 +1458,10 @@
    ]
   },
   "SK": {
+   "starlink": {
+    "status": "flying",
+    "access": "free_with_account"
+   },
    "airline": "SAS",
    "rules": [
     {
@@ -1474,6 +1570,10 @@
    ]
   },
   "EI": {
+   "starlink": {
+    "status": "flying",
+    "access": "free"
+   },
    "airline": "Aer Lingus",
    "rules": [
     {
@@ -1494,6 +1594,10 @@
    ]
   },
   "AZ": {
+   "starlink": {
+    "status": "announced",
+    "access": "free_with_account"
+   },
    "airline": "ITA Airways",
    "rules": [
     {
@@ -1556,6 +1660,10 @@
    ]
   },
   "W6": {
+   "starlink": {
+    "status": "announced",
+    "access": "unannounced"
+   },
    "airline": "Wizz Air",
    "rules": [
     {
@@ -1652,6 +1760,10 @@
    "needs_verification": true
   },
   "GF": {
+   "starlink": {
+    "status": "flying",
+    "access": "free"
+   },
    "airline": "Gulf Air",
    "rules": [
     {
@@ -1768,6 +1880,10 @@
    "needs_verification": true
   },
   "LY": {
+   "starlink": {
+    "status": "announced",
+    "access": "free"
+   },
    "airline": "El Al",
    "rules": [
     {
@@ -1967,6 +2083,10 @@
    ]
   },
   "Y4": {
+   "starlink": {
+    "status": "announced",
+    "access": "unannounced"
+   },
    "airline": "Volaris",
    "rules": [
     {
@@ -2050,6 +2170,10 @@
    "needs_verification": true
   },
   "JA": {
+   "starlink": {
+    "status": "announced",
+    "access": "unannounced"
+   },
    "airline": "JetSMART",
    "rules": [
     {
@@ -2352,6 +2476,10 @@
    "needs_verification": true
   },
   "EW": {
+   "starlink": {
+    "status": "announced",
+    "access": "unannounced"
+   },
    "airline": "Eurowings",
    "rules": [
     {
@@ -2438,6 +2566,10 @@
    "needs_verification": true
   },
   "BT": {
+   "starlink": {
+    "status": "flying",
+    "access": "free"
+   },
    "airline": "airBaltic",
    "rules": [
     {
@@ -2552,6 +2684,10 @@
    "needs_verification": true
   },
   "FZ": {
+   "starlink": {
+    "status": "announced",
+    "access": "free"
+   },
    "airline": "flydubai",
    "rules": [
     {
@@ -2591,6 +2727,10 @@
    ]
   },
   "OV": {
+   "starlink": {
+    "status": "none",
+    "access": "unannounced"
+   },
    "airline": "SalamAir",
    "rules": [
     {
@@ -2633,9 +2773,14 @@
    "rules": [
     {
      "fleet": "rollout",
-     "types": "787|A320|A321",
-     "provider": "Panasonic Avionics eX3 Ka-band IFEC (787 and A320neo); Neo Space Group with the SES Open Orbits multi-orbit network is due on the A321neo fleet from 2026 but is not confirmed in service",
+     "types": "787|A320",
+     "provider": "Panasonic Avionics eX3 Ka-band IFEC (787 and A320neo)",
      "orbit": "GEO"
+    },
+    {
+     "types": "A321",
+     "provider": "Neo Space Group with the SES Open Orbits multi-orbit network is due on the A321neo fleet from 2026 but is not confirmed in service",
+     "orbit": "NONE"
     }
    ],
    "access": "Paid data bundles, roughly $3.5 to $28.9 for 20MB to 220MB, on fitted aircraft only.",
@@ -2790,6 +2935,10 @@
    "needs_verification": true
   },
   "5J": {
+   "starlink": {
+    "status": "announced",
+    "access": "unannounced"
+   },
    "airline": "Cebu Pacific",
    "rules": [
     {
@@ -2832,6 +2981,10 @@
    ]
   },
   "VJ": {
+   "starlink": {
+    "status": "announced",
+    "access": "unannounced"
+   },
    "airline": "Vietjet Air",
    "rules": [
     {
@@ -2851,6 +3004,10 @@
    "needs_verification": true
   },
   "ZG": {
+   "starlink": {
+    "status": "flying",
+    "access": "free"
+   },
    "airline": "ZIPAIR",
    "rules": [
     {
@@ -2905,6 +3062,10 @@
    "needs_verification": true
   },
   "LJ": {
+   "starlink": {
+    "status": "announced",
+    "access": "free"
+   },
    "airline": "Jin Air",
    "rules": [
     {
@@ -2997,6 +3158,10 @@
    ]
   },
   "FA": {
+   "starlink": {
+    "status": "none",
+    "access": "unannounced"
+   },
    "airline": "FlySafair",
    "rules": [
     {
@@ -3220,7 +3385,7 @@
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
-    "https://www.lam.co.mz/en/switchlanguage/to/pt/LAM-Inflight-Entertainment-Wi-Fi",
+    "https://www.lam.co.mz/en",
     "https://en.wikipedia.org/wiki/LAM_Mozambique_Airlines"
    ],
    "needs_verification": true
@@ -3928,9 +4093,8 @@
    "confidence": "reported",
    "as_of": "2026-08",
    "sources": [
-    "https://www.solaseedair.jp/service/inflight/",
     "https://www.solaseedair.jp/service/",
-    "https://www.solaseedair.jp/service/inflight/solatime.html"
+    "https://www.solaseedair.jp/service/inflight/"
    ]
   },
   "HD": {
@@ -3990,6 +4154,10 @@
    ]
   },
   "RS": {
+   "starlink": {
+    "status": "announced",
+    "access": "unannounced"
+   },
    "airline": "Air Seoul",
    "rules": [
     {
@@ -4271,6 +4439,10 @@
    ]
   },
   "WK": {
+   "starlink": {
+    "status": "announced",
+    "access": "free"
+   },
    "airline": "Edelweiss Air",
    "rules": [
     {

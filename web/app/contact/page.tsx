@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/ui";
-import { CONTACT_EMAIL, GITHUB_URL } from "@/lib/site";
+import { CONTACT_EMAIL, GITHUB_URL, og } from "@/lib/site";
 import { stats } from "@/lib/extension";
 
 export const metadata: Metadata = {
@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description:
     "Report a wrong Wi-Fi verdict, a rollout we missed, or an airline we do not cover yet. Corrections are the fastest way to improve the registry.",
   alternates: { canonical: "/contact/" },
-  openGraph: { url: "/contact/" }
+  openGraph: og("/contact/")
 };
 
 export default function Contact() {

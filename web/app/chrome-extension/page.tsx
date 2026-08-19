@@ -3,14 +3,14 @@ import Link from "next/link";
 import { Breadcrumbs, Chip, Faq, JsonLd, Section } from "@/components/ui";
 import { Shot } from "@/components/Shot";
 import { stats } from "@/lib/extension";
-import { CHROME_STORE_URL, SITE_URL } from "@/lib/site";
+import { CHROME_STORE_URL, SITE_URL, og, EXTENSION_VERSION } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "FlightWifi Chrome extension: Wi-Fi verdicts on Google Flights",
   description:
     "Free extension that shows whether each flight's Wi-Fi handles video calls, per exact aircraft, inline on Google Flights, Skyscanner and Soar. Zero permissions, no tracking.",
   alternates: { canonical: "/chrome-extension/" },
-    openGraph: { url: "/chrome-extension/" }
+    openGraph: og("/chrome-extension/")
 };
 
 const FAQ = [
@@ -109,7 +109,7 @@ export default function ExtensionPage() {
       <Section>
         <p className="text-sm text-[var(--muted)]">
           Privacy in one line: the extension collects nothing, sends nothing, and has no server.
-          Full policy <Link href="/privacy/">here</Link>, source on{" "}
+          Read the <Link href="/privacy/">full privacy policy</Link>, or the source on{" "}
           <a href="https://github.com/Priyansh-Jain/flightWifi">GitHub</a>.
         </p>
       </Section>
@@ -118,10 +118,22 @@ export default function ExtensionPage() {
         data={{
           "@context": "https://schema.org",
           "@type": "SoftwareApplication",
+          "@id": `${SITE_URL}/chrome-extension/#app`,
           name: "FlightWifi",
+          description:
+            "A free Chrome extension that shows each flight's Wi-Fi verdict inline on Google Flights, Skyscanner and Soar, matched to the exact aircraft. Collects no data and makes no network requests.",
           operatingSystem: "Chrome",
           applicationCategory: "BrowserApplication",
-          offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+          softwareVersion: EXTENSION_VERSION,
+          screenshot: `${SITE_URL}/screenshot-results.jpg`,
+          isAccessibleForFree: true,
+          offers: {
+            "@type": "Offer",
+            price: "0",
+            priceCurrency: "USD",
+            availability: "https://schema.org/InStock",
+            url: CHROME_STORE_URL
+          },
           url: `${SITE_URL}/chrome-extension/`,
           downloadUrl: CHROME_STORE_URL,
           publisher: { "@id": `${SITE_URL}/#org` }

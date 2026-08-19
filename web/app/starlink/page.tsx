@@ -3,14 +3,15 @@ import Link from "next/link";
 import { Breadcrumbs, Chip, Cta, Faq, JsonLd, Section } from "@/components/ui";
 import { AirlineLink } from "@/components/airline";
 import { STARLINK_ACCESS_UI, starlinkRows, stats } from "@/lib/extension";
-import { SITE_URL } from "@/lib/site";
+import { schemaDates } from "@/lib/derive";
+import { SITE_LAUNCH, SITE_URL, og } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Which airlines have Starlink? The in-service tracker",
   description:
     "Every airline flying Starlink Wi-Fi today, every mid-retrofit fleet, and every signed deal with nothing in the air yet. In-service status, not press releases.",
   alternates: { canonical: "/starlink/" },
-    openGraph: { url: "/starlink/" }
+    openGraph: og("/starlink/")
 };
 
 const STATUS_META = {
@@ -122,13 +123,18 @@ export default function StarlinkPage() {
             "In-service vs contracted Starlink status per airline and aircraft type, compiled from official airline and provider sources.",
           url: `${SITE_URL}/starlink/`,
           license: "https://creativecommons.org/licenses/by/4.0/",
+          isAccessibleForFree: true,
           creator: { "@id": `${SITE_URL}/#org` },
+          keywords: ["in-flight wifi", "Starlink", "airline connectivity", "aircraft wifi", "satellite internet"],
+          temporalCoverage: `${SITE_LAUNCH}/..`,
+          datePublished: SITE_LAUNCH,
+          variableMeasured: ["airline", "aircraft type", "connectivity provider", "satellite orbit", "cost tier", "in-service status"],
           distribution: {
             "@type": "DataDownload",
             encodingFormat: "application/json",
             contentUrl: `${SITE_URL}/data.json`
           },
-          dateModified: `${s.asOf}-01`
+          dateModified: schemaDates(s.asOf).dateModified
         }}
       />
     </>

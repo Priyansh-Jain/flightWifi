@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { og } from "@/lib/site";
 import Link from "next/link";
-import { Breadcrumbs, Cta, Section } from "@/components/ui";
+import { Breadcrumbs, Cta, Section, CollectionJsonLd } from "@/components/ui";
 import { COMPARISONS } from "@/lib/derive";
 
 export const metadata: Metadata = {
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
   description:
     "Side-by-side Wi-Fi comparisons for airlines that compete on the same routes: Qatar vs Emirates, United vs Delta and more.",
   alternates: { canonical: "/compare/" },
-    openGraph: { url: "/compare/" }
+    openGraph: og("/compare/")
 };
 
 export default function CompareIndex() {
@@ -37,6 +38,12 @@ export default function CompareIndex() {
           ))}
         </div>
       </Section>
+      <CollectionJsonLd
+        name="Airline Wi-Fi comparisons"
+        description="Airline Wi-Fi comparisons on FlightWifi."
+        path="/compare/"
+        items={COMPARISONS.map((c) => ({ name: c.title, href: `/compare/${c.slug}/` }))}
+      />
       <Cta />
     </>
   );

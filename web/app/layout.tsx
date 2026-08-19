@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { SiteFooter, SiteNav } from "@/components/chrome";
 import { JsonLd } from "@/components/ui";
-import { SITE_NAME, SITE_URL, TAGLINE } from "@/lib/site";
+import { CHROME_STORE_URL, CONTACT_EMAIL, GITHUB_URL, SITE_LAUNCH, SITE_NAME, SITE_URL, TAGLINE } from "@/lib/site";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -19,6 +19,11 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image"
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-snippet": -1, "max-image-preview": "large", "max-video-preview": -1 }
   }
 };
 
@@ -41,7 +46,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 "@id": `${SITE_URL}/#org`,
                 name: SITE_NAME,
                 url: SITE_URL,
-                logo: `${SITE_URL}/logo.png`
+                logo: { "@type": "ImageObject", url: `${SITE_URL}/logo.png`, width: 512, height: 512 },
+                description:
+                  "An independent registry of in-flight Wi-Fi across 235 airlines, compiled from airline and connectivity-provider sources and published as open data.",
+                foundingDate: SITE_LAUNCH,
+                email: CONTACT_EMAIL,
+                sameAs: [GITHUB_URL, CHROME_STORE_URL]
               },
               {
                 "@type": "WebSite",

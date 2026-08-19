@@ -4,7 +4,7 @@ import { Breadcrumbs, Chip, Cta, Faq, JsonLd, Section } from "@/components/ui";
 import { AirlineLink } from "@/components/airline";
 import { PROVIDERS, monthLabel, providerAirlines, schemaDates, type ProviderDef } from "@/lib/derive";
 import { stats } from "@/lib/extension";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, og } from "@/lib/site";
 
 export function generateStaticParams() {
   return PROVIDERS.map((p) => ({ slug: p.slug }));
@@ -19,10 +19,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const def = PROVIDERS.find((p) => p.slug === slug);
   if (!def) return {};
   return {
-    title: `${def.name} in-flight Wi-Fi: how it works and which airlines use it`,
+    title: `${def.name} in-flight Wi-Fi: which airlines use it`,
     description: `${def.summary} Latency, orbit, and every airline in our registry flying or planning it.`,
     alternates: { canonical: `/providers/${slug}/` },
-    openGraph: { url: `/providers/${slug}/` }
+    openGraph: og(`/providers/${slug}/`)
   };
 }
 
@@ -142,6 +142,7 @@ export default async function ProviderPage({ params }: Props) {
           "@type": "Article",
           headline: `${def.name} in-flight Wi-Fi`,
           description: def.summary,
+          image: `${SITE_URL}/og.png`,
           ...schemaDates(stats().asOf),
           author: { "@id": `${SITE_URL}/#org` },
           publisher: { "@id": `${SITE_URL}/#org` },

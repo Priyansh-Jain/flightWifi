@@ -4,14 +4,14 @@ import { Breadcrumbs, Chip, Cta, JsonLd, Section } from "@/components/ui";
 import { ARTICLES, type BlogArticle } from "@/lib/blog";
 import { AIRCRAFT, PROVIDERS, monthLabel } from "@/lib/derive";
 import { starlinkRows, stats } from "@/lib/extension";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, og } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Blog",
   description:
     "Data-led writing on airline Wi-Fi: which airlines fly Starlink, which Wi-Fi is free, and whether you can work in the air. Every number comes from the registry.",
   alternates: { canonical: "/blog/" },
-  openGraph: { url: "/blog/" }
+  openGraph: og("/blog/")
 };
 
 function CardArt({ art }: { art: BlogArticle["art"] }) {

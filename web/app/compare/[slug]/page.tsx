@@ -4,7 +4,7 @@ import { Breadcrumbs, Cta, Faq, JsonLd, Section } from "@/components/ui";
 import { FleetTable } from "@/components/airline";
 import { COMPARISONS, monthLabel, schemaDates } from "@/lib/derive";
 import { accessPoints, entryFor, fleetVerdict, stats } from "@/lib/extension";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, og } from "@/lib/site";
 import { slugForCode } from "@/lib/slugs";
 import Link from "next/link";
 
@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: def.title,
     description: `${def.title}: per-aircraft verdicts, cost and video-call support side by side, from official sources.`,
     alternates: { canonical: `/compare/${slug}/` },
-    openGraph: { url: `/compare/${slug}/` }
+    openGraph: og(`/compare/${slug}/`)
   };
 }
 
@@ -104,6 +104,7 @@ export default async function ComparePage({ params }: Props) {
           "@context": "https://schema.org",
           "@type": "Article",
           headline: def.title,
+          image: `${SITE_URL}/og.png`,
           description: `${def.title}: per-aircraft verdicts, cost and video-call support side by side, from official sources.`,
           ...schemaDates(stats().asOf),
           author: { "@id": `${SITE_URL}/#org` },

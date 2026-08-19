@@ -15,4 +15,4 @@ Everything FlightWifi makes is free.
 
 ## Dataset
 - Price: free under CC BY 4.0 (attribution required)
-- Full registry at https://flightwifi.io/data.json
+- Full registry at https://flightwifi.app/data.json

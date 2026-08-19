@@ -73,7 +73,9 @@ export function Faq({ items, title = "Frequently asked questions", id }: { items
         <div className="card px-5">
           {items.map((item) => (
             <details key={item.q} className="faq">
-              <summary>{item.q}</summary>
+              <summary>
+                <h3>{item.q}</h3>
+              </summary>
               <div>{item.a}</div>
             </details>
           ))}
@@ -119,5 +121,42 @@ export function InstallButton() {
     >
       Get the free extension
     </a>
+  );
+}
+
+// A directory index is a collection, not an article. Declaring the items makes the set itself
+// machine-readable rather than leaving 235 links as undifferentiated anchors.
+export function CollectionJsonLd({
+  name,
+  description,
+  path,
+  items
+}: {
+  name: string;
+  description: string;
+  path: string;
+  items: { name: string; href: string }[];
+}) {
+  return (
+    <JsonLd
+      data={{
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        name,
+        description,
+        url: `${SITE_URL}${path}`,
+        isPartOf: { "@id": `${SITE_URL}/#site` },
+        mainEntity: {
+          "@type": "ItemList",
+          numberOfItems: items.length,
+          itemListElement: items.map((it, i) => ({
+            "@type": "ListItem",
+            position: i + 1,
+            name: it.name,
+            url: `${SITE_URL}${it.href}`
+          }))
+        }
+      }}
+    />
   );
 }

@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import { og } from "@/lib/site";
 import { Breadcrumbs, Section } from "@/components/ui";
 
 export const metadata: Metadata = {
   title: "Privacy policy",
   description: "FlightWifi collects no data of any kind, on this site or in the extension.",
   alternates: { canonical: "/privacy/" },
-    openGraph: { url: "/privacy/" }
+    openGraph: og("/privacy/")
 };
 
 export default function Privacy() {

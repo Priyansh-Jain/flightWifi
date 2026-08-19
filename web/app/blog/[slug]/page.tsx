@@ -8,7 +8,7 @@ import { AirlineLink } from "@/components/airline";
 import { STARLINK_ACCESS_UI, starlinkRows, stats } from "@/lib/extension";
 import { ARTICLES } from "@/lib/blog";
 import { codeForSlug } from "@/lib/slugs";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, og } from "@/lib/site";
 
 export function generateStaticParams() {
   return Object.keys(ARTICLES).map((slug) => ({ slug }));
@@ -26,13 +26,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: article.title,
     description: article.excerpt,
     alternates: { canonical: `/blog/${slug}/` },
-    openGraph: {
-      url: `/blog/${slug}/`,
+    openGraph: og(`/blog/${slug}/`, {
       type: "article",
       publishedTime: article.date,
-      modifiedTime: article.date,
-      images: ["/og.png"]
-    }
+      modifiedTime: article.date
+    })
   };
 }
 

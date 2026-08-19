@@ -12,7 +12,7 @@ const registry = JSON.parse(
 const out = {
   name: "FlightWifi airline wifi registry",
   license: "CC-BY-4.0",
-  attribution: "FlightWifi, https://flightwifi.io",
+  attribution: "FlightWifi, https://flightwifi.app",
   compiled: new Date().toISOString().slice(0, 10),
   airlines: registry
 };

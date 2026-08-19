@@ -6,6 +6,8 @@ import { stats } from "@/lib/extension";
 const NAV = [
   { href: "/airlines/", label: "Airlines" },
   { href: "/starlink/", label: "Starlink tracker" },
+  { href: "/calls/", label: "Calls" },
+  { href: "/no-wifi/", label: "No Wi-Fi" },
   { href: "/providers/", label: "Providers" },
   { href: "/aircraft/", label: "Aircraft" },
   { href: "/compare/", label: "Compare" },
@@ -71,6 +73,9 @@ export function SiteFooter() {
           <Link href="/starlink/">Starlink tracker</Link>
           <Link href="/providers/">Providers</Link>
           <Link href="/aircraft/">Aircraft</Link>
+          <Link href="/calls/">Calls on board</Link>
+          <Link href="/no-wifi/">Airlines without Wi-Fi</Link>
+          <a href="/llms.txt">llms.txt</a>
           <a href="/data.json">Open data (JSON)</a>
           <Link href="/methodology/">Methodology</Link>
         </div>

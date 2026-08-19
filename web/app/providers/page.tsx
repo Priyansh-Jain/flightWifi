@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { og } from "@/lib/site";
 import Link from "next/link";
-import { Breadcrumbs, Cta, Section } from "@/components/ui";
+import { Breadcrumbs, Cta, Section, CollectionJsonLd } from "@/components/ui";
 import { PROVIDERS, providerAirlines } from "@/lib/derive";
 
 export const metadata: Metadata = {
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
   description:
     "Starlink, Viasat, Panasonic, Intelsat, SES, OneWeb, Kuiper and more: how each system works, its latency, and which airlines fly it.",
   alternates: { canonical: "/providers/" },
-    openGraph: { url: "/providers/" }
+    openGraph: og("/providers/")
 };
 
 export default function ProvidersIndex() {
@@ -44,6 +45,12 @@ export default function ProvidersIndex() {
           })}
         </div>
       </Section>
+      <CollectionJsonLd
+        name="In-flight connectivity providers"
+        description="In-flight connectivity providers on FlightWifi."
+        path="/providers/"
+        items={PROVIDERS.map((p) => ({ name: p.name, href: `/providers/${p.slug}/` }))}
+      />
       <Cta />
     </>
   );

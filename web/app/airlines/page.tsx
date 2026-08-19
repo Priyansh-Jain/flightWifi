@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Breadcrumbs, Cta, Section } from "@/components/ui";
+import { og } from "@/lib/site";
+import { Breadcrumbs, CollectionJsonLd, Cta, Section } from "@/components/ui";
 import { searchIndex } from "@/lib/derive";
 import { slugForCode } from "@/lib/slugs";
 import { stats } from "@/lib/extension";
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
   description:
     "Does your airline have Wi-Fi, and is it fast enough to work on? Verdicts for 235 airlines from official sources, updated continuously.",
   alternates: { canonical: "/airlines/" },
-    openGraph: { url: "/airlines/" }
+    openGraph: og("/airlines/")
 };
 
 export default function AirlinesIndex() {
@@ -29,6 +30,12 @@ export default function AirlinesIndex() {
       <Section>
         <AirlineDirectory rows={rows} />
       </Section>
+      <CollectionJsonLd
+        name="Airline Wi-Fi directory"
+        description={`Wi-Fi verdicts for ${s.airlines} airlines, one page each.`}
+        path="/airlines/"
+        items={rows.map((r) => ({ name: r.airline, href: `/airlines/${r.slug}/` }))}
+      />
       <Cta />
     </>
   );

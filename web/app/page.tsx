@@ -4,7 +4,7 @@ import { Chip, Cta, Faq, InstallButton, Section } from "@/components/ui";
 import { AirlineLink } from "@/components/airline";
 import { Shot } from "@/components/Shot";
 import { STARLINK_ACCESS_UI, starlinkRows, stats } from "@/lib/extension";
-import { TAGLINE } from "@/lib/site";
+import { TAGLINE, og } from "@/lib/site";
 
 const VERDICTS = [
   { cls: "fast", label: "Video calls work", d: "Low-orbit satellite. Quick enough to be treated like ground wifi." },
@@ -40,7 +40,7 @@ const FAQ = [
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
-    openGraph: { url: "/" }
+    openGraph: og("/")
 };
 
 export default function Home() {

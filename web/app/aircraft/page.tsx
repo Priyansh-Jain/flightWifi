@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { og } from "@/lib/site";
 import Link from "next/link";
-import { Breadcrumbs, Cta, Section } from "@/components/ui";
+import { Breadcrumbs, Cta, Section, CollectionJsonLd } from "@/components/ui";
 import { AIRCRAFT, aircraftAirlines } from "@/lib/derive";
 
 export const metadata: Metadata = {
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
   description:
     "Wi-Fi verdicts per aircraft: Boeing 777, 787, Airbus A350, A380 and more, across every airline that names the type in its rollout.",
   alternates: { canonical: "/aircraft/" },
-    openGraph: { url: "/aircraft/" }
+    openGraph: og("/aircraft/")
 };
 
 export default function AircraftIndex() {
@@ -43,6 +44,12 @@ export default function AircraftIndex() {
           })}
         </div>
       </Section>
+      <CollectionJsonLd
+        name="Wi-Fi by aircraft type"
+        description="Wi-Fi by aircraft type on FlightWifi."
+        path="/aircraft/"
+        items={AIRCRAFT.map((a) => ({ name: a.name, href: `/aircraft/${a.slug}/` }))}
+      />
       <Cta />
     </>
   );

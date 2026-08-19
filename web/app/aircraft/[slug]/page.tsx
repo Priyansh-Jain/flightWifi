@@ -4,7 +4,7 @@ import { Breadcrumbs, Chip, Cta, Faq, JsonLd, Section } from "@/components/ui";
 import { AirlineLink } from "@/components/airline";
 import { AIRCRAFT, aircraftAirlines, monthLabel, schemaDates } from "@/lib/derive";
 import { stats } from "@/lib/extension";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, og } from "@/lib/site";
 
 export function generateStaticParams() {
   return AIRCRAFT.map((a) => ({ slug: a.slug }));
@@ -19,10 +19,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const def = AIRCRAFT.find((a) => a.slug === slug);
   if (!def) return {};
   return {
-    title: `${def.name} Wi-Fi by airline`,
-    description: `Which airlines have Wi-Fi on the ${def.name}, whose is fast enough for video calls, and whose ${def.name}s fly with nothing. Sourced airline by airline.`,
+    title: `Does the ${def.name} have Wi-Fi?`,
+    description: `Whether the ${def.name} aircraft has Wi-Fi depends entirely on the airline flying it. Every operator in the registry that names the ${def.name}, with the system on board and whether it carries a video call.`,
     alternates: { canonical: `/aircraft/${slug}/` },
-    openGraph: { url: `/aircraft/${slug}/` }
+    openGraph: og(`/aircraft/${slug}/`)
   };
 }
 
@@ -59,12 +59,16 @@ export default async function AircraftPage({ params }: Props) {
       />
       <section className="mx-auto w-full max-w-5xl px-5 pt-6">
         <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
-          {def.name} Wi-Fi by airline
+          Does the {def.name} have Wi-Fi?
         </h1>
         <p className="mt-3 max-w-2xl text-[var(--muted)]">
-          The same aircraft type carries completely different internet depending on who operates it.
-          These are the airlines whose registry entries name the {def.name} specifically; carriers
-          with a single fleet-wide answer are on their own pages.
+          {faqs.length ? faqs[0].a : ""}
+        </p>
+        <p className="mt-3 max-w-2xl text-[var(--muted)]">
+          The {def.name} is an airliner, not a single product with one answer: the same airframe
+          carries completely different internet depending on who operates it. These are the airlines
+          whose registry entries name the {def.name} specifically; carriers with a single fleet-wide
+          answer are on their own pages.
         </p>
       </section>
       <Section>
@@ -99,12 +103,14 @@ export default async function AircraftPage({ params }: Props) {
         data={{
           "@context": "https://schema.org",
           "@type": "Article",
-          headline: `${def.name} Wi-Fi by airline`,
+          headline: `Does the ${def.name} have Wi-Fi?`,
+          image: `${SITE_URL}/og.png`,
           description: `Which airlines have Wi-Fi on the ${def.name}, whose is fast enough for video calls, and whose ${def.name}s fly with nothing.`,
           ...schemaDates(stats().asOf),
           author: { "@id": `${SITE_URL}/#org` },
           publisher: { "@id": `${SITE_URL}/#org` },
-          mainEntityOfPage: `${SITE_URL}/aircraft/${slug}/`
+          mainEntityOfPage: `${SITE_URL}/aircraft/${slug}/`,
+          about: { "@type": "Product", name: `${def.name} airliner`, sameAs: def.wikipedia }
         }}
       />
     </>

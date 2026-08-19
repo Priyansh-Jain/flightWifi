@@ -271,3 +271,10 @@ details.faq > div {
 .nav-strip::-webkit-scrollbar {
   display: none;
 }
+
+/* the FAQ question is a heading for extraction, but must not inherit heading size in the row */
+.faq summary h3 {
+  display: inline;
+  font: inherit;
+  margin: 0;
+}

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { og } from "@/lib/site";
 import Link from "next/link";
 import { Breadcrumbs, Section } from "@/components/ui";
 import { sourceTotals } from "@/lib/derive";
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
   description:
     "Airline and provider sources first, trade reporting named where it is used, in-service over announced, per-aircraft rules, and a paper trail for every claim.",
   alternates: { canonical: "/methodology/" },
-    openGraph: { url: "/methodology/" }
+    openGraph: og("/methodology/")
 };
 
 export default function Methodology() {

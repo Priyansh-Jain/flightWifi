@@ -20,6 +20,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     page("/", 1),
     page("/starlink/", 0.9),
+    page("/no-wifi/", 0.8),
+    page("/calls/", 0.8),
     page("/airlines/", 0.9),
     page("/chrome-extension/", 0.8),
     page("/providers/", 0.7),

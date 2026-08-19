@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Breadcrumbs, Section } from "@/components/ui";
-import { CONTACT_EMAIL, GITHUB_URL } from "@/lib/site";
+import { CONTACT_EMAIL, GITHUB_URL, og } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "About",
   description:
     "Why FlightWifi exists: a hand-audited registry of in-flight Wi-Fi across 235 airlines, sourced from the carriers and their connectivity providers.",
   alternates: { canonical: "/about/" },
-  openGraph: { url: "/about/" }
+  openGraph: og("/about/")
 };
 
 export default function About() {

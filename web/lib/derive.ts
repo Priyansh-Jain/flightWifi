@@ -1,4 +1,4 @@
-import { codes, entryFor, fleetRows, fleetVerdict, orbitClass, registry, verdict, type Entry, type Rule } from "./extension";
+import { callPolicy, codes, entryFor, fleetRows, fleetVerdict, orbitClass, registry, verdict, type Entry, type Rule } from "./extension";
 import { SITE_LAUNCH } from "./site";
 
 export type ProviderDef = {
@@ -185,23 +185,26 @@ function scopeOf(rule: Rule): string {
   return rule.fleet ?? "Fleet";
 }
 
-export type AircraftDef = { slug: string; name: string; probe: string };
+export type AircraftDef = { slug: string; name: string; probe: string; wikipedia: string };
 
 // The probe string is the aircraft text exactly as Google Flights prints it, because that is the
 // form every registry type token is written against.
 export const AIRCRAFT: AircraftDef[] = [
-  { slug: "boeing-737", name: "Boeing 737", probe: "Boeing 737" },
-  { slug: "boeing-767", name: "Boeing 767", probe: "Boeing 767" },
-  { slug: "boeing-777", name: "Boeing 777", probe: "Boeing 777" },
-  { slug: "boeing-787", name: "Boeing 787", probe: "Boeing 787" },
-  { slug: "airbus-a220", name: "Airbus A220", probe: "Airbus A220" },
-  { slug: "airbus-a320", name: "Airbus A320", probe: "Airbus A320" },
-  { slug: "airbus-a321", name: "Airbus A321", probe: "Airbus A321" },
-  { slug: "airbus-a330", name: "Airbus A330", probe: "Airbus A330" },
-  { slug: "airbus-a350", name: "Airbus A350", probe: "Airbus A350" },
-  { slug: "airbus-a380", name: "Airbus A380", probe: "Airbus A380" },
-  { slug: "embraer-e190", name: "Embraer E190", probe: "Embraer 190" },
-  { slug: "atr-72", name: "ATR 72", probe: "ATR 72" }
+  { slug: "boeing-737", name: "Boeing 737", probe: "Boeing 737" , wikipedia: "https://en.wikipedia.org/wiki/Boeing_737" },
+  { slug: "boeing-767", name: "Boeing 767", probe: "Boeing 767" , wikipedia: "https://en.wikipedia.org/wiki/Boeing_767" },
+  { slug: "boeing-777", name: "Boeing 777", probe: "Boeing 777" , wikipedia: "https://en.wikipedia.org/wiki/Boeing_777" },
+  { slug: "boeing-787", name: "Boeing 787", probe: "Boeing 787" , wikipedia: "https://en.wikipedia.org/wiki/Boeing_787_Dreamliner" },
+  { slug: "airbus-a220", name: "Airbus A220", probe: "Airbus A220" , wikipedia: "https://en.wikipedia.org/wiki/Airbus_A220" },
+  { slug: "airbus-a320", name: "Airbus A320", probe: "Airbus A320" , wikipedia: "https://en.wikipedia.org/wiki/Airbus_A320_family" },
+  { slug: "airbus-a321", name: "Airbus A321", probe: "Airbus A321" , wikipedia: "https://en.wikipedia.org/wiki/Airbus_A321" },
+  { slug: "airbus-a330", name: "Airbus A330", probe: "Airbus A330" , wikipedia: "https://en.wikipedia.org/wiki/Airbus_A330" },
+  { slug: "airbus-a350", name: "Airbus A350", probe: "Airbus A350" , wikipedia: "https://en.wikipedia.org/wiki/Airbus_A350" },
+  { slug: "airbus-a380", name: "Airbus A380", probe: "Airbus A380" , wikipedia: "https://en.wikipedia.org/wiki/Airbus_A380" },
+  { slug: "airbus-a319", name: "Airbus A319", probe: "Airbus A319" , wikipedia: "https://en.wikipedia.org/wiki/Airbus_A320_family" },
+  { slug: "embraer-e190", name: "Embraer E190", probe: "Embraer 190" , wikipedia: "https://en.wikipedia.org/wiki/Embraer_E-Jet_family" },
+  { slug: "embraer-e195", name: "Embraer E195", probe: "Embraer 195" , wikipedia: "https://en.wikipedia.org/wiki/Embraer_E-Jet_E2_family" },
+  { slug: "dash-8", name: "Dash 8", probe: "Dash 8" , wikipedia: "https://en.wikipedia.org/wiki/De_Havilland_Canada_Dash_8" },
+  { slug: "atr-72", name: "ATR 72", probe: "ATR 72", wikipedia: "https://en.wikipedia.org/wiki/ATR_72" }
 ];
 
 function clip(text: string, n: number): string {
@@ -319,23 +322,52 @@ export function schemaDates(asOf: string): { datePublished: string; dateModified
 // The registry's sourcing is airline-and-provider-first, but a minority of carriers publish nothing
 // about wifi and their entry rests on aviation trade press instead. Claiming "official sources only"
 // across every page was therefore false on those entries, so each surface states which it is.
-const TRADE_DOMAIN_RX =
-  /onemileatatime|awardwallet|simpleflying|thepointsguy|paxex\.aero|runwaygirlnetwork|liveandletsfly|happyfares|skift|cnbc|bloomberg|gulfnews|reuters|forbes|aerotime|aviationweek|apex\.aero|timeout|seekingalpha|businesstraveller|executivetraveller|flyertalk|reddit|wikipedia|travelweekly|thenationalnews|khaleejtimes|aviationa2z|ch-aviation|airlinegeeks|aviationsourcenews/i;
+// A denylist counted every unknown domain as official, so 18 airlines whose only citation was a
+// trade outlet still claimed "sourced from official pages". Officialness is now positive evidence:
+// the host must be the airline's own domain or a known connectivity provider.
+const PROVIDER_DOMAINS = [
+  "starlink.com", "spacex.com", "viasat.com", "panasonic.aero", "panasonic.com", "intelsat.com",
+  "ses.com", "anuvu.com", "sita.aero", "oneweb.net", "eutelsat.com", "inmarsat.com",
+  "gogoair.com", "aboutamazon.com", "thalesgroup.com", "hughes.com", "nsg.com.sa"
+];
+
+function hostOf(url: string): string {
+  const m = url.match(/^https?:\/\/([^/]+)/i);
+  return m ? m[1].toLowerCase().replace(/^www\./, "") : "";
+}
+
+// "Turkish Airlines" -> ["turkishairlines", "turkish"], so turkishairlines.com counts and a blog
+// that merely mentions the airline does not.
+function airlineTokens(name: string): string[] {
+  const bare = name.toLowerCase().replace(/[^a-z0-9 ]/g, "");
+  const joined = bare.replace(/ /g, "");
+  const first = bare.split(" ")[0];
+  return [joined, first].filter((t) => t.length >= 4);
+}
+
+function isOfficial(url: string, airline: string): boolean {
+  const host = hostOf(url);
+  if (!host) return false;
+  if (PROVIDER_DOMAINS.some((d) => host === d || host.endsWith(`.${d}`))) return true;
+  const label = host.split(".")[0];
+  return airlineTokens(airline).some((t) => host.includes(t) || t.includes(label));
+}
 
 export function sourceMix(entry: Entry): { official: number; trade: number; total: number } {
   const list = entry.sources ?? [];
-  const trade = list.filter((u) => TRADE_DOMAIN_RX.test(u)).length;
-  return { official: list.length - trade, trade, total: list.length };
+  const official = list.filter((u) => isOfficial(u, entry.airline)).length;
+  return { official, trade: list.length - official, total: list.length };
 }
 
 export function sourceNote(entry: Entry): string {
   const { official, trade } = sourceMix(entry);
   if (!official && !trade) return "No sources are recorded for this entry yet.";
+  const poss = entry.airline.endsWith("s") ? `${entry.airline}'` : `${entry.airline}'s`;
   if (!official)
     return `${entry.airline} does not publish its Wi-Fi terms in a form we could cite, so this entry rests on aviation trade reporting rather than the airline's own pages.`;
   if (!trade)
-    return `Every fact on this page comes from ${entry.airline}'s own publications or its connectivity provider's announcements.`;
-  return `Facts on this page come from ${entry.airline}'s own publications and its connectivity provider's announcements, with aviation trade reporting used for corroboration.`;
+    return `Every fact on this page comes from ${poss} own publications or its connectivity provider's announcements.`;
+  return `Facts on this page come from ${poss} own publications and its connectivity provider's announcements, with aviation trade reporting used for corroboration.`;
 }
 
 export function sourceTotals() {
@@ -349,4 +381,62 @@ export function sourceTotals() {
     if (!m.official && m.total) tradeOnly += 1;
   }
   return { official, trade, tradeOnly, total: official + trade };
+}
+
+// Nobody publishes the negative list, and the mainstream guides get it wrong: several airlines
+// widely listed as "free wifi" actually run an entertainment-only cabin network with no route to
+// the internet. Both facts are derivable, so this can never go stale.
+export type NoWifiRow = { code: string; airline: string; access: string; kind: "portal" | "none" | "announced" };
+
+const PORTAL_RX = /stream|portal|entertainment|local .*network|moving map|cabin LAN|wireless IFE|AirFi|Immfly|Bluebox/i;
+const ANNOUNCED_RX = /announced|signed|planned|from 20\d\d|selected|due |trial/i;
+
+export function noWifiRows(): NoWifiRow[] {
+  const out: NoWifiRow[] = [];
+  for (const code of codes()) {
+    const e = entryFor(code)!;
+    if (!e.rules.every((r) => orbitClass(r.orbit) === "NONE")) continue;
+    const text = `${e.access ?? ""} ${e.rules.map((r) => r.provider ?? "").join(" ")}`;
+    const kind: NoWifiRow["kind"] = PORTAL_RX.test(text)
+      ? "portal"
+      : ANNOUNCED_RX.test(text)
+        ? "announced"
+        : "none";
+    out.push({ code, airline: e.airline, access: e.access ?? "", kind });
+  }
+  return out.sort((a, b) => a.airline.localeCompare(b.airline));
+}
+
+// Whether the link can carry a call and whether the airline permits one are separate questions, and
+// the second is the trap. Only airlines that state a policy appear; absent means unknown, not yes.
+export type CallRow = {
+  code: string;
+  airline: string;
+  policy: "yes" | "no" | "voice";
+  reported: boolean;
+  cls: string;
+  label: string;
+  fastEnough: boolean;
+};
+
+export function callRows(): CallRow[] {
+  const out: CallRow[] = [];
+  for (const code of codes()) {
+    const p = callPolicy(code);
+    if (!p) continue;
+    const e = entryFor(code)!;
+    const v = fleetVerdict(code);
+    const fastEnough = e.rules.some((r) => ["LEO", "MEO", "VARIES"].includes(orbitClass(r.orbit)));
+    out.push({
+      code,
+      airline: e.airline,
+      policy: p.calls as CallRow["policy"],
+      reported: Boolean(p.check),
+      cls: v?.cls ?? "unknown",
+      label: v?.label ?? "Not verified",
+      fastEnough
+    });
+  }
+  const rank = { yes: 0, voice: 1, no: 2 };
+  return out.sort((a, b) => rank[a.policy] - rank[b.policy] || a.airline.localeCompare(b.airline));
 }
