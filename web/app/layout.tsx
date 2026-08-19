@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { SiteFooter, SiteNav } from "@/components/chrome";
 import { JsonLd } from "@/components/ui";
@@ -37,6 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SiteNav />
         <main id="main" className="flex-1">{children}</main>
         <SiteFooter />
+        <Analytics />
         <JsonLd
           data={{
             "@context": "https://schema.org",

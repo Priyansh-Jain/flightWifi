@@ -3,7 +3,7 @@
 import { execFileSync } from "node:child_process";
 import { existsSync } from "node:fs";
 
-const SOURCES = ["screenshot-results", "screenshot-tooltip"];
+const SOURCES = ["screenshot-results", "screenshot-tooltip", "screenshot-compare"];
 const WIDTHS = [640, 960];
 const missing = SOURCES.flatMap((b) =>
   WIDTHS.flatMap((w) => ["avif", "webp", "jpg"].map((e) => `public/${b}-${w}.${e}`))

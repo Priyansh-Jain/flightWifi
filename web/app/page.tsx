@@ -74,16 +74,17 @@ export default function Home() {
       <Section>
         <div className="card overflow-hidden">
           <Shot
-            base="screenshot-results"
-            alt="Google Flights results with FlightWifi verdict chips inline: Email & browsing on Etihad, Varies by aircraft on Gulf Air, Not on every aircraft on Air India"
-            width={1067}
-            height={642}
+            base="screenshot-compare"
+            alt="Five real Google Flights results shown twice. Without FlightWifi each row gives only times, stops and price. With FlightWifi each carries a verdict: Video calls work on airBaltic, Email and browsing on Turkish Airlines, Varies by aircraft on British Airways, Not on every aircraft on Air India, and No Wi-Fi on easyJet."
+            width={1080}
+            height={914}
             className="w-full"
             priority
           />
         </div>
         <p className="mt-3 text-center text-sm text-[var(--muted)]">
-          A live Delhi to London search with the extension installed. Six different answers on one page.
+          Five real results, taken from three searches, before and after. Same rows, same prices.
+          The only thing that changed is that you can now tell them apart.
         </p>
       </Section>
 
@@ -105,10 +106,11 @@ export default function Home() {
             </p>
           </div>
           <div className="card p-5">
-            <p className="font-semibold">Nothing is collected</p>
+            <p className="font-semibold">No account, no tracking</p>
             <p className="mt-1 text-sm text-[var(--muted)]">
-              No account, no analytics, no tracking, on the site or in the extension. It has no
-              server to send anything to. <Link href="/privacy/">Privacy policy</Link>.
+              The extension collects nothing at all and has no server to send anything to. The site
+              counts page views with cookieless analytics: no cookies, no cross-site tracking, no
+              personal data. <Link href="/privacy/">Privacy policy</Link>.
             </p>
           </div>
         </div>

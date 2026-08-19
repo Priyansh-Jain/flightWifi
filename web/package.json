@@ -10,6 +10,7 @@
     "prebuild": "node scripts/gen-data.mjs && node scripts/images.mjs"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "next": "^16.2.6",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"

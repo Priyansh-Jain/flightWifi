@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SITE_URL } from "@/lib/site";
+import { CHROME_STORE_URL, SITE_URL } from "@/lib/site";
 
 export function Chip({ cls, label }: { cls: string; label: string }) {
   return <span className={`v v-${cls}`}>{label}</span>;
@@ -113,10 +113,13 @@ export function Cta({ compact = false }: { compact?: boolean }) {
   );
 }
 
+// The label promises the extension, so the click should deliver it. Anyone who wants the
+// explainer first still reaches /chrome-extension/ from the nav pill and the footer.
 export function InstallButton() {
   return (
     <a
-      href="/chrome-extension/"
+      href={CHROME_STORE_URL}
+      rel="noopener"
       className="inline-flex shrink-0 items-center gap-2 rounded-full bg-[var(--accent)] px-5 py-2.5 font-semibold text-[var(--accent-ink)] no-underline hover:opacity-90 hover:no-underline"
     >
       Get the free extension

@@ -35,8 +35,20 @@ export default function Privacy() {
           </p>
           <h2>This website</h2>
           <p>
-            The site is static pages. It sets no cookies, runs no third-party trackers, and hosts
-            all assets itself.
+            The pages are static files served from this domain. The one exception to &ldquo;nothing
+            runs here&rdquo; is page-view counting, added on 19 August 2026 using Vercel Web
+            Analytics.
+          </p>
+          <p>It is cookieless. Specifically, it:</p>
+          <ul>
+            <li>sets no cookies and stores nothing on your device</li>
+            <li>does not follow you across other sites, and builds no profile of you</li>
+            <li>collects no personal information and no account is involved</li>
+          </ul>
+          <p>
+            What it does record is the page you viewed, the site that referred you, and coarse
+            device and country information, so we can see which pages people find useful. Nothing
+            about it is shared with advertisers, because there are none.
           </p>
           <h2>Changes</h2>
           <p>
