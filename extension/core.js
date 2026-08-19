@@ -23,7 +23,7 @@ function norm(s) {
 // normalising will bridge. Added only when a route sweep shows a real gap, never guessed.
 // "lot" is safe only because these lookups match the whole cell text exactly; as a substring it
 // would fire on the English word.
-const TRADE_NAMES = { "scandinavian airlines": "SK", lot: "LO" };
+const TRADE_NAMES = { "scandinavian airlines": "SK", lot: "LO", "air baltic corporation a/s": "BT" };
 
 // Sister AOCs flying the same branded fleet under a second code. This is NOT for lookalike names
 // (Batik Malaysia is a different airline from Batik Indonesia and stays out): an alias is only
@@ -99,13 +99,13 @@ function carrierByName(text) {
 // Amber is the only colour that asks the reader to stop, so it is reserved for the one case that
 // warrants it: part of the fleet has no wifi at all and the schedule will not say which you get.
 const VERDICT_UI = {
-  LEO: { cls: "fast", label: "Video calls work", why: "Low-orbit satellite, quick enough to be treated like ground wifi", latency: "roughly 20-50ms (low orbit)" },
-  MEO: { cls: "fast", label: "Video calls work", why: "Mid-orbit satellite, usually quick enough for a live call", latency: "roughly 120-150ms (mid orbit)" },
+  LEO: { cls: "fast", label: "Fast enough for calls", why: "Low-orbit satellite, quick enough to be treated like ground wifi", latency: "roughly 20-50ms (low orbit)" },
+  MEO: { cls: "fast", label: "Fast enough for calls", why: "Mid-orbit satellite, usually quick enough for a live call", latency: "roughly 120-150ms (mid orbit)" },
   GEO: { cls: "ok", label: "Email & browsing", why: "High-orbit satellite. The lag is the limit, not the speed", latency: "roughly 600ms and up (high orbit)" },
   A2G: { cls: "ok", label: "Email & browsing", why: "Ground-based network beamed up from masts. Fine until you need it live", latency: "air-to-ground, no satellite" },
-  VARIES: { cls: "ok", label: "Fast on some flights", why: "Every aircraft has wifi. Whether it is the quick kind depends which one turns up", latency: "varies by aircraft" },
-  PARTIAL: { cls: "part", label: "Not guaranteed", why: "Part of this fleet has no wifi at all, and the schedule will not say which aircraft you get", latency: "varies by aircraft" },
-  LEG_PARTIAL: { cls: "part", label: "Wi-Fi on some legs", why: "The legs of this trip do not match. At least one of them has no wifi at all", latency: "varies by leg" },
+  VARIES: { cls: "ok", label: "Varies by aircraft", why: "Every aircraft has wifi. Whether it is the quick kind depends which one turns up", latency: "varies by aircraft" },
+  PARTIAL: { cls: "part", label: "Not on every aircraft", why: "Part of this fleet has no wifi at all, and the schedule will not say which aircraft you get", latency: "varies by aircraft" },
+  LEG_PARTIAL: { cls: "part", label: "Not on every aircraft", why: "The legs of this trip do not match. At least one of them has no wifi at all", latency: "varies by leg" },
   NONE: { cls: "none", label: "No Wi-Fi", why: "No usable internet on this aircraft", latency: null },
   GOOGLE_YES: { cls: "ok", label: "Wi-Fi, speed unknown", why: "Google lists wifi here. We have not verified the provider, so we will not claim a speed", latency: null },
   GOOGLE_NO: { cls: "none", label: "No Wi-Fi", why: "Google publishes amenities for this flight and wifi is not among them", latency: null },
@@ -120,6 +120,67 @@ const CAPABILITY = {
   GEO: { good: ["Email & chat", "Browsing"], bad: ["Video calls", "Anything live"] },
   A2G: { good: ["Email & chat", "Browsing"], bad: ["Video calls", "Anything live"] },
   VARIES: { good: ["Email & chat", "Browsing"], bad: ["Counting on a video call"] }
+};
+
+// Whether the link can carry a call and whether the airline lets you make one are separate
+// questions, and the second one is the trap. Most carriers prohibit voice and video over wifi as a
+// term of carriage no matter how fast the connection is, so a latency verdict alone reads as
+// permission it cannot grant. Only airlines that state a policy are listed; absent means unknown.
+const CALL_POLICY = {
+  // taken from the airline's own page or contract of carriage
+  DL: { calls: "no", src: "delta.com" },
+  UA: { calls: "no", src: "united.com contract of carriage, rule 21" },
+  WS: { calls: "no", src: "westjet.com" },
+  SK: { calls: "no", src: "flysas.com" },
+  NZ: { calls: "no", src: "airnewzealand.com" },
+  VS: { calls: "voice", src: "virginatlantic.com" },
+  BT: { calls: "yes", src: "airbaltic.com" },
+  // consistently reported, airline page not retrievable for direct verification
+  AA: { calls: "no", src: "reported", check: true },
+  WN: { calls: "no", src: "reported", check: true },
+  B6: { calls: "no", src: "reported", check: true },
+  AS: { calls: "no", src: "reported", check: true },
+  HA: { calls: "no", src: "reported", check: true },
+  AC: { calls: "no", src: "reported", check: true },
+  QF: { calls: "no", src: "reported", check: true },
+  LH: { calls: "no", src: "reported", check: true },
+  AF: { calls: "no", src: "reported", check: true },
+  TK: { calls: "no", src: "reported", check: true },
+  AI: { calls: "no", src: "reported", check: true },
+  SQ: { calls: "no", src: "reported", check: true },
+  NH: { calls: "no", src: "reported", check: true },
+  BA: { calls: "yes", src: "reported", check: true },
+  QR: { calls: "yes", src: "reported", check: true },
+  EI: { calls: "yes", src: "reported", check: true }
+};
+
+const CALL_POLICY_TEXT = {
+  no: "Not permitted by the airline",
+  yes: "Permitted, headphones expected",
+  voice: "Voice permitted, video not"
+};
+
+// Where the airline's policy is known the chip can say what you may actually do; where it is not,
+// it stays a claim about the link alone. Unknown defaults to the cautious wording because most
+// carriers prohibit calls, so assuming permission is the error that would actually mislead.
+const CALL_LABEL = {
+  yes: "Video calls work",
+  no: "Fast, but no calls",
+  voice: "Voice calls only"
+};
+
+// VARIES and PARTIAL are worded for a collapsed row where the aircraft is unknown, and "on some
+// flights" reads as evasion once the card has already named the aircraft sitting next to it. When
+// the type is known the uncertainty is real but narrower: the sub-fleet is part-fitted, so the
+// individual airframe decides, not the schedule. Saying that is more precise and less like a dodge.
+const TYPED_UI = {
+  VARIES: {
+    label: "Varies by aircraft",
+    why: "Every plane of this type has wifi, but some carry the fast system and some still have the older one"
+  },
+  PARTIAL: {
+    why: "Some planes of this type have no wifi at all, and the schedule will not say which one you get"
+  }
 };
 
 const RANK = { NONE: 0, PARTIAL: 1, UNKNOWN: 2, GEO: 3, A2G: 3, VARIES: 4, MEO: 5, LEO: 6 };
@@ -159,12 +220,19 @@ function verdictFor(carrierCode, aircraftText, signal) {
     const g = signal === "absent" ? "GOOGLE_NO" : "GOOGLE_YES";
     return decorate(g, { provider: rule.provider, orbit: rule.orbit, entry, google: signal, viaGoogle: true, aircraft: aircraftText });
   }
+  const policy = CALL_POLICY[carrierCode];
   return decorate(key, {
     provider: rule.provider,
     orbit: rule.orbit,
     entry,
+    code: carrierCode,
     google: signal,
     aircraft: aircraftText,
+    // a fast link is the only case where the policy changes what the chip should say: on a slow or
+    // absent one the call is off the table regardless of what the airline permits
+    ...(policy && (key === "LEO" || key === "MEO") ? { label: CALL_LABEL[policy.calls] } : {}),
+    // knowing the aircraft narrows what the uncertainty is about, so it should narrow the wording too
+    ...(aircraftText && TYPED_UI[key] ? TYPED_UI[key] : {}),
     conflict: key === "NONE" && (signal === "free" || signal === "paid" || signal === "generic")
   });
 }
@@ -348,6 +416,7 @@ function tipHtml(v) {
   const rows = [];
   const multi = v.legs && v.legs.length > 1;
   const cap = CAPABILITY[v.key];
+  const policy = !multi && v.code ? CALL_POLICY[v.code] : null;
   // a connection is only as good as its worst leg, and hiding which leg is the bad one would
   // leave the reader unable to act on the verdict
   const legs = multi
@@ -365,6 +434,11 @@ function tipHtml(v) {
   if (cap && !multi) {
     if (cap.good.length) rows.push(capRow("good", cap.good));
     if (cap.bad.length) rows.push(capRow("bad", cap.bad));
+  }
+  // the capability rows above say what the link can carry; this says what you are allowed to do
+  // with it, which is a different answer and usually the more restrictive one
+  if (policy && v.key !== "NONE") {
+    rows.push(tipRow("Calls", CALL_POLICY_TEXT[policy.calls] + (policy.check ? " (unconfirmed)" : "")));
   }
   if (!multi && v.entry) {
     const p = cleanProvider(v.provider);
@@ -395,6 +469,20 @@ function tipHtml(v) {
   }
 
   const notes = [];
+  // the gap between "the link can carry this" and "the airline allows this" is the one people get
+  // caught by, so it is stated outright rather than left for the reader to infer
+  // only worth a note where the link would otherwise carry the call: on a slow or absent one the
+  // policy changes nothing, and the Calls row above already states it
+  const fastLink = v.key === "LEO" || v.key === "MEO" || v.key === "VARIES";
+  // an unverified policy is hedged in the note as well as the row: a confident sentence is the one
+  // people quote back at us, and we only have the airline's own wording for some of these
+  const says = policy && policy.check ? "is reported to restrict" : "restricts";
+  if (policy && policy.calls === "no" && fastLink) {
+    notes.push(`📵 ${v.entry.airline} ${says} voice and video calls over wifi. The link can carry one; the airline is the limit.`);
+  }
+  if (policy && policy.calls === "voice" && fastLink) {
+    notes.push(`📵 ${v.entry.airline} permits voice calls but not video calls over wifi.`);
+  }
   if (v.conflict) notes.push("Google lists wifi on this flight and our aircraft-level data does not. Treat as uncertain.");
   if (v.viaGoogle) notes.push("This verdict is Google's. Our registry has no confirmed provider for this aircraft.");
   if (v.unresolvedOperator) {

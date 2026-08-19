@@ -176,6 +176,55 @@
   margin: 3px 1px 2px 3px;
 }
 
+/* Soar's offer rows have no amenity column to sit in: the only free space is the card edge, where
+   the site already puts its own BEST/CHEAPEST badge. Riding that same rail keeps the verdict on one
+   line instead of wrapping to three inside the 100px airline column, and leaves the row height
+   untouched. The offer is position:relative already, so this anchors to the card.
+
+   Geometry and type are copied from Soar's own badge (absolute, -9px, pill, 3px/10px padding,
+   10px/700 uppercase at .05em, 15px line box) so the two sit on the same rail and read as one
+   system. Only the colour differs, and deliberately: their badge is a fixed accent blue, ours
+   carries the verdict, which is the whole point of the chip. It mirrors to the right because
+   theirs owns left:18px. */
+.fw-soar-badge {
+  position: absolute;
+  top: -9px;
+  right: 18px;
+  left: auto;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: calc(100% - 32px);
+  padding: 3px 10px;
+  border: 0;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 15px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: none;
+  /* their badge sits on a solid card, so the tint is painted over white rather than left
+     translucent: on the card edge a transparent fill would show the page seam through it */
+  background: linear-gradient(var(--fw-bg), var(--fw-bg)), #fff;
+}
+
+.fw-dark .fw-soar-badge {
+  background: linear-gradient(var(--fw-bg), var(--fw-bg)), #1c1f24;
+}
+
+/* the wifi glyph is what stops this reading as one of Soar's own labels, but at 10px the chip's
+   default mark is oversized for the line box */
+.fw-soar-badge::before {
+  width: 11px;
+  height: 11px;
+  flex: 0 0 11px;
+}
+
 /* hover card */
 .fw-tip {
   display: none;

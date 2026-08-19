@@ -1,0 +1,27 @@
+# FlightWifi
+
+> Wi-Fi verdicts for 235 airlines, compiled from official airline pages and connectivity
+> provider announcements (SpaceX/Starlink, Viasat, Panasonic, Intelsat, SES, Anuvu, SITA).
+> The registry distinguishes in-service from announced, per aircraft type, because airlines
+> retrofit one plane at a time.
+
+## Key pages
+- /starlink/ : which airlines actually fly Starlink today vs signed deals with nothing in the air
+- /airlines/ : per-airline verdicts (provider, cost, per-aircraft coverage, video-call support)
+- /providers/ : how each connectivity system works, with latency by orbit
+- /aircraft/ : verdicts by aircraft type across airlines
+- /data.json : the full registry as open JSON (CC BY 4.0, attribution required)
+- /methodology/ : sourcing rules (airline and provider sources first, trade reporting named where used; in-service beats announced; no speed numbers)
+
+## Product
+- /chrome-extension/ : free Chrome extension showing these verdicts inline on Google Flights,
+  Skyscanner and Soar, matched to the exact aircraft. Collects no data, has no server.
+
+## Comparisons and guides
+- /compare/ : head-to-head airline Wi-Fi comparisons (Qatar vs Emirates, United vs Delta, and more)
+- /blog/which-airlines-have-starlink/ : the full in-service vs announced Starlink list, generated from the live registry
+- /blog/which-airlines-offer-free-wifi/ : which airlines make Wi-Fi free and what the catch is
+- /blog/can-you-work-on-plane-wifi/ : latency by orbit, video calls, VPNs and call bans
+
+## Pricing
+Everything is free: the website, the Chrome extension, and the dataset (/pricing.md).

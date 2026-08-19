@@ -10,7 +10,7 @@ STAGE="dist/staging"
 rm -rf dist
 mkdir -p "$STAGE"
 
-cp -R extension/data extension/icons extension/chip.css extension/core.js extension/google.js extension/google-bridge.js extension/skyscanner.js "$STAGE/"
+cp -R extension/data extension/icons extension/chip.css extension/core.js extension/google.js extension/google-bridge.js extension/skyscanner.js extension/soar.js "$STAGE/"
 
 python3 - "$STAGE" <<'PY'
 import json, re, sys
@@ -22,7 +22,7 @@ m.pop("background", None)
 m["name"] = m["name"].replace(" (working title)", "")
 json.dump(m, open(f"{stage}/manifest.json", "w"), indent=2)
 
-FILES = ["core.js", "google.js", "google-bridge.js", "skyscanner.js"]
+FILES = ["core.js", "google.js", "google-bridge.js", "skyscanner.js", "soar.js"]
 for fname in FILES:
     src = open(f"{stage}/{fname}").read()
 
@@ -56,7 +56,7 @@ node -e "
 const fs = require('fs');
 const m = JSON.parse(fs.readFileSync('$STAGE/manifest.json', 'utf8'));
 for (const k of ['permissions', 'background']) if (k in m) throw new Error(k + ' still in manifest');
-for (const f of ['core.js', 'google.js', 'google-bridge.js', 'skyscanner.js']) {
+for (const f of ['core.js', 'google.js', 'google-bridge.js', 'skyscanner.js', 'soar.js']) {
   new Function(fs.readFileSync('$STAGE/' + f, 'utf8'));
   const s = fs.readFileSync('$STAGE/' + f, 'utf8');
   for (const bad of ['FW_TRACE', 'data-fw-', 'FW-DEVSTAT']) if (s.includes(bad)) throw new Error(bad + ' survived the strip in ' + f);

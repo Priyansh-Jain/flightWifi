@@ -133,7 +133,7 @@ const AIRCRAFT_CASES = [
   ["QR", "Boeing 787", "VARIES"],
   ["QR", "Boeing 777", "LEO"],
   ["QR", "Airbus A320", "NONE"],
-  ["QW", "Airbus A320", "UNKNOWN"],
+  ["QW", "Airbus A320", "PARTIAL"],
   ["SQ", "Airbus A350", "GEO"],
   ["6E", "Airbus A321", "NONE"],
   ["BT", "Airbus A220", "LEO"]

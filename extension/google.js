@@ -150,21 +150,35 @@ function bridgeRead() {
 }
 
 const CARD_TIME_RX = /^(\d{1,2}):(\d{2})\s*(AM|PM)?$/;
+// the booking header prints both clocks in one text node ("3:25 AM \u2013 2:10 PM"), where the list
+// keeps them in separate leaves; the range form is only consulted when the exact form fails
+const CARD_TIME_RANGE_RX = /^(\d{1,2}):(\d{2})\s*(AM|PM)?\s*[\u2013\u2014-]\s*(\d{1,2}):(\d{2})\s*(AM|PM)?/;
+
+function toMin(h, mm, ap) {
+  h = +h;
+  if (ap === "PM" && h !== 12) h += 12;
+  if (ap === "AM" && h === 12) h = 0;
+  return h * 60 + +mm;
+}
 
 function cardTimes(li) {
   const out = [];
   const walker = document.createTreeWalker(li, NodeFilter.SHOW_TEXT);
   let n;
   while ((n = walker.nextNode()) && out.length < 2) {
-    const m = CARD_TIME_RX.exec(n.textContent.trim());
-    if (!m) continue;
+    const t = n.textContent.trim();
+    const m = CARD_TIME_RX.exec(t);
+    const r = m ? null : CARD_TIME_RANGE_RX.exec(t);
+    if (!m && !r) continue;
     if (n.parentElement.getBoundingClientRect().width === 0) continue;
-    let h = +m[1];
-    if (m[3] === "PM" && h !== 12) h += 12;
-    if (m[3] === "AM" && h === 12) h = 0;
-    out.push(h * 60 + +m[2]);
+    if (m) {
+      out.push(toMin(m[1], m[2], m[3]));
+    } else {
+      out.push(toMin(r[1], r[2], r[3]));
+      out.push(toMin(r[4], r[5], r[6]));
+    }
   }
-  return out;
+  return out.slice(0, 2);
 }
 
 function cardStops(li) {
@@ -266,8 +280,10 @@ function processExpandedCard(li) {
     const next = aircraft[i + 1] || null;
     const inLeg = (x) => isAfter(node, x) && (!next || isAfter(x, next));
     const target = wifi.find((w) => !claimed.has(w) && inLeg(w));
-    // Google's amenity lines are flex <li>s inside a <ul>, so a chip appended into the row gets
-    // squeezed beside the label; it belongs on its own row where it has the full column width
+    // The verdict lives in the amenity column, on its own row directly under Google's wifi line or
+    // in the slot where that line would have been: wifi is an amenity, and that column is where the
+    // reader is already looking for it. Google's amenity lines are flex <li>s inside a <ul>, so the
+    // chip gets its own row rather than being squeezed beside a label.
     const list = amenityListFor(node);
     const row = target ? target.parentElement.closest("li") : null;
     const host = list || (target ? target.parentElement : node.parentElement);
@@ -281,8 +297,6 @@ function processExpandedCard(li) {
     const v = verdictFor(carrier, node.textContent.trim(), signal);
     const chip = buildChip(v);
     chip.classList.add("fw-leg");
-    // beside Google's amenity line the column is ~100px wide and an inline chip spills out of it,
-    // so there it stacks underneath; in the wide airline row it stays inline
     chip.classList.add(list ? "fw-stack" : "fw-inline");
     chip.setAttribute("data-fw-carrier", carrier || "");
     chip.setAttribute("data-fw-src", v.entry ? (v.viaGoogle ? "google-over-entry" : "registry") : "google:" + v.reason);
@@ -291,7 +305,6 @@ function processExpandedCard(li) {
       const slot = document.createElement("li");
       slot.className = "fw-row";
       slot.appendChild(chip);
-      // sit directly under Google's own wifi line, or in the slot where it would have been
       const anchor = row && row.parentElement === list ? row.nextSibling : list.children[1] || null;
       list.insertBefore(slot, anchor);
     } else {
@@ -301,7 +314,131 @@ function processExpandedCard(li) {
   });
 }
 
-const FW_VER = "54";
+const FW_VER = "55";
+/* ---------- booking view (/travel/flights/booking) ---------- */
+
+// Selecting a flight leaves the results list entirely. The booking view rebuilds the itinerary
+// without <li> rows, so the expander walk in sweep() never reaches it and the page went unchipped
+// even though it names the aircraft once its sections are open. The shape is the familiar one:
+// the type sits in its own leaf and Google glues the flight number to it in the same visual run
+// ("Airbus A320G9 466"), with the airline on a sibling line of the same block.
+function bookingCarrier(host, acLine) {
+  for (const line of (host.innerText || "").split("\n")) {
+    const t = line.trim();
+    // the aircraft line carries the flight number, not a name, and would resolve nothing anyway
+    if (!t || t === acLine) continue;
+    const c = carrierExact(t) || carrierByName(t);
+    if (c) return c;
+  }
+  return null;
+}
+
+function processBookingLeg(node) {
+  const host = node.parentElement;
+  // each leg block carries its own amenity column; the chip belongs there for the same reason it
+  // does on the search page, with the aircraft line only as the fallback when a leg has no column
+  const list = amenityListFor(node);
+  if (!host || host.querySelector(".fw-chip") || (list && list.querySelector(".fw-row"))) return;
+  const ac = node.textContent.trim();
+  const acLine = (host.innerText || "").split("\n").find((l) => l.includes(ac)) || "";
+  // operating flight number first: on a codeshare the name printed above belongs to the marketing
+  // carrier while the number belongs to the metal
+  const m = FLIGHT_AFTER_AIRCRAFT_RX.exec(acLine.slice(acLine.indexOf(ac) + ac.length));
+  let code = m ? regCode(m[1]) : null;
+  if (!code || !WIFI_REGISTRY[code]) code = bookingCarrier(host, acLine);
+  if (!code) return;
+  const v = verdictFor(code, ac, "nodata");
+  // no amenity line on this view, so an unsourced carrier or type says nothing rather than guessing
+  if (!v || !v.entry) return;
+  const chip = buildChip(v);
+  chip.classList.add("fw-sum", "fw-book");
+  chip.classList.add(list ? "fw-stack" : "fw-inline");
+  chip.setAttribute("data-fw-carrier", code);
+  chip.setAttribute("data-fw-src", "registry");
+  chip.setAttribute("data-fw-ac", ac);
+  if (list) {
+    const wifiRow = [...list.children].find((r) => /Wi-?Fi/i.test(r.textContent || "") && !r.classList.contains("fw-row"));
+    const slot = document.createElement("li");
+    slot.className = "fw-row";
+    slot.appendChild(chip);
+    list.insertBefore(slot, wifiRow ? wifiRow.nextSibling : list.children[1] || null);
+  } else {
+    host.appendChild(chip);
+  }
+  FW_TRACE.push(`book:${code}:${v.cls}`);
+}
+
+// Collapsed, the booking card names the airline but not the metal. The bridge, though, usually
+// still holds the itinerary this card came from (booking is an SPA hop off the same search), so
+// the per-leg exact verdict is tried first and the fleet rollup is only the fallback; without
+// this the card a user just saw green on the list could greet them amber here, computed from a
+// fleet whose unfitted types their trip never touches. Exact-only resolution keeps this off the
+// "Book with X" option rows, whose airline names Google glues into longer runs that an exact
+// lookup cannot match.
+function bookingTimeScope(host) {
+  let n = host;
+  for (let i = 0; n && i < 8; i++) {
+    if (cardTimes(n).length >= 2) return n;
+    n = n.parentElement;
+  }
+  return null;
+}
+
+function processBookingSummary(el) {
+  if (el.closest("button, a, [role='button']")) return;
+  const code = carrierExact((el.textContent || "").trim());
+  if (!code) return;
+  const host = el.parentElement;
+  if (!host || host.querySelector(".fw-chip")) return;
+  // a block that also names the aircraft belongs to the exact pass, even when that pass declined
+  if ([...host.children].some((c) => AIRCRAFT_NODE_RX.test((c.textContent || "").trim()))) return;
+  const scope = bookingTimeScope(host);
+  const res = scope ? bridgeVerdict(scope, [code]) : null;
+  if (res && res.suppress) {
+    FW_TRACE.push(`book-sum-suppress:${res.ccs}`);
+    return;
+  }
+  let v = res && res.v;
+  let src = "bridge";
+  if (v) {
+    v.exact = true;
+  } else {
+    src = "fleet";
+    v = fleetVerdict([code]);
+    if (!v) return;
+    v.expandHint = "Expand the flight for the verdict on the exact aircraft.";
+  }
+  const chip = buildChip(v);
+  chip.classList.add("fw-sum", "fw-book", "fw-inline");
+  chip.setAttribute("data-fw-carrier", code);
+  chip.setAttribute("data-fw-src", src);
+  host.appendChild(chip);
+  FW_TRACE.push(`book-sum:${code}:${v.cls}`);
+}
+
+function sweepBooking() {
+  let processed = 0;
+  const airlineLeaves = [];
+  for (const el of document.querySelectorAll("span, div")) {
+    if (el.children.length) continue;
+    const t = (el.textContent || "").trim();
+    // the results list is handled by the <li> walk; this pass is only for the booking DOM
+    if (!t || el.closest("li")) continue;
+    if (t.length <= 60 && AIRCRAFT_NODE_RX.test(t)) {
+      processed++;
+      processBookingLeg(el);
+    } else if (t.length <= 40) {
+      airlineLeaves.push(el);
+    }
+  }
+  // after the exact pass, so its chips are in place before the fleet pass checks for them
+  for (const el of airlineLeaves) {
+    processed++;
+    processBookingSummary(el);
+  }
+  return processed;
+}
+
 let sweepCount = 0;
 
 let totalMs = 0;
@@ -315,6 +452,9 @@ function sweep() {
     // neither class nor style, and getComputedStyle forces a recalc so it stays rare
     if (sweepCount % 30 === 1) syncTheme();
     bridgeRead();
+    // the booking view has no <li> rows at all, so it needs its own pass; scoping by path keeps
+    // this leaf walk off the results page, whose DOM is orders of magnitude larger
+    if (location.pathname.indexOf("/travel/flights/booking") === 0) processed += sweepBooking();
     document.querySelectorAll("button[aria-expanded]").forEach((btn) => {
       const li = btn.closest("li");
       if (!li) return;
