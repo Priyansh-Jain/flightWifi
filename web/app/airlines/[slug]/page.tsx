@@ -6,7 +6,7 @@ import { AirlineLink, FleetTable, SourceList } from "@/components/airline";
 import { accessPoints, callPolicy, entryFor, fleetNotes, fleetRows, fleetVerdict, orbitClass } from "@/lib/extension";
 import { comparisonsFor, relatedAirlines, schemaDates, sourceMix, sourceNote } from "@/lib/derive";
 import { airlineSlugs, codeForSlug } from "@/lib/slugs";
-import { SITE_URL, og } from "@/lib/site";
+import { SITE_URL, og, clampDesc } from "@/lib/site";
 
 export function generateStaticParams() {
   return airlineSlugs().map((slug) => ({ slug }));
@@ -23,8 +23,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!code || !entry) return {};
   const v = fleetVerdict(code);
   return {
-    title: `${entry.airline} Wi-Fi: ${v?.label ?? "verdict"}`,
-    description: `Does ${entry.airline} have Wi-Fi? ${v?.label}. Provider, cost, per-aircraft coverage and video-call support, verified against official sources.`,
+    // Search Trends for this niche is dominated by the question form: the rising queries are all
+    // "does <airline> have free wifi" and "<airline> wifi cost", so the title answers that phrasing
+    // rather than asserting a verdict the searcher has not asked for yet.
+    // The "and is it free" half is dropped on long carrier names so the title still fits a SERP
+    // line; the free question is answered by the description and an FAQ heading on every page.
+    title:
+      entry.airline.length <= 14
+        ? `Does ${entry.airline} have Wi-Fi, and is it free?`
+        : `Does ${entry.airline} have Wi-Fi?`,
+    description: clampDesc(`Does ${entry.airline} have Wi-Fi? ${v?.label}. Provider, cost, per-aircraft coverage and video-call support, verified against official sources.`),
     alternates: { canonical: `/airlines/${slug}/` },
     openGraph: og(`/airlines/${slug}/`)
   };
@@ -105,7 +113,7 @@ export default async function AirlinePage({ params }: Props) {
       />
       <section className="mx-auto w-full max-w-5xl px-5 pt-6">
         <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
-          {entry.airline} Wi-Fi
+          Does {entry.airline} have Wi-Fi?
         </h1>
         <p className="mt-3 max-w-2xl text-[var(--muted)]">{faq[0].a}</p>
         <div className="mt-3 flex flex-wrap items-center gap-3">

@@ -4,7 +4,7 @@ import { Breadcrumbs, Chip, Cta, Faq, JsonLd, Section } from "@/components/ui";
 import { AirlineLink } from "@/components/airline";
 import { AIRCRAFT, aircraftAirlines, monthLabel, schemaDates } from "@/lib/derive";
 import { stats } from "@/lib/extension";
-import { SITE_URL, og } from "@/lib/site";
+import { SITE_URL, og, clampDesc } from "@/lib/site";
 
 export function generateStaticParams() {
   return AIRCRAFT.map((a) => ({ slug: a.slug }));
@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!def) return {};
   return {
     title: `Does the ${def.name} have Wi-Fi?`,
-    description: `Whether the ${def.name} aircraft has Wi-Fi depends entirely on the airline flying it. Every operator in the registry that names the ${def.name}, with the system on board and whether it carries a video call.`,
+    description: clampDesc(`Whether the ${def.name} aircraft has Wi-Fi depends entirely on the airline flying it. Every operator in the registry that names the ${def.name}, with the system on board and whether it carries a video call.`),
     alternates: { canonical: `/aircraft/${slug}/` },
     openGraph: og(`/aircraft/${slug}/`)
   };

@@ -8,7 +8,7 @@ import { AirlineLink } from "@/components/airline";
 import { STARLINK_ACCESS_UI, starlinkRows, stats } from "@/lib/extension";
 import { ARTICLES } from "@/lib/blog";
 import { codeForSlug } from "@/lib/slugs";
-import { SITE_URL, og } from "@/lib/site";
+import { SITE_URL, og, clampDesc } from "@/lib/site";
 
 export function generateStaticParams() {
   return Object.keys(ARTICLES).map((slug) => ({ slug }));
@@ -23,8 +23,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const article = ARTICLES[slug];
   if (!article) return {};
   return {
-    title: article.title,
-    description: article.excerpt,
+    title: article.seoTitle ?? article.title,
+    description: clampDesc(article.excerpt),
     alternates: { canonical: `/blog/${slug}/` },
     openGraph: og(`/blog/${slug}/`, {
       type: "article",

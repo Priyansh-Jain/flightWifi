@@ -4,12 +4,13 @@ import { Breadcrumbs, Cta, Faq, JsonLd, Section } from "@/components/ui";
 import { AirlineLink } from "@/components/airline";
 import { monthLabel, noWifiRows, schemaDates } from "@/lib/derive";
 import { stats } from "@/lib/extension";
-import { SITE_URL, og } from "@/lib/site";
+import { SITE_URL, og, clampDesc } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Which airlines have no Wi-Fi?",
-  description:
-    "The airlines that still fly with no internet at all, and the ones whose onboard Wi-Fi is a local movie server with no route to the ground. Compiled airline by airline.",
+  description:clampDesc(
+    "The airlines that still fly with no internet at all, and the ones whose onboard Wi-Fi is a local movie server with no route to the ground. Compiled airline by airline."
+    ),
   alternates: { canonical: "/no-wifi/" },
   openGraph: og("/no-wifi/")
 };

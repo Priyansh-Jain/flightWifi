@@ -4,12 +4,13 @@ import { Breadcrumbs, Chip, Cta, Faq, JsonLd, Section } from "@/components/ui";
 import { AirlineLink } from "@/components/airline";
 import { callRows, monthLabel, schemaDates } from "@/lib/derive";
 import { stats } from "@/lib/extension";
-import { SITE_URL, og } from "@/lib/site";
+import { SITE_URL, og, clampDesc } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Which airlines let you take a call on board?",
-  description:
-    "Whether the link can carry a call and whether the airline permits one are different questions. Both, airline by airline, for every carrier that publishes a policy.",
+  description:clampDesc(
+    "Whether the link can carry a call and whether the airline permits one are different questions. Both, airline by airline, for every carrier that publishes a policy."
+    ),
   alternates: { canonical: "/calls/" },
   openGraph: og("/calls/")
 };

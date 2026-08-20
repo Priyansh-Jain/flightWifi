@@ -1,5 +1,7 @@
 export interface BlogArticle {
   title: string;
+  // used for <title> only, when the headline is too long for a search result line
+  seoTitle?: string;
   excerpt: string;
   date: string;
   readTime: string;
@@ -17,6 +19,7 @@ export interface BlogArticle {
 export const ARTICLES: Record<string, BlogArticle> = {
   "which-airlines-have-starlink": {
     title: "Which Airlines Have Starlink Wi-Fi? The Complete August 2026 Guide",
+    seoTitle: "Which Airlines Have Starlink Wi-Fi?",
     excerpt:
       "An audit of 235 airlines against official sources: who really has Starlink in the air, who is halfway through, and whose Wi-Fi is secretly a movie server.",
     date: "2026-08-18",
@@ -71,6 +74,7 @@ export const ARTICLES: Record<string, BlogArticle> = {
 
   "which-airlines-offer-free-wifi": {
     title: "Which Airlines Offer Free Wi-Fi in 2026? The Honest List",
+    seoTitle: "Which Airlines Offer Free Wi-Fi in 2026?",
     excerpt:
       "Free for everyone, free behind a loyalty sign-up, free messaging only, and the airlines whose free Wi-Fi is a movie server: the real tiers, from official sources.",
     date: "2026-08-18",
@@ -122,6 +126,7 @@ export const ARTICLES: Record<string, BlogArticle> = {
 
   "can-you-work-on-plane-wifi": {
     title: "Can You Actually Work on Plane Wi-Fi? What Latency Decides",
+    seoTitle: "Can You Work on Plane Wi-Fi?",
     excerpt:
       "Video calls, VPNs, cloud docs and SSH at 35,000 feet: why the orbit above your plane matters more than the speed number, and which airlines ban calls even on fast Wi-Fi.",
     date: "2026-08-18",

@@ -5,7 +5,7 @@ import { Breadcrumbs, Cta, Section, CollectionJsonLd } from "@/components/ui";
 import { PROVIDERS, providerAirlines } from "@/lib/derive";
 
 export const metadata: Metadata = {
-  title: "In-flight Wi-Fi providers: who actually runs airline internet",
+  title: "In-flight Wi-Fi providers",
   description:
     "Starlink, Viasat, Panasonic, Intelsat, SES, OneWeb, Kuiper and more: how each system works, its latency, and which airlines fly it.",
   alternates: { canonical: "/providers/" },

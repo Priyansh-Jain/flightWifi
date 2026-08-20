@@ -28,3 +28,13 @@ export const EXTENSION_VERSION: string = JSON.parse(
     "utf8"
   )
 ).version;
+
+// Search engines cut a description around 160 characters, so anything past that is written for
+// nobody. Clips on a word boundary rather than mid-word.
+export function clampDesc(text: string, max = 155): string {
+  const t = text.replace(/\s+/g, " ").trim();
+  if (t.length <= max) return t;
+  const cut = t.slice(0, max);
+  const stop = Math.max(cut.lastIndexOf(". "), cut.lastIndexOf(" "));
+  return `${cut.slice(0, stop > 60 ? stop : max).replace(/[,;:]$/, "")}…`;
+}

@@ -3,12 +3,13 @@ import Link from "next/link";
 import { Breadcrumbs, Chip, Faq, JsonLd, Section } from "@/components/ui";
 import { Shot } from "@/components/Shot";
 import { stats } from "@/lib/extension";
-import { CHROME_STORE_URL, SITE_URL, og, EXTENSION_VERSION } from "@/lib/site";
+import { CHROME_STORE_URL, SITE_URL, og, EXTENSION_VERSION, clampDesc } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "FlightWifi Chrome extension: Wi-Fi verdicts on Google Flights",
-  description:
-    "Free extension that shows whether each flight's Wi-Fi handles video calls, per exact aircraft, inline on Google Flights, Skyscanner and Soar. Zero permissions, no tracking.",
+  title: "Chrome extension: Wi-Fi verdicts as you search",
+  description:clampDesc(
+    "Free extension that shows whether each flight's Wi-Fi handles video calls, per exact aircraft, inline on Google Flights, Skyscanner and Soar. Zero permissions, no tracking."
+    ),
   alternates: { canonical: "/chrome-extension/" },
     openGraph: og("/chrome-extension/")
 };
