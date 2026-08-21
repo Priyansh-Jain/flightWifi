@@ -2,7 +2,7 @@
  "name": "FlightWifi airline wifi registry",
  "license": "CC-BY-4.0",
  "attribution": "FlightWifi, https://flightwifi.app",
- "compiled": "2026-08-20",
+ "compiled": "2026-08-21",
  "airlines": {
   "TK": {
    "airline": "Turkish Airlines",
@@ -52,7 +52,7 @@
   "QR": {
    "starlink": {
     "status": "flying",
-    "access": "free"
+    "access": "free_with_account"
    },
    "airline": "Qatar Airways",
    "rules": [
@@ -63,7 +63,7 @@
     },
     {
      "types": "787",
-     "provider": "Starlink rollout on 787-9s completing before end of 2026; Inmarsat GX/SITA OnAir until fitted",
+     "provider": "787-8 sub-fleet fully equipped; 787-9 fitting under way (world first, August 2026) and due to finish across the 787 fleet by end of 2026; Inmarsat GX/SITA OnAir until fitted",
      "orbit": "mixed GEO/LEO"
     },
     {
@@ -78,15 +78,17 @@
     },
     {
      "fleet": "all",
-     "provider": "Starlink on all 777/A350/787-8 widebodies",
+     "provider": "Starlink on 150 widebodies: the 777 and A350 programmes are complete and the 787-8 sub-fleet is done",
      "orbit": "mixed GEO/LEO"
     }
    ],
-   "access": "Free on Starlink-fitted aircraft; legacy widebodies tiered (free 1-hour pass for Privilege Club members, paid from $10); narrowbodies have no wifi yet",
+   "access": "Starlink on the 777, A350 and 787 is free, but only 45 minutes for a passenger who is not a Privilege Club member; members get the whole flight and joining is free. Gate-to-gate at select airports only. Legacy widebodies tiered (free 1-hour pass for Privilege Club members, paid from $10); narrowbodies have no wifi yet",
    "confidence": "sourced",
    "needs_verification": true,
    "as_of": "2026-08",
    "sources": [
+    "https://www.qatarairways.com/press-releases/en-WW/269475-qatar-airways-150-starlink-equipped-widebody-aircraft-now-include-world-s-first-starlink-equipped-boeing-787-9/",
+    "https://www.qatarairways.com/en/onboard/connectivity.html",
     "https://www.qatarairways.com/press-releases/en-WW/259315-qatar-airways-launches-world-s-first-starlink-equipped-boeing-787-and-completes-airbus-a350-starlink-rollout-connecting-over-11-millio/",
     "https://onemileatatime.com/news/qatar-airways-free-starlink-wi-fi/",
     "https://awardwallet.com/airlines/qatar-airways-wifi/"
