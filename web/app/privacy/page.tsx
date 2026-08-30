@@ -15,7 +15,7 @@ export default function Privacy() {
       <Breadcrumbs crumbs={[{ name: "Home", href: "/" }, { name: "Privacy", href: "/privacy/" }]} />
       <section className="mx-auto w-full max-w-[46rem] px-5 pt-6">
         <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">Privacy policy</h1>
-        <p className="mt-2 text-sm text-[var(--muted)]">Last updated: 18 August 2026</p>
+        <p className="mt-2 text-sm text-[var(--muted)]">Last updated: 29 August 2026</p>
       </section>
       <div className="mx-auto w-full max-w-[46rem] px-5 py-8">
         <div className="prose">
@@ -30,8 +30,14 @@ export default function Privacy() {
           <p>
             All processing happens locally in your browser. The extension reads the flight
             information already displayed in your own tab, compares it against a wifi registry
-            bundled inside the package, and draws a verdict chip. It makes no network requests of
-            its own to any server, including ours; it has no server.
+            bundled inside the package, and draws a verdict chip. While you browse it makes no
+            network requests of its own to any server, including ours; it has no server.
+          </p>
+          <p>
+            There is one moment it reaches our site, and it is the moment it stops running: if you
+            uninstall the extension, Chrome opens a page here that asks why, carrying only the
+            version number you had. That is a plain page load. Answering is optional, and nothing in
+            it is tied to you or to anything you searched for.
           </p>
           <h2>This website</h2>
           <p>
@@ -49,6 +55,20 @@ export default function Privacy() {
             What it does record is the page you viewed, the site that referred you, and coarse
             device and country information, so we can see which pages people find useful. Nothing
             about it is shared with advertisers, because there are none.
+          </p>
+          <p>
+            The uninstall page adds one counter to that same tool: which of the listed reasons was
+            chosen, and the extension version it was chosen from. It is a tally and nothing more,
+            with no way to trace a choice back to a person.
+          </p>
+          <p>
+            That form also has an optional box for writing what went wrong. Only what you type there
+            is sent, only when you press Submit, and only alongside the reason and the version.
+            Leave it empty and the tally is all that is recorded. A written note is delivered into a
+            private Google Sheet we own, so Google holds it as our storage provider and nothing
+            about you is attached to it beyond what you typed. If that delivery is not set up or
+            fails, the note opens as a draft in your own mail app instead, in which case it reaches
+            us only once you send it and then carries your address the way any email does.
           </p>
           <h2>Changes</h2>
           <p>

@@ -1,3 +1,5 @@
+importScripts("uninstall.js");
+
 const TOKEN_URL = chrome.runtime.getURL("reload-token.txt");
 
 async function check() {

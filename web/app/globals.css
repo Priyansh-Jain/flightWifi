@@ -13,6 +13,8 @@
   --line: #1f2833;
   --accent: #7cb1ff;
   --accent-ink: #0b0f14;
+  --good: #6ddb9b;
+  --bad: #f2938c;
 }
 
 @media (prefers-color-scheme: light) {
@@ -24,6 +26,8 @@
     --line: #e4e8ed;
     --accent: #1a5fb4;
     --accent-ink: #ffffff;
+    --good: #0f7a3d;
+    --bad: #b3261e;
   }
 }
 
@@ -156,6 +160,43 @@ nav[aria-label="Breadcrumb"] a {
   background: var(--bg-raised);
   border: 1px solid var(--line);
   border-radius: 14px;
+}
+
+body:has([data-bare]) > header,
+body:has([data-bare]) > footer {
+  display: none;
+}
+
+dialog {
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--bg-raised);
+  color: var(--ink);
+  width: min(34rem, calc(100vw - 2rem));
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+dialog::backdrop {
+  background: rgb(0 0 0 / 0.6);
+}
+
+dialog textarea {
+  width: 100%;
+  resize: vertical;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--ink);
+  padding: 0.7rem 0.85rem;
+  font: inherit;
+  font-size: 0.95rem;
+}
+
+dialog textarea::placeholder {
+  color: var(--muted);
 }
 
 .scroller {

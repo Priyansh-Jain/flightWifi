@@ -5,6 +5,10 @@ export const CHROME_STORE_URL =
   process.env.NEXT_PUBLIC_CHROME_STORE_URL ??
   "https://chromewebstore.google.com/detail/flightwifi-%E2%80%93-in-flight-wi/omoclebljmjljikaoaogdpahjlbmdbin";
 export const GITHUB_URL = "https://github.com/Priyansh-Jain/flightWifi";
+// Static export has no API route to post to. Set this to the Apps Script web app URL from
+// feedback-sheet/SETUP.md and written feedback appends to the sheet; leave it unset and the form
+// falls back to a prefilled mail draft so nothing the user typed is dropped.
+export const FEEDBACK_ENDPOINT = process.env.NEXT_PUBLIC_FEEDBACK_ENDPOINT ?? "";
 export const CONTACT_EMAIL = "priyansh0327@gmail.com";
 export const SITE_LAUNCH = "2026-08-18";
 
