@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "FlightWifi - Flight WiFi & Starlink Checker",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Check any flight's WiFi before you book: Starlink or old satellite, free or paid, video calls or not. Google Flights + Skyscanner.",
   "icons": {
     "16": "icons/icon16.png",
