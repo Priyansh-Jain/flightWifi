@@ -43,8 +43,9 @@
   // FW-DEVSTAT-END
 
   function timeMin(t) {
-    if (!Array.isArray(t) || !t.length || typeof t[0] !== "number") return null;
-    const h = t[0], m = t.length > 1 && typeof t[1] === "number" ? t[1] : 0;
+    if (!Array.isArray(t) || !t.length || (t[0] == null && t[1] == null)) return null;
+    const h = t[0] == null ? 0 : t[0], m = t.length > 1 && t[1] != null ? t[1] : 0;
+    if (typeof h !== "number" || typeof m !== "number") return null;
     if (h < 0 || h > 23 || m < 0 || m > 59) return null;
     return h * 60 + m;
   }
