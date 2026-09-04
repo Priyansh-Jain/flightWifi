@@ -2,7 +2,7 @@
  "name": "FlightWifi airline wifi registry",
  "license": "CC-BY-4.0",
  "attribution": "FlightWifi, https://flightwifi.app",
- "compiled": "2026-08-21",
+ "compiled": "2026-09-04",
  "airlines": {
   "TK": {
    "airline": "Turkish Airlines",

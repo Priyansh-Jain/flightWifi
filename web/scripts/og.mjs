@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
+import sharp from "sharp";
 import { stats } from "../lib/extension.ts";
 
 // Renders public/og.png from scripts/og.html with the system Chrome, so no extra dependency.
@@ -25,10 +26,9 @@ try {
     ["screenshot-without.jpg", "wo.png"],
     ["screenshot-with.jpg", "wi.png"]
   ]) {
-    execFileSync("python3", [
-      "-c",
-      `from PIL import Image; im = Image.open(${JSON.stringify(path.join(pub, src))}).convert("RGB"); im.crop((0, 0, 1000, im.height)).save(${JSON.stringify(path.join(tmp, out))})`
-    ]);
+    const input = path.join(pub, src);
+    const { height } = await sharp(input).metadata();
+    await sharp(input).extract({ left: 0, top: 0, width: 1000, height }).png().toFile(path.join(tmp, out));
   }
   const html = fs
     .readFileSync(path.join(root, "scripts", "og.html"), "utf8")
