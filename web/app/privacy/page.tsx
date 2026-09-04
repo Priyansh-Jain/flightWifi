@@ -4,7 +4,7 @@ import { Breadcrumbs, Section } from "@/components/ui";
 
 export const metadata: Metadata = {
   title: "Privacy policy",
-  description: "FlightWifi collects no data of any kind, on this site or in the extension.",
+  description: "FlightWifi collects no data of any kind in the extension, and on this site only what you type into the flight checker.",
   alternates: { canonical: "/privacy/" },
     openGraph: og("/privacy/")
 };
@@ -14,8 +14,8 @@ export default function Privacy() {
     <>
       <Breadcrumbs crumbs={[{ name: "Home", href: "/" }, { name: "Privacy", href: "/privacy/" }]} />
       <section className="mx-auto w-full max-w-[46rem] px-5 pt-6">
-        <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">Privacy policy</h1>
-        <p className="mt-2 text-sm text-[var(--muted)]">Last updated: 29 August 2026</p>
+        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Privacy policy</h1>
+        <p className="mt-2 text-sm text-[var(--muted)]">Last updated: 3 September 2026</p>
       </section>
       <div className="mx-auto w-full max-w-[46rem] px-5 py-8">
         <div className="prose">
@@ -69,6 +69,18 @@ export default function Privacy() {
             about you is attached to it beyond what you typed. If that delivery is not set up or
             fails, the note opens as a draft in your own mail app instead, in which case it reaches
             us only once you send it and then carries your address the way any email does.
+          </p>
+          <h3>Checking a flight number</h3>
+          <p>
+            The checker on the homepage answers airline and aircraft questions entirely in your
+            browser, from a copy of the registry it downloads once. A flight number is different,
+            because we do not hold airline schedules. If you type one, the flight number and the
+            date you pick are sent to our server, which asks AeroDataBox, a flight-schedule
+            provider, which aircraft is planned for that flight. That is the whole request: no
+            cookies, no account, no identifier of yours travels with it. Our server keeps the answer
+            for up to a day, keyed only by the flight number and date, so the same lookup is not
+            repeated. AeroDataBox sees the request as coming from our server and handles it under
+            its own privacy policy.
           </p>
           <h2>Changes</h2>
           <p>

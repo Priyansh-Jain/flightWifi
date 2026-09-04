@@ -1,0 +1,67 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600&display=block">
+<style>
+  html, body { margin: 0; }
+  body { width: 1200px; height: 630px; overflow: hidden; background: #08090b; color: #fff; font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+  .wrap { position: relative; width: 1200px; height: 630px; overflow: hidden; }
+  .glow { position: absolute; inset: 0; background:
+      radial-gradient(60% 55% at 78% 40%, rgba(47,123,246,0.22), transparent 70%),
+      radial-gradient(90% 40% at 50% 118%, rgba(47,123,246,0.28), transparent 70%); }
+  .horizon { position: absolute; left: -10%; right: -10%; bottom: -520px; height: 640px; border-radius: 50%; background: #0b1220; box-shadow: 0 -2px 0 rgba(124,177,255,0.45), 0 -30px 80px rgba(47,123,246,0.35); }
+  .left { position: absolute; left: 64px; top: 58px; width: 600px; }
+  .brand { display: flex; align-items: center; gap: 16px; }
+  .brand img { width: 52px; height: 52px; border-radius: 12px; }
+  .brand span { font-family: Sora, sans-serif; font-weight: 600; font-size: 38px; letter-spacing: -0.02em; }
+  h1 { margin: 50px 0 0; font-family: Sora, sans-serif; font-weight: 600; font-size: 49px; line-height: 0.98; letter-spacing: -0.045em; }
+  h1 b { font-weight: 600; color: #7cb1ff; }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 36px; width: 600px; }
+  .v { display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; padding: 9px 16px; font-size: 19px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; }
+  .v svg { width: 18px; height: 18px; }
+  .v-fast { background: #10301d; color: #6ddb9b; }
+  .v-ok { background: #14243d; color: #8ab4f8; }
+  .v-part { background: #33260f; color: #f5c26b; }
+  .v-none { background: #3a1614; color: #f2938c; }
+  .meta { position: absolute; left: 64px; bottom: 56px; display: flex; align-items: center; gap: 22px; font-size: 21px; color: #b9bcc3; letter-spacing: -0.005em; }
+  .meta span { display: inline-flex; align-items: center; gap: 9px; }
+  .meta svg { width: 20px; height: 20px; color: #7cb1ff; }
+  .meta i { width: 4px; height: 4px; border-radius: 50%; background: #5a5d66; }
+  .right { position: absolute; left: 660px; top: 52px; width: 500px; }
+  .labels { display: flex; gap: 14px; margin-bottom: 14px; padding: 0 20px; }
+  .labels div { flex: 1; text-align: center; }
+  .labels b { display: block; font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
+  .labels small { display: block; margin-top: 2px; font-size: 13px; color: #95979e; }
+  .panels { position: relative; height: 470px; }
+  .panel { position: absolute; top: 0; width: 350px; height: 444px; border-radius: 14px; overflow: hidden; background: #202125; border: 1px solid #3a3d45; box-shadow: 0 30px 60px rgba(0,0,0,0.55); }
+  .panel img { position: absolute; left: 0; top: 0; width: 100%; height: auto; }
+  .panel.wo { left: 0; z-index: 1; filter: saturate(0.85) brightness(0.92); }
+  .panel.wi { left: 150px; top: 22px; z-index: 2; border-color: rgba(124,177,255,0.55); box-shadow: 0 0 0 1px rgba(124,177,255,0.25), 0 0 60px rgba(47,123,246,0.35), 0 30px 60px rgba(0,0,0,0.6); }
+  .panel .cap { position: absolute; left: 0; right: 0; top: 0; height: 40px; background: #17181c; border-bottom: 1px solid #2c2e34; display: flex; align-items: center; padding: 0 14px; font-size: 13px; font-weight: 600; color: #e8eaed; gap: 8px; }
+  .panel .cap img { position: static; width: 18px; height: 18px; border-radius: 5px; }
+  .panel .shot { position: absolute; left: 0; top: 40px; right: 0; bottom: 0; overflow: hidden; }
+</style></head>
+<body><div class="wrap"><div class="glow"></div><div class="horizon"></div>
+  <div class="left">
+    <div class="brand"><img src="__LOGO__" alt=""><span>FlightWifi</span></div>
+    <h1>Know your flight's <span style="white-space:nowrap">Wi-Fi</span><br><b>before you book.</b></h1>
+    <div class="chips">
+      <span class="v v-fast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8Z"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>Video calls work</span>
+      <span class="v v-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>Email &amp; browsing</span>
+      <span class="v v-part"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 2-1.7 3.3-1.7H22"/><path d="m18 2 4 4-4 4"/><path d="M2 6h1.9c1.5 0 2.9.9 3.6 2.2"/><path d="M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8"/><path d="m18 14 4 4-4 4"/></svg>Varies by aircraft</span>
+      <span class="v v-none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h.01"/><path d="M8.5 16.429a5 5 0 0 1 7 0"/><path d="M5 12.859a10 10 0 0 1 5.17-2.69"/><path d="M19 12.859a10 10 0 0 0-2.007-1.523"/><path d="M2 8.82a15 15 0 0 1 4.177-2.643"/><path d="M22 8.82a15 15 0 0 0-11.288-3.764"/><path d="m2 2 20 20"/></svg>No Wi-Fi</span>
+    </div>
+  </div>
+  <div class="meta">
+    <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg>__AIRLINES__ airlines</span><i></i>
+    <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="m9 15 2 2 4-4"/></svg>__SOURCES__ cited sources</span><i></i>
+    <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>Aircraft-specific</span>
+  </div>
+  <div class="right">
+    <div class="labels"><div><b>Without FlightWifi</b><small>Google Flights as it is</small></div><div><b>With FlightWifi</b><small>The verdict, inline</small></div></div>
+    <div class="panels">
+      <div class="panel wo"><div class="cap">Google Flights</div><div class="shot"><img src="__WITHOUT__" alt=""></div></div>
+      <div class="panel wi"><div class="cap"><img src="__LOGO__" alt="">Google Flights + FlightWifi</div><div class="shot"><img src="__WITH__" alt=""></div></div>
+    </div>
+  </div>
+</div></body></html>

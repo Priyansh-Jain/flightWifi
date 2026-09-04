@@ -75,7 +75,7 @@ export default function BlogIndex() {
       <Breadcrumbs crumbs={[{ name: "Home", href: "/" }, { name: "Blog", href: "/blog/" }]} />
 
       <section className="mx-auto w-full max-w-5xl px-5 pt-6">
-        <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">FlightWifi Blog</h1>
+        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">FlightWifi Blog</h1>
         <p className="mt-3 max-w-2xl text-[var(--muted)]">
           Data-led writing on what is actually flying. Every number here is generated from the same
           registry that powers the extension, so an article cannot quietly go stale.
@@ -88,7 +88,7 @@ export default function BlogIndex() {
             <span className="w-fit rounded-full border border-[var(--accent)] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[var(--accent)]">
               Featured
             </span>
-            <h2 className="text-2xl font-extrabold leading-tight tracking-tight sm:text-3xl">
+            <h2 className="text-2xl font-semibold leading-tight tracking-tight sm:text-3xl">
               <Link href={`/blog/${featSlug}/`} className="text-[var(--ink)] hover:no-underline">
                 {feat.title}
               </Link>

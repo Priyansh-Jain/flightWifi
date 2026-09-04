@@ -18,7 +18,7 @@ export default function Contact() {
     <>
       <Breadcrumbs crumbs={[{ name: "Home", href: "/" }, { name: "Contact", href: "/contact/" }]} />
       <section className="mx-auto w-full max-w-[46rem] px-5 pt-6">
-        <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">Contact</h1>
+        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Contact</h1>
       </section>
       <div className="mx-auto w-full max-w-[46rem] px-5 py-8">
         <div className="prose">

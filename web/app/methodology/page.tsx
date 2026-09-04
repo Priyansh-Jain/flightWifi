@@ -20,7 +20,7 @@ export default function Methodology() {
     <>
       <Breadcrumbs crumbs={[{ name: "Home", href: "/" }, { name: "Methodology", href: "/methodology/" }]} />
       <section className="mx-auto w-full max-w-[46rem] px-5 pt-6">
-        <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">Methodology</h1>
+        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Methodology</h1>
       </section>
       <div className="mx-auto w-full max-w-[46rem] px-5 py-8">
         <div className="prose">

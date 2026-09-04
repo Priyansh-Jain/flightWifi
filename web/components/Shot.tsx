@@ -2,7 +2,7 @@
 // the original JPEG at one size. These screenshots are the largest paint on the pages that carry
 // them, so the AVIF/WebP derivatives and width set are generated at build time by scripts/images.mjs
 // and selected here by the browser instead.
-const WIDTHS = [640, 960];
+const WIDTHS = [640, 960, 1440, 1920, 2880];
 
 export function Shot({
   base,
@@ -10,6 +10,7 @@ export function Shot({
   width,
   height,
   priority = false,
+  eager = false,
   className,
   sizes = "(max-width: 900px) 100vw, 900px"
 }: {
@@ -18,10 +19,12 @@ export function Shot({
   width: number;
   height: number;
   priority?: boolean;
+  eager?: boolean;
   className?: string;
   sizes?: string;
 }) {
-  const set = (ext: string) => WIDTHS.map((w) => `/${base}-${w}.${ext} ${w}w`).join(", ");
+  const widths = WIDTHS.filter((w) => w <= width);
+  const set = (ext: string) => widths.map((w) => `/${base}-${w}.${ext} ${w}w`).join(", ");
   return (
     <>
       {priority ? (
@@ -44,7 +47,7 @@ export function Shot({
           alt={alt}
           width={width}
           height={height}
-          loading={priority ? "eager" : "lazy"}
+          loading={priority || eager ? "eager" : "lazy"}
           fetchPriority={priority ? "high" : "auto"}
           decoding="async"
           className={className}

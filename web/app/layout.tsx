@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
+import { Sora } from "next/font/google";
 import "./globals.css";
 import { SiteFooter, SiteNav } from "@/components/chrome";
 import { JsonLd } from "@/components/ui";
 import { CHROME_STORE_URL, CONTACT_EMAIL, GITHUB_URL, SITE_LAUNCH, SITE_NAME, SITE_URL, TAGLINE } from "@/lib/site";
+
+const sora = Sora({ subsets: ["latin"], weight: ["600"], display: "swap", variable: "--font-display" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -30,7 +33,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={sora.variable}>
       <body className="flex min-h-screen flex-col antialiased">
         <a href="#main" className="skip-link">
           Skip to content

@@ -39,7 +39,7 @@ export default function ExtensionPage() {
     <>
       <Breadcrumbs crumbs={[{ name: "Home", href: "/" }, { name: "Chrome extension", href: "/chrome-extension/" }]} />
       <section className="mx-auto w-full max-w-5xl px-5 pt-10 text-center">
-        <h1 className="mx-auto max-w-2xl text-3xl font-extrabold tracking-tight sm:text-5xl">
+        <h1 className="mx-auto max-w-2xl text-3xl font-semibold tracking-tight sm:text-5xl">
           The verdicts, where you book
         </h1>
         <p className="mx-auto mt-4 max-w-2xl text-lg text-[var(--muted)]">

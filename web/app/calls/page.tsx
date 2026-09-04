@@ -48,7 +48,7 @@ export default function CallsPage() {
     <>
       <Breadcrumbs crumbs={[{ name: "Home", href: "/" }, { name: "Calls", href: "/calls/" }]} />
       <section className="mx-auto w-full max-w-5xl px-5 pt-6">
-        <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
           Which airlines let you take a call on board?
         </h1>
         <p className="mt-3 max-w-2xl text-[var(--muted)]">

@@ -168,7 +168,7 @@ export default async function BlogPost({ params }: Props) {
           <p className="text-sm text-[var(--muted)]">
             {article.category} · {article.date} · {article.readTime} read · data last verified {s.asOf}
           </p>
-          <h1 className="mt-2 text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">
+          <h1 className="mt-2 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
             {article.title}
           </h1>
           <p className="mt-3 text-lg text-[var(--muted)]">{article.excerpt}</p>

@@ -139,7 +139,7 @@ export default function UninstallFeedback({
       data-bare
       className="mx-auto flex min-h-[100dvh] w-full max-w-4xl flex-col items-center justify-center px-5 py-14"
     >
-      <h1 className="text-center text-4xl font-extrabold tracking-tight sm:text-6xl">
+      <h1 className="text-center text-4xl font-semibold tracking-tight sm:text-6xl">
         It&rsquo;s hard to say goodbye&hellip;
       </h1>
 
@@ -226,7 +226,7 @@ export default function UninstallFeedback({
       <dialog ref={dialogRef} aria-labelledby="fb-title">
         {status === "done" ? (
           <div className="p-6 text-center sm:p-7">
-            <h2 id="fb-title" className="text-xl font-bold">
+            <h2 id="fb-title" className="text-xl font-semibold">
               Thanks for telling us.
             </h2>
             <p className="mt-2 text-sm text-[var(--muted)]">
@@ -244,7 +244,7 @@ export default function UninstallFeedback({
           </div>
         ) : (
           <form onSubmit={submit} className="p-6 sm:p-7">
-            <h2 id="fb-title" className="text-xl font-bold">
+            <h2 id="fb-title" className="text-xl font-semibold">
               Why did you remove it?
             </h2>
             <p className="mt-1 text-sm text-[var(--muted)]">

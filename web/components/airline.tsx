@@ -1,19 +1,22 @@
 import Link from "next/link";
 import { fleetRows, type Entry } from "@/lib/extension";
 import { aircraftSlugFor } from "@/lib/derive";
+import { familyOf, pairFor, pairHref } from "@/lib/matrix";
 import { slugForCode } from "@/lib/slugs";
 import { Chip } from "./ui";
 
-function ScopeCell({ types, scope }: { types: string[]; scope: string }) {
+function ScopeCell({ code, types, scope }: { code: string; types: string[]; scope: string }) {
   if (!types.length) return <>{scope}</>;
   return (
     <>
       {types.map((t, i) => {
+        const pair = pairFor(code, familyOf(t).slug);
         const slug = aircraftSlugFor(t);
+        const href = pair ? pairHref(pair) : slug ? `/aircraft/${slug}/` : null;
         return (
           <span key={t}>
             {i > 0 ? ", " : ""}
-            {slug ? <Link href={`/aircraft/${slug}/`}>{t}</Link> : t}
+            {href ? <Link href={href}>{t}</Link> : t}
           </span>
         );
       })}
@@ -55,7 +58,7 @@ export function FleetTable({ code, compact = false }: { code: string; compact?: 
           {rows.map((r, i) => (
             <tr key={i}>
               <td className="font-medium">
-                <ScopeCell types={r.types} scope={r.scope} />
+                <ScopeCell code={code} types={r.types} scope={r.scope} />
               </td>
               <td>
                 <Chip cls={r.cls} label={r.label} />

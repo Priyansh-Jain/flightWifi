@@ -4,6 +4,7 @@ import { airlineSlugs } from "@/lib/slugs";
 import { AIRCRAFT, COMPARISONS, PROVIDERS } from "@/lib/derive";
 import { ARTICLES } from "@/lib/blog";
 import { stats } from "@/lib/extension";
+import { allPairs } from "@/lib/matrix";
 import { schemaDates } from "@/lib/derive";
 
 export const dynamic = "force-static";
@@ -33,6 +34,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     page("/contact/", 0.4),
     page("/privacy/", 0.2),
     ...airlineSlugs().map((s) => page(`/airlines/${s}/`, 0.7)),
+    ...allPairs().map((p) => page(`/airlines/${p.airlineSlug}/${p.family.slug}/`, 0.6)),
     ...PROVIDERS.map((p) => page(`/providers/${p.slug}/`, 0.6)),
     ...AIRCRAFT.map((a) => page(`/aircraft/${a.slug}/`, 0.6)),
     ...COMPARISONS.map((c) => page(`/compare/${c.slug}/`, 0.6)),

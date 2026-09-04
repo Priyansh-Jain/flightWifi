@@ -33,7 +33,7 @@ function Side({ code }: { code: string }) {
   const access = accessPoints(entry.access);
   return (
     <div className="min-w-0">
-      <h2 className="mb-3 text-lg font-bold">
+      <h2 className="mb-3 text-lg font-semibold">
         <Link href={`/airlines/${slugForCode(code)}/`}>{entry.airline}</Link>
       </h2>
       <FleetTable code={code} compact />
@@ -85,7 +85,7 @@ export default async function ComparePage({ params }: Props) {
         ]}
       />
       <section className="mx-auto w-full max-w-5xl px-5 pt-6">
-        <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">{def.title}</h1>
+        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">{def.title}</h1>
         <p className="mt-3 max-w-2xl text-[var(--muted)]">
           Same route, different metal. The tables below are the two carriers' live registry entries,
           per aircraft type, so the comparison stays current as their rollouts move.

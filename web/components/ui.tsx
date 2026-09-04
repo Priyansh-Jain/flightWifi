@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { CHROME_STORE_URL, SITE_URL } from "@/lib/site";
+import { ChromeMark } from "@/components/chrome";
 
 export function Chip({ cls, label }: { cls: string; label: string }) {
   return <span className={`v v-${cls}`}>{label}</span>;
@@ -16,7 +17,7 @@ export function Section({
 }) {
   return (
     <section id={id} className="mx-auto w-full max-w-5xl px-5 py-10">
-      {title ? <h2 className="mb-5 text-xl font-bold tracking-tight">{title}</h2> : null}
+      {title ? <h2 className="mb-5 text-xl font-semibold tracking-tight">{title}</h2> : null}
       {children}
     </section>
   );
@@ -96,34 +97,31 @@ export function Faq({ items, title = "Frequently asked questions", id }: { items
   );
 }
 
-export function Cta({ compact = false }: { compact?: boolean }) {
+export function Cta() {
   return (
-    <div className={compact ? "" : "mx-auto w-full max-w-5xl px-5 py-10"}>
-      <div className="card flex flex-col items-start gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <p className="font-semibold">See these verdicts while you book</p>
-          <p className="text-sm text-[var(--muted)]">
-            The free FlightWifi extension shows them inline on Google Flights, Skyscanner and Soar,
-            matched to the exact aircraft on your flight.
-          </p>
+    <section className="cta-band relative w-full overflow-hidden border-t border-[var(--line)] py-20 md:py-28 lg:py-32">
+      <div className="ftr-glow pointer-events-none absolute inset-x-0 top-0 h-px" aria-hidden="true" />
+      <div className="relative mx-auto w-full max-w-[760px] px-5 text-center sm:px-6">
+        <h2 className="sec-title">Know before you book.</h2>
+        <p className="mx-auto mt-5 max-w-[580px] text-base text-[var(--muted)]">
+          The free FlightWifi extension shows these verdicts inline on Google Flights, Skyscanner and
+          Soar, matched to the exact aircraft on your flight.
+        </p>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <a href={CHROME_STORE_URL} rel="noopener" className="flare-btn">
+            <span aria-hidden="true" className="flare-ring">
+              <span className="flare-spin" />
+              <span className="flare-heat" />
+            </span>
+            <ChromeMark size={16} />
+            Get the free extension
+          </a>
+          <Link href="/starlink/" className="ghost-btn">
+            Starlink tracker
+          </Link>
         </div>
-        <InstallButton />
       </div>
-    </div>
-  );
-}
-
-// The label promises the extension, so the click should deliver it. Anyone who wants the
-// explainer first still reaches /chrome-extension/ from the nav pill and the footer.
-export function InstallButton() {
-  return (
-    <a
-      href={CHROME_STORE_URL}
-      rel="noopener"
-      className="inline-flex shrink-0 items-center gap-2 rounded-full bg-[var(--accent)] px-5 py-2.5 font-semibold text-[var(--accent-ink)] no-underline hover:opacity-90 hover:no-underline"
-    >
-      Get the free extension
-    </a>
+    </section>
   );
 }
 

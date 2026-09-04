@@ -52,6 +52,43 @@ type Bridge = {
   costOf: (text: string) => string | null;
   VERDICT_UI: Record<string, { cls: string; label: string; why: string; latency: string | null }>;
   CALL_POLICY: Record<string, { calls: string; check?: boolean }>;
+  CAPABILITY: Record<string, { good: string[]; bad: string[] }>;
+  CALL_POLICY_TEXT: Record<string, string>;
+  cleanProvider: (p: string) => string;
+  decorate: (key: string, extra: object) => RawVerdict;
+  rollup: (keys: string[]) => string;
+};
+
+type RawVerdict = Verdict & {
+  aircraft?: string;
+  fleetwide?: boolean;
+  code?: string;
+  legs?: { code?: string; entry: Entry; key: string }[];
+  aircraftNote?: string;
+  noExpand?: boolean;
+  expandHint?: string;
+  conflict?: boolean;
+  viaGoogle?: boolean;
+  unresolvedOperator?: string;
+};
+
+export type TipRow = {
+  k: string;
+  v?: string;
+  caps?: { kind: "good" | "bad"; items: string[] };
+  cost?: { cost: string | null; pts: string[] };
+};
+
+export type TipData = {
+  cls: string;
+  label: string;
+  why: string;
+  legs?: { airline: string; cls: string; label: string }[];
+  rows: TipRow[];
+  notes: string[];
+  info: string;
+  src: string;
+  latency: string | null;
 };
 
 let cached: Bridge | null = null;
@@ -73,7 +110,7 @@ function load(): Bridge {
   const build = new Function(
     "WIFI_REGISTRY",
     `${head}
-    return { verdictFor, classifyOrbit, providerLine, fleetVerdict, accessPoints, costOf, VERDICT_UI, CALL_POLICY };`
+    return { verdictFor, classifyOrbit, providerLine, fleetVerdict, accessPoints, costOf, VERDICT_UI, CALL_POLICY, CAPABILITY, CALL_POLICY_TEXT, cleanProvider, decorate, rollup };`
   );
 
   cached = { WIFI_REGISTRY: registry, ...build(registry) } as Bridge;
@@ -119,6 +156,18 @@ export function accessPoints(access?: string): string[] {
 
 export function callPolicy(code: string) {
   return load().CALL_POLICY[code.toUpperCase()] ?? null;
+}
+
+export function callPolicyText(calls: string): string {
+  return load().CALL_POLICY_TEXT[calls] ?? "";
+}
+
+export function costOf(access?: string): string | null {
+  return access ? load().costOf(access) : null;
+}
+
+export function capability(key: string): { good: string[]; bad: string[] } | null {
+  return load().CAPABILITY[key] ?? null;
 }
 
 // The aircraft a rule covers are stored as a regex alternation ("777|A350|787"). For a page we want
@@ -295,4 +344,99 @@ export function stats() {
     noWifi: all.filter((e) => e.rules.every((r) => r.orbit === "NONE")).length,
     asOf: all.map((e) => e.as_of).filter(Boolean).sort().pop() ?? ""
   };
+}
+
+function sourceLine(entries: Entry[]): string {
+  const refs = entries.reduce((n, e) => n + (e.sources ? e.sources.length : 0), 0);
+  const confidence = entries.some((e) => e.confidence === "reported") ? "reported" : "sourced";
+  const pending = entries.some((e) => e.needs_verification);
+  const asOf = entries.map((e) => e.as_of || "").sort()[0];
+  return (
+    `${confidence}${pending ? ", verification pending" : ""} · as of ${asOf}` +
+    (refs ? ` · ${refs} ref${refs > 1 ? "s" : ""}` : "")
+  );
+}
+
+function tipFromVerdict(v: RawVerdict): TipData {
+  const b = load();
+  const rows: TipRow[] = [];
+  const multi = !!(v.legs && v.legs.length > 1);
+  const cap = b.CAPABILITY[v.key];
+  const policy = !multi && v.code ? b.CALL_POLICY[v.code] : null;
+  if (cap && !multi) {
+    if (cap.good.length) rows.push({ k: "Good for", caps: { kind: "good", items: cap.good } });
+    if (cap.bad.length) rows.push({ k: "Not for", caps: { kind: "bad", items: cap.bad } });
+  }
+  if (policy && v.key !== "NONE") {
+    rows.push({ k: "Calls", v: b.CALL_POLICY_TEXT[policy.calls] + (policy.check ? " (unconfirmed)" : "") });
+  }
+  if (!multi && v.entry) {
+    const p = b.cleanProvider(v.provider || "");
+    if (p && !/^none$/i.test(p)) rows.push({ k: v.key === "NONE" ? "Onboard" : "Provider", v: p });
+  }
+  rows.push({
+    k: "Aircraft",
+    v:
+      v.aircraft ||
+      (v.fleetwide
+        ? v.aircraftNote || (v.noExpand ? "whole fleet, this view never names it" : "whole fleet, not named until you expand")
+        : "not shown")
+  });
+  if (!multi && v.entry && v.entry.access) {
+    const cost = b.costOf(v.entry.access);
+    rows.push({ k: "Cost", cost: { cost, pts: b.accessPoints(v.entry.access, cost) } });
+  }
+  const notes: string[] = [];
+  const fastLink = v.key === "LEO" || v.key === "MEO" || v.key === "VARIES";
+  const says = policy && policy.check ? "is reported to restrict" : "restricts";
+  if (policy && policy.calls === "no" && fastLink && v.entry) {
+    notes.push(`📵 ${v.entry.airline} ${says} voice and video calls over wifi. The link can carry one; the airline is the limit.`);
+  }
+  if (policy && policy.calls === "voice" && fastLink && v.entry) {
+    notes.push(`📵 ${v.entry.airline} permits voice calls but not video calls over wifi.`);
+  }
+  if (v.unresolvedOperator) {
+    notes.push(`Flown by ${v.unresolvedOperator}, which is not in the registry yet. This is the marketing airline's fleet answer, not that operator's.`);
+  }
+  const info = !v.fleetwide
+    ? ""
+    : v.expandHint ||
+      (v.noExpand
+        ? "Fleet-level verdict. This view never names the aircraft, so the exact one flying is unknown."
+        : multi
+          ? "Each airline above is its whole fleet. Expand to see the aircraft actually flying each leg."
+          : "Expand the flight for the verdict on the exact aircraft.");
+  const src = multi
+    ? sourceLine(v.legs!.map((l) => l.entry))
+    : v.entry
+      ? sourceLine([v.entry])
+      : "Google's own amenity data, not our own verification";
+  return {
+    cls: v.cls,
+    label: v.label,
+    why: v.why || "",
+    legs: multi ? v.legs!.map((l) => ({ airline: l.entry.airline, cls: b.VERDICT_UI[l.key].cls, label: b.VERDICT_UI[l.key].label })) : undefined,
+    rows,
+    notes,
+    info,
+    src,
+    latency: v.latency ?? null
+  };
+}
+
+// The hover card the extension shows for one results row, built the same way google.js builds it:
+// one verdict per leg, rolled up when the legs disagree.
+export function legsTip(legs: { code: string; aircraft?: string }[]): TipData | null {
+  const b = load();
+  const parts = legs.map((l) => ({ cc: l.code.toUpperCase(), ac: l.aircraft || "", v: b.verdictFor(l.code.toUpperCase(), l.aircraft || "", "nodata") as RawVerdict | null }));
+  if (parts.some((p) => !p.v || !p.v.entry)) return null;
+  if (parts.length === 1) return tipFromVerdict(parts[0].v!);
+  const key = b.rollup(parts.map((p) => p.v!.key));
+  const differ = new Set(parts.map((p) => p.v!.key)).size > 1;
+  const v = b.decorate(differ && key === "PARTIAL" ? "LEG_PARTIAL" : key, {
+    legs: parts.map((p) => ({ code: p.cc, entry: p.v!.entry, key: p.v!.key })),
+    aircraft: parts.map((p) => p.ac).filter(Boolean).join(" · "),
+    entry: null
+  });
+  return tipFromVerdict(v);
 }
