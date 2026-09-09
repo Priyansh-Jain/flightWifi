@@ -24,7 +24,7 @@ export default function Privacy() {
           <ul>
             <li>No personal information, no account, no sign-up</li>
             <li>No analytics, no telemetry, no crash reporting</li>
-            <li>No cookies and no stored state beyond the extension package itself</li>
+            <li>No cookies. The only thing it stores is your per-site on/off switches, on this device</li>
             <li>No browsing history: it only runs on the flight search pages listed in its manifest</li>
           </ul>
           <p>
@@ -38,6 +38,27 @@ export default function Privacy() {
             uninstall the extension, Chrome opens a page here that asks why, carrying only the
             version number you had. That is a plain page load. Answering is optional, and nothing in
             it is tied to you or to anything you searched for.
+          </p>
+          <h3>Permissions</h3>
+          <p>
+            The extension asks Chrome for three permissions. None of them reads, stores or sends
+            anything about you, and none of them shows an install warning.
+          </p>
+          <ul>
+            <li>
+              The storage permission keeps your per-site on/off switches for Google Flights,
+              Skyscanner and Soar on this device. That is the only thing it stores.
+            </li>
+            <li>
+              The activeTab and scripting permissions let the toolbar popup restart the extension on
+              a flight search tab that was already open when the extension last updated, so you do
+              not have to reload the page. They apply only to the tab you clicked the icon on, only
+              at that moment, and never grant standing access to any site.
+            </li>
+          </ul>
+          <p>
+            Beyond that, its only access is the content scripts that run on the flight search pages
+            listed in its manifest.
           </p>
           <h2>This website</h2>
           <p>
