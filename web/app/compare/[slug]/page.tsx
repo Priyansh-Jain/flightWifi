@@ -84,7 +84,7 @@ export default async function ComparePage({ params }: Props) {
           { name: def.title, href: `/compare/${slug}/` }
         ]}
       />
-      <section className="mx-auto w-full max-w-5xl px-5 pt-6">
+      <section className="mx-auto w-full max-w-5xl px-5 pt-3">
         <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">{def.title}</h1>
         <p className="mt-3 max-w-2xl text-[var(--muted)]">
           Same route, different metal. The tables below are the two carriers' live registry entries,

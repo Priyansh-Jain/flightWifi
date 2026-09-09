@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { og } from "@/lib/site";
-import { Breadcrumbs, CollectionJsonLd, Cta, Section } from "@/components/ui";
-import { searchIndex } from "@/lib/derive";
-import { slugForCode } from "@/lib/slugs";
+import { Breadcrumbs, CollectionJsonLd, Cta } from "@/components/ui";
+import { directoryRows } from "@/lib/derive";
 import { stats } from "@/lib/extension";
 import AirlineDirectory from "./AirlineDirectory";
 
@@ -16,20 +15,21 @@ export const metadata: Metadata = {
 
 export default function AirlinesIndex() {
   const s = stats();
-  const rows = searchIndex().map((r) => ({ ...r, slug: slugForCode(r.code) }));
+  const rows = directoryRows();
   return (
     <>
       <Breadcrumbs crumbs={[{ name: "Home", href: "/" }, { name: "Airlines", href: "/airlines/" }]} />
-      <section className="mx-auto w-full max-w-5xl px-5 pt-6">
-        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Airline Wi-Fi directory</h1>
+      <section className="mx-auto w-full max-w-[1200px] px-5 pb-16 pt-6 sm:px-6 lg:px-8">
+        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Airline Wi-Fi</h1>
         <p className="mt-3 max-w-2xl text-[var(--muted)]">
-          One page per airline: provider, cost, per-aircraft coverage and whether a video call will
-          survive. {s.airlines} airlines, {s.sources} official sources, last verified {s.asOf}.
+          Every airline&apos;s verdict in one list: Starlink or satellite, free or paid, and what the
+          connection is actually good for. {s.airlines} airlines, {s.sources} cited sources, last
+          verified {s.asOf}.
         </p>
+        <div className="mt-8">
+          <AirlineDirectory rows={rows} />
+        </div>
       </section>
-      <Section>
-        <AirlineDirectory rows={rows} />
-      </Section>
       <CollectionJsonLd
         name="Airline Wi-Fi directory"
         description={`Wi-Fi verdicts for ${s.airlines} airlines, one page each.`}

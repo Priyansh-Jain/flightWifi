@@ -1,156 +1,152 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Breadcrumbs, Chip, Cta, JsonLd, Section } from "@/components/ui";
-import { ARTICLES, type BlogArticle } from "@/lib/blog";
-import { AIRCRAFT, PROVIDERS, monthLabel } from "@/lib/derive";
-import { starlinkRows, stats } from "@/lib/extension";
+import { Cta, JsonLd } from "@/components/ui";
+import { ARTICLES } from "@/lib/blog";
+import { ArrowRight, Author, CATEGORY_META, GoogleMark, PostCard, Thumb, blogHref, fmtDate, type Post } from "@/components/blog-ui";
 import { SITE_URL, og } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Blog",
   description:
-    "Data-led writing on airline Wi-Fi: which airlines fly Starlink, which Wi-Fi is free, and whether you can work in the air. Every number comes from the registry.",
+    "Data-led writing on airline Wi-Fi: which airlines fly Starlink, which Wi-Fi is free, how to connect, and whether you can work in the air. Every number comes from the registry.",
   alternates: { canonical: "/blog/" },
   openGraph: og("/blog/")
 };
 
-function CardArt({ art }: { art: BlogArticle["art"] }) {
-  if (!art?.length) return null;
-  return (
-    <div className="flex min-h-[5.5rem] flex-wrap content-center items-center gap-2 rounded-xl bg-[var(--bg)] p-4">
-      {art.map((a) => (
-        <Chip key={a.label} cls={a.cls} label={a.label} />
-      ))}
-    </div>
-  );
-}
+const POSTS: Post[] = Object.entries(ARTICLES)
+  .map(([slug, article]) => ({ slug, ...article }))
+  .sort((a, b) => b.date.localeCompare(a.date));
 
-function niceDate(iso: string): string {
-  const [y, m, d] = iso.split("-");
-  return `${Number(d)} ${monthLabel(`${y}-${m}`)}`;
-}
+const PER_PAGE = 6;
 
-export default function BlogIndex() {
-  const posts = Object.entries(ARTICLES).sort((a, b) => b[1].date.localeCompare(a[1].date));
-  const [featSlug, feat] = posts[0];
-  const s = stats();
-  const flying = starlinkRows().filter((r) => r.status === "flying").length;
+export default async function BlogIndex({ searchParams }: { searchParams: Promise<{ page?: string; category?: string }> }) {
+  const sp = await searchParams;
+  const activeEntry = Object.entries(CATEGORY_META).find(([, m]) => m.param === sp.category);
+  const activeCategory = activeEntry?.[0];
+  const filtered = activeCategory ? POSTS.filter((p) => p.category === activeCategory) : POSTS;
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
+  const page = Math.min(totalPages, Math.max(1, parseInt(sp.page ?? "1", 10) || 1));
+  const posts = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
-  const figures = [
-    { n: String(s.airlines), l: "airlines audited" },
-    { n: String(flying), l: "flying Starlink today" },
-    { n: String(s.sources), l: "cited sources" },
-    { n: monthLabel(s.asOf).replace(/ \d{4}$/, ""), l: `last verified, ${s.asOf.slice(0, 4)}` }
-  ];
-
-  const destinations = [
-    {
-      href: "/starlink/",
-      title: "Starlink tracker",
-      d: "In service versus signed, airline by airline.",
-      meta: `${flying} flying now`
-    },
-    {
-      href: "/airlines/",
-      title: "Every airline",
-      d: "One page per carrier, with the verdict per aircraft type.",
-      meta: `${s.airlines} pages`
-    },
-    {
-      href: "/aircraft/",
-      title: "By aircraft",
-      d: "The same plane carries different internet depending on who flies it.",
-      meta: `${AIRCRAFT.length} types`
-    },
-    {
-      href: "/providers/",
-      title: "By provider",
-      d: "How each satellite system works, and what its orbit costs you in lag.",
-      meta: `${PROVIDERS.length} providers`
-    }
-  ];
+  const [featured] = POSTS;
+  const categories = Object.entries(CATEGORY_META)
+    .map(([category, meta]) => ({ category, ...meta, count: POSTS.filter((p) => p.category === category).length }))
+    .filter((c) => c.count > 0);
 
   return (
     <>
-      <Breadcrumbs crumbs={[{ name: "Home", href: "/" }, { name: "Blog", href: "/blog/" }]} />
+      <div className="soar">
+        <h1 className="sr-only">FlightWifi Blog</h1>
 
-      <section className="mx-auto w-full max-w-5xl px-5 pt-6">
-        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">FlightWifi Blog</h1>
-        <p className="mt-3 max-w-2xl text-[var(--muted)]">
-          Data-led writing on what is actually flying. Every number here is generated from the same
-          registry that powers the extension, so an article cannot quietly go stale.
-        </p>
-      </section>
-
-      <Section>
-        <div className="card grid overflow-hidden lg:grid-cols-2">
-          <div className="flex flex-col justify-center gap-4 p-7 sm:p-9">
-            <span className="w-fit rounded-full border border-[var(--accent)] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[var(--accent)]">
-              Featured
-            </span>
-            <h2 className="text-2xl font-semibold leading-tight tracking-tight sm:text-3xl">
-              <Link href={`/blog/${featSlug}/`} className="text-[var(--ink)] hover:no-underline">
-                {feat.title}
-              </Link>
-            </h2>
-            <p className="text-[var(--muted)]">{feat.excerpt}</p>
-            <p className="text-sm text-[var(--muted)]">
-              {feat.category} · {feat.readTime} read · {niceDate(feat.date)}
-            </p>
-            <Link href={`/blog/${featSlug}/`} className="w-fit font-semibold">
-              Read the guide →
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 gap-px border-t border-[var(--line)] bg-[var(--line)] lg:border-l lg:border-t-0">
-            {figures.map((f) => (
-              <div key={f.l} className="flex flex-col justify-center gap-1 bg-[var(--bg-raised)] p-6">
-                <span className="text-2xl font-extrabold tracking-tight sm:text-3xl">{f.n}</span>
-                <span className="text-sm text-[var(--muted)]">{f.l}</span>
+        <div className="mx-auto w-full max-w-[1200px] px-5 pt-6 sm:px-6 sm:pt-10 lg:px-8">
+          <section className="sb-card sb-post overflow-hidden">
+            <div className="grid lg:grid-cols-[46%_54%]">
+              <div className="sb-panel flex flex-col px-7 py-8 sm:px-[51px] sm:py-[60px]">
+                <div className="flex items-center justify-between gap-4">
+                  <span className="sb-pill">Featured article</span>
+                  <span className="sb-meta">Posted {fmtDate(featured.date)}</span>
+                </div>
+                <h2 className="mt-7 text-[32px] leading-[1.04] tracking-[-0.035em] text-[var(--ink)] sm:text-[42px]">
+                  <Link href={`/blog/${featured.slug}/`} className="sb-title-link sb-stretch">
+                    {featured.title}
+                  </Link>
+                </h2>
+                <p className="mt-5 line-clamp-3 text-[16px] leading-[1.55] text-[var(--muted)]">{featured.excerpt}</p>
+                <div className="mt-7">
+                  <Author detail={`${featured.readTime} read`} />
+                </div>
+                <Link href={`/blog/${featured.slug}/`} className="sb-link relative z-[2] mt-auto w-fit pt-10">
+                  Read the guide
+                  <ArrowRight />
+                </Link>
               </div>
-            ))}
+              <div className="order-first min-h-[240px] overflow-hidden lg:order-last lg:min-h-[430px]">
+                <Thumb post={featured} eager />
+              </div>
+            </div>
+          </section>
+
+          <div className="mt-9 flex justify-center">
+            <a
+              href="https://www.google.com/preferences/source?q=flightwifi.app"
+              target="_blank"
+              rel="noreferrer"
+              className="sb-google"
+            >
+              <GoogleMark />
+              Add FlightWifi to Preferred Sources
+            </a>
           </div>
-        </div>
-      </Section>
 
-      <Section title="All articles">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {posts.map(([slug, p]) => (
-            <Link
-              key={slug}
-              href={`/blog/${slug}/`}
-              className="card flex flex-col gap-3 p-4 text-[var(--ink)] hover:border-[var(--accent)] hover:no-underline"
-            >
-              <CardArt art={p.art} />
-              <p className="text-sm text-[var(--muted)]">
-                {p.category} · {p.readTime} read
+          <section className="mt-24 sm:mt-28">
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+              <h2 className="text-[36px] leading-[1.04] tracking-[-0.035em] text-[var(--ink)] sm:text-[48px]">Explore by category</h2>
+              <p className="max-w-[490px] text-[16px] leading-[1.55] text-[var(--muted)]">
+                From the deal announcement to the seat-back login page, find the part of airline Wi-Fi you want to understand.
               </p>
-              <p className="text-lg font-bold leading-snug">{p.title}</p>
-              <p className="text-sm text-[var(--muted)]">{p.excerpt}</p>
-              <p className="mt-auto pt-1 text-sm text-[var(--muted)]">{niceDate(p.date)}</p>
-            </Link>
-          ))}
-        </div>
-      </Section>
+            </div>
+            <div className="mt-10 grid gap-[14px] md:grid-cols-3">
+              {categories.map((c) => (
+                <Link key={c.category} href={blogHref(c.param)} className="sb-card group flex min-h-[280px] flex-col p-[25px]">
+                  <span className="text-[32px] leading-none">{c.emoji}</span>
+                  <h3 className="mt-[47px] text-[28.8px] leading-[1.1] tracking-[-0.025em] text-[var(--ink)]">{c.label}</h3>
+                  <span className="mt-3 flex-1 text-[13px] leading-[1.55] text-[var(--muted)]">{c.blurb}</span>
+                  <span className="flex items-center justify-between pt-4 text-[10px] text-[var(--muted)]">
+                    {c.count} {c.count === 1 ? "story" : "stories"}
+                    <ArrowRight className="text-[var(--ink)] transition-transform group-hover:translate-x-1" />
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </section>
 
-      <Section title="Go straight to the data">
-        <p className="mb-4 max-w-2xl text-[var(--muted)]">
-          The articles are written from these pages. If you already know what you are looking for,
-          skip the reading.
-        </p>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {destinations.map((d) => (
-            <Link
-              key={d.href}
-              href={d.href}
-              className="card flex flex-col gap-1.5 p-5 text-[var(--ink)] hover:border-[var(--accent)] hover:no-underline"
-            >
-              <span className="font-semibold">{d.title}</span>
-              <span className="text-sm text-[var(--muted)]">{d.d}</span>
-              <span className="mt-auto pt-2 text-sm font-medium text-[var(--accent)]">{d.meta}</span>
-            </Link>
-          ))}
+          <section className="mt-24 pb-6 sm:mt-36">
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+              <h2 className="text-[36px] leading-[1.04] tracking-[-0.035em] text-[var(--ink)] sm:text-[48px]">Latest from FlightWifi</h2>
+              <div className="flex flex-wrap items-center gap-2">
+                {categories.map((c) => (
+                  <Link key={c.param} href={blogHref(c.param)} className="sb-chip" aria-current={activeCategory === c.category ? "true" : undefined}>
+                    {c.label}
+                  </Link>
+                ))}
+                <Link href={blogHref()} className="sb-chip" aria-current={!activeCategory ? "true" : undefined}>
+                  Browse all
+                </Link>
+              </div>
+            </div>
+
+            <div className="mt-10 grid gap-[14px] md:grid-cols-2 lg:grid-cols-3">
+              {posts.map((post) => (
+                <PostCard key={post.slug} post={post} />
+              ))}
+            </div>
+
+            {totalPages > 1 ? (
+              <div className="relative mt-12 flex h-11 items-center justify-between">
+                <div>
+                  {page > 1 ? (
+                    <Link href={blogHref(activeEntry?.[1].param, page - 1)} className="flex items-center gap-2 text-[11px] font-semibold text-[var(--ink)]">
+                      <ArrowRight className="rotate-180" />
+                      Newer
+                    </Link>
+                  ) : null}
+                </div>
+                <p className="absolute left-1/2 -translate-x-1/2 text-[10px] text-[var(--muted)]">
+                  Page {page} of {totalPages}
+                </p>
+                <div>
+                  {page < totalPages ? (
+                    <Link href={blogHref(activeEntry?.[1].param, page + 1)} className="flex items-center gap-2 text-[11px] font-semibold text-[var(--ink)]">
+                      Older
+                      <ArrowRight />
+                    </Link>
+                  ) : null}
+                </div>
+              </div>
+            ) : null}
+          </section>
         </div>
-      </Section>
+      </div>
 
       <Cta />
       <JsonLd
@@ -160,13 +156,14 @@ export default function BlogIndex() {
           name: "FlightWifi Blog",
           url: `${SITE_URL}/blog/`,
           publisher: { "@id": `${SITE_URL}/#org` },
-          blogPost: posts.map(([slug, p]) => ({
+          blogPost: POSTS.map((p) => ({
             "@type": "BlogPosting",
             headline: p.title,
             description: p.excerpt,
             datePublished: p.date,
             articleSection: p.category,
-            url: `${SITE_URL}/blog/${slug}/`
+            image: p.image ? `${SITE_URL}${p.image}` : undefined,
+            url: `${SITE_URL}/blog/${p.slug}/`
           }))
         }}
       />

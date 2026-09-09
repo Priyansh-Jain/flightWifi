@@ -1,4 +1,5 @@
-import { callPolicy, codes, entryFor, fleetRows, fleetVerdict, orbitClass, registry, verdict, type Entry, type Rule } from "./extension";
+import { STARLINK_ACCESS_UI, callLabel, callPolicy, capability, codes, costOf, entryFor, fleetRows, fleetVerdict, orbitClass, progressPct, registry, starlinkRows, verdict, verdictUi, type Entry, type Rule, type StarlinkFact, type StarlinkProgress } from "./extension";
+import { slugForCode } from "./slugs";
 import { SITE_LAUNCH } from "./site";
 
 export type ProviderDef = {
@@ -299,12 +300,77 @@ export function aircraftSlugFor(type: string): string | null {
   return hit ? hit.slug : null;
 }
 
-export function searchIndex() {
-  return codes().map((code) => {
+// The directory has to answer "which airline should I pick" without a click, so every column is
+// derived rather than written: the capability list is the extension's own, the cost comes from the
+// access parser, and "calls" asks whether any aircraft in the fleet can hold one rather than what
+// the fleet rolls up to, because a mid-retrofit carrier rolls up to PARTIAL while its A350s are on
+// Starlink.
+export type DirectoryRow = {
+  code: string;
+  airline: string;
+  slug: string;
+  label: string;
+  cls: string;
+  key: string;
+  starlink: "flying" | "announced" | null;
+  bestFor: string;
+  cost: string | null;
+  calls: boolean;
+};
+
+let dirCache: DirectoryRow[] | null = null;
+
+export function directoryRows(): DirectoryRow[] {
+  if (dirCache) return dirCache;
+  dirCache = codes().map((code) => {
     const e = entryFor(code)!;
     const v = fleetVerdict(code);
-    return { code, airline: e.airline, label: v?.label ?? "Not verified", cls: v?.cls ?? "unknown" };
+    const key = v?.key ?? "UNKNOWN";
+    const cls = v?.cls ?? "unknown";
+    // The verdict pill already says what the link can carry, so this column is written as short
+    // tokens rather than sentences: it has to be scannable down 235 rows, not read.
+    const cap = capability(key);
+    const SHORT: Record<string, string> = { "Video calls": "Calls", "Email & chat": "Email", Browsing: "Browsing" };
+    const bestFor =
+      cap && cap.good.length
+        ? cap.good.map((g) => SHORT[g] ?? g).join(" · ")
+        : key === "PARTIAL"
+          ? "Varies by plane"
+          : "—";
+    // A "free" line on a carrier with no internet is describing a seatback streaming portal, not a
+    // connection, so cost is suppressed rather than shown as Free.
+    const cost = cls === "none" ? null : costOf(e.access);
+    const fastSomewhere = e.rules.some(
+      (r) =>
+        ["LEO", "MEO"].includes(orbitClass(r.orbit)) ||
+        (orbitClass(r.orbit) === "VARIES" && /starlink/i.test(r.provider ?? ""))
+    );
+    // The homepage and the extension both relabel a fast fleet by its call policy, so the directory
+    // does too rather than showing the generic orbit wording next to the same coloured pill.
+    const policy = callPolicy(code);
+    const label =
+      (key === "LEO" || key === "MEO") && policy ? callLabel(policy.calls) ?? v?.label : v?.label;
+    return {
+      code,
+      airline: e.airline,
+      slug: slugForCode(code),
+      label: label ?? "Not verified",
+      cls,
+      key,
+      starlink: e.starlink && e.starlink.status !== "none" ? e.starlink.status : null,
+      bestFor,
+      cost,
+      calls: fastSomewhere && policy?.calls !== "no"
+    };
   });
+  return dirCache;
+}
+
+export function relatedRows(code: string, n = 6): DirectoryRow[] {
+  const index = new Map(directoryRows().map((r) => [r.code, r]));
+  return relatedAirlines(code, n)
+    .map((r) => index.get(r.code))
+    .filter((r): r is DirectoryRow => Boolean(r));
 }
 
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -351,6 +417,16 @@ function isOfficial(url: string, airline: string): boolean {
   if (PROVIDER_DOMAINS.some((d) => host === d || host.endsWith(`.${d}`))) return true;
   const label = host.split(".")[0];
   return airlineTokens(airline).some((t) => host.includes(t) || t.includes(label));
+}
+
+export type SourceKind = "airline" | "provider" | "trade";
+
+export function sourceKind(url: string, airline: string): SourceKind {
+  const host = hostOf(url);
+  if (!host) return "trade";
+  if (PROVIDER_DOMAINS.some((d) => host === d || host.endsWith(`.${d}`))) return "provider";
+  const label = host.split(".")[0];
+  return airlineTokens(airline).some((t) => host.includes(t) || t.includes(label)) ? "airline" : "trade";
 }
 
 export function sourceMix(entry: Entry): { official: number; trade: number; total: number } {
@@ -439,4 +515,83 @@ export function callRows(): CallRow[] {
   }
   const rank = { yes: 0, voice: 1, no: 2 };
   return out.sort((a, b) => rank[a.policy] - rank[b.policy] || a.airline.localeCompare(b.airline));
+}
+
+export type StarlinkTableRow = {
+  code: string;
+  airline: string;
+  slug: string;
+  status: "flying" | "announced";
+  access: StarlinkFact["access"];
+  cost: string;
+  detail: string;
+  fleetwide: boolean;
+  progress: StarlinkProgress | null;
+  pct: number | null;
+  wifiLabel: string;
+  wifiCls: string;
+  asOf: string;
+  updated: string;
+};
+
+// The prose a rule carries is written for an airline page; the table needs the clause that says how
+// far the rollout has got, without the provider names and parentheses.
+function shortDetail(detail: string, fleetwide: boolean): string {
+  if (fleetwide) return "Whole fleet";
+  const flat = detail.replace(/\s*\([^)]*\)/g, "");
+  const clauses = flat.split(/;\s*/);
+  const pick = clauses.find((c) => /starlink/i.test(c)) ?? clauses[0] ?? "";
+  const cleaned = pick.replace(/\s+/g, " ").trim();
+  return cleaned.length > 96 ? `${cleaned.slice(0, 93).replace(/[,;: ]+$/, "")}…` : cleaned;
+}
+
+// One serialisable row per Starlink airline for the client-side table: the Wi-Fi column shows what
+// a Starlink aircraft gives (with the airline's own call policy), or, for a deal with nothing
+// flying, what the fleet gives today.
+export function starlinkTableRows(): StarlinkTableRow[] {
+  const leo = verdictUi("LEO");
+  return starlinkRows().map((r) => {
+    const entry = entryFor(r.code)!;
+    const policy = callPolicy(r.code);
+    let wifiLabel: string;
+    let wifiCls: string;
+    if (r.status === "flying") {
+      wifiLabel = (policy ? callLabel(policy.calls) : null) ?? leo?.label ?? "Video calls work";
+      wifiCls = leo?.cls ?? "fast";
+    } else {
+      const fv = fleetVerdict(r.code);
+      const key = fv?.key ?? "UNKNOWN";
+      wifiLabel = ((key === "LEO" || key === "MEO") && policy ? callLabel(policy.calls) : null) ?? fv?.label ?? "Not verified";
+      wifiCls = fv?.cls ?? "unknown";
+    }
+    const progress = r.status === "flying" ? entry.starlink?.progress ?? null : null;
+    const dates = (entry.starlink?.milestones ?? []).map((m) => m.date).sort();
+    const ui = STARLINK_ACCESS_UI[r.access];
+    return {
+      code: r.code,
+      airline: r.airline,
+      slug: slugForCode(r.code),
+      status: r.status,
+      access: r.access,
+      cost: r.status === "flying" ? ui.flying.label : ui.announced,
+      detail: shortDetail(r.detail, r.fleetwide),
+      fleetwide: r.fleetwide,
+      progress,
+      pct: progress ? progressPct(progress) : null,
+      wifiLabel,
+      wifiCls,
+      asOf: entry.as_of ?? "",
+      updated: dates.length ? dates[dates.length - 1] : entry.as_of ?? ""
+    };
+  });
+}
+
+const SHORT_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+// Registry dates are as precise as the source: a day when the airline gave one, otherwise a month.
+export function shortDate(d: string): string {
+  const [y, m, day] = d.split("-");
+  const mon = SHORT_MONTHS[Number(m) - 1];
+  if (!mon) return d;
+  return day ? `${Number(day)} ${mon} ${y}` : `${mon} ${y}`;
 }

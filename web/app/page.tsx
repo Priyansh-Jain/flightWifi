@@ -89,7 +89,7 @@ const ICONS: Record<string, React.ReactNode> = {
 const FAQ = [
   {
     q: "Which airlines have Starlink Wi-Fi right now?",
-    a: "As of August 2026, Starlink is flying with passengers on Qatar Airways, United, Emirates, Hawaiian, WestJet, SAS, Air France, Aer Lingus, Iberia, Virgin Atlantic (A350s), airBaltic, ZIPAIR, British Airways (five 787s), Southwest, Alaska, Copa, Gulf Air and more. Many of these are mid-retrofit, so whether your specific plane has it varies. Our Starlink tracker shows the in-service status per airline."
+    a: "As of August 2026, Starlink is flying with passengers on Qatar Airways, United, Emirates, Hawaiian, WestJet, SAS, Air France, Aer Lingus, Iberia, Virgin Atlantic (A350s), airBaltic, ZIPAIR, British Airways (five 787s), Southwest, Alaska, Copa, Gulf Air and more. Many of these are mid-retrofit, so whether your specific plane has it varies. Our Starlink page shows the in-service status and rollout progress per airline."
   },
   {
     q: "Can you make video calls on plane Wi-Fi?",
@@ -158,7 +158,7 @@ export default function Home() {
             Get the free extension
           </a>
           <Link href="/starlink/" className="ghost-btn">
-            Starlink tracker
+            Starlink on flights
           </Link>
         </div>
         <p className="mt-6 text-sm text-[var(--muted)]">

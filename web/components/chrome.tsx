@@ -13,7 +13,7 @@ const GROUPS: { title: string; items: { href: string; label: string; external?: 
     title: "Data",
     items: [
       { href: "/airlines/", label: "Airlines" },
-      { href: "/starlink/", label: "Starlink tracker" },
+      { href: "/starlink/", label: "Starlink on flights" },
       { href: "/aircraft/", label: "Aircraft" },
       { href: "/providers/", label: "Providers" },
       { href: "/compare/", label: "Compare" }
@@ -79,9 +79,9 @@ export function SiteFooter() {
           <div>
             <Link
               href="/"
-              className="inline-flex min-h-11 items-center gap-2 font-bold tracking-tight text-[var(--ink)] hover:no-underline hover:opacity-80"
+              className="inline-flex min-h-11 w-fit items-center gap-2 text-[17px] font-bold tracking-tight text-[var(--ink)] hover:no-underline hover:opacity-80"
             >
-              <Image src="/logo.png" alt="" width={24} height={24} />
+              <Image src="/logo.png" alt="" width={32} height={32} />
               {SITE_NAME}
             </Link>
             <p className="mt-5 max-w-[34ch] text-sm text-[var(--muted)]">

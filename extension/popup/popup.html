@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="popup.css" />
+    <title>FlightWifi</title>
+  </head>
+  <body>
+    <header class="hd">
+      <span class="brand">
+        <img src="../icons/icon32.png" alt="" width="20" height="20" />
+        FlightWifi
+      </span>
+      <button id="gear" class="icon-btn" type="button" aria-label="Settings" aria-expanded="false">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="3" />
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+        </svg>
+      </button>
+    </header>
+
+    <main id="main">
+      <p class="status">
+        <span id="dot" class="dot"></span>
+        <span>
+          <span id="statusText" class="status-t">Checking this page</span>
+          <span id="statusSub" class="status-s" hidden></span>
+        </span>
+      </p>
+
+      <!-- supported site, verdicts on, at least one result on screen -->
+      <section id="active" hidden>
+        <p id="found" class="found"></p>
+        <ul id="tally" class="tally"></ul>
+        <button id="explain" class="link-btn" type="button" aria-expanded="false">
+          What do these mean? <span class="arr" aria-hidden="true">→</span>
+        </button>
+        <div id="glossary" class="acc" hidden></div>
+      </section>
+
+      <!-- supported site, verdicts on, nothing rendered yet -->
+      <section id="waiting" hidden>
+        <p class="note">Search for a route and the Wi&#8209;Fi verdict appears next to every result.</p>
+      </section>
+
+      <!-- any other page -->
+      <section id="idle" hidden>
+        <p class="note">
+          Search flights normally. FlightWifi adds the Wi&#8209;Fi verdict next to each result.
+        </p>
+        <a class="btn" href="https://www.google.com/travel/flights" target="_blank" rel="noopener">Open Google Flights</a>
+        <p class="chips">Google&nbsp;Flights · Skyscanner · Soar</p>
+      </section>
+
+      <!-- supported site that is not answering, even after a repair -->
+      <section id="unreachable" hidden>
+        <p class="note">This tab isn't answering, which usually means it was open before FlightWifi last updated. Reloading the page fixes it.</p>
+        <button id="reloadTab" class="btn btn-solid" type="button">Reload page</button>
+      </section>
+
+      <!-- supported site, switched off in settings -->
+      <section id="off" hidden>
+        <p class="note">Verdicts are hidden on this site.</p>
+        <button id="turnOn" class="btn btn-solid" type="button">Turn them back on</button>
+      </section>
+    </main>
+
+    <section id="settings" hidden>
+      <p class="sec-label">Show verdicts on</p>
+      <label class="row"><span>Google Flights</span><input type="checkbox" id="s-google" class="sw" checked /><span class="track" aria-hidden="true"></span></label>
+      <label class="row"><span>Skyscanner</span><input type="checkbox" id="s-skyscanner" class="sw" checked /><span class="track" aria-hidden="true"></span></label>
+      <label class="row"><span>Soar</span><input type="checkbox" id="s-soar" class="sw" checked /><span class="track" aria-hidden="true"></span></label>
+      <p class="note tiny">Changes apply to open tabs straight away.</p>
+    </section>
+
+    <footer class="ft">
+      <p id="meta" class="meta"></p>
+      <p class="review">
+        Enjoying FlightWifi?
+        <a href="https://chromewebstore.google.com/detail/omoclebljmjljikaoaogdpahjlbmdbin/reviews" target="_blank" rel="noopener">Review <span class="arr" aria-hidden="true">→</span></a>
+      </p>
+      <p class="links">
+        <a href="https://flightwifi.app/contact/" target="_blank" rel="noopener">Help</a>
+        <span aria-hidden="true">·</span>
+        <a href="https://flightwifi.app/privacy/" target="_blank" rel="noopener">Privacy</a>
+        <span aria-hidden="true">·</span>
+        <a href="https://flightwifi.app/" target="_blank" rel="noopener">Website</a>
+      </p>
+    </footer>
+
+    <script src="../data/registry.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

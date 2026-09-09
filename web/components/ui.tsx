@@ -34,21 +34,30 @@ export function JsonLd({ data }: { data: object }) {
 
 export type Crumb = { name: string; href: string };
 
-export function Breadcrumbs({ crumbs }: { crumbs: Crumb[] }) {
+// A two-crumb trail on a section landing page only ever reads "Home / Airlines", which the header
+// nav already says, so it is dropped from the page while the schema stays: the trail still helps
+// search results, it just stops eating the space above the title. Three crumbs or more is a real
+// position in the site and gets shown.
+export function Breadcrumbs({ crumbs, hidden = false }: { crumbs: Crumb[]; hidden?: boolean }) {
   return (
     <>
-      <nav aria-label="Breadcrumb" className="mx-auto w-full max-w-5xl px-5 pt-6 text-sm text-[var(--muted)]">
-        {crumbs.map((c, i) => (
-          <span key={c.href}>
-            {i > 0 ? <span className="mx-1.5">/</span> : null}
-            {i === crumbs.length - 1 ? (
-              <span className="text-[var(--ink)]">{c.name}</span>
-            ) : (
-              <Link href={c.href}>{c.name}</Link>
-            )}
-          </span>
-        ))}
-      </nav>
+      {crumbs.length > 2 && !hidden ? (
+        <nav
+          aria-label="Breadcrumb"
+          className="mx-auto w-full max-w-5xl px-5 pt-5 text-[13px] text-[var(--muted)]"
+        >
+          {crumbs.map((c, i) => (
+            <span key={c.href}>
+              {i > 0 ? <span className="mx-1.5 opacity-60">/</span> : null}
+              {i === crumbs.length - 1 ? (
+                <span className="text-[var(--ink)]">{c.name}</span>
+              ) : (
+                <Link href={c.href}>{c.name}</Link>
+              )}
+            </span>
+          ))}
+        </nav>
+      ) : null}
       <JsonLd
         data={{
           "@context": "https://schema.org",
@@ -97,7 +106,7 @@ export function Faq({ items, title = "Frequently asked questions", id }: { items
   );
 }
 
-export function Cta() {
+export function Cta({ secondary = { href: "/starlink/", label: "Starlink on flights" } }: { secondary?: { href: string; label: string } }) {
   return (
     <section className="cta-band relative w-full overflow-hidden border-t border-[var(--line)] py-20 md:py-28 lg:py-32">
       <div className="ftr-glow pointer-events-none absolute inset-x-0 top-0 h-px" aria-hidden="true" />
@@ -116,8 +125,8 @@ export function Cta() {
             <ChromeMark size={16} />
             Get the free extension
           </a>
-          <Link href="/starlink/" className="ghost-btn">
-            Starlink tracker
+          <Link href={secondary.href} className="ghost-btn">
+            {secondary.label}
           </Link>
         </div>
       </div>

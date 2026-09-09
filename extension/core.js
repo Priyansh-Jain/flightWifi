@@ -96,20 +96,25 @@ function carrierByName(text) {
 // promise less than the truth, which is why high-orbit reads "Email & browsing" rather than
 // "Messaging only" - a 600ms link is bad for live calls and completely fine for mail and docs.
 //
+// These strings are the product's vocabulary and flightwifi.app uses the same ones, so a reader who
+// arrives site -> extension -> flight result meets one classification rather than three. `row` is
+// the line this verdict is tallied on in the popup: class cannot carry that, because "Email &
+// browsing" and "Varies by aircraft" share a class and are different answers.
+//
 // Amber is the only colour that asks the reader to stop, so it is reserved for the one case that
 // warrants it: part of the fleet has no wifi at all and the schedule will not say which you get.
 const VERDICT_UI = {
-  LEO: { cls: "fast", label: "Fast enough for calls", why: "Low-orbit satellite, quick enough to be treated like ground wifi", latency: "roughly 20-50ms (low orbit)" },
-  MEO: { cls: "fast", label: "Fast enough for calls", why: "Mid-orbit satellite, usually quick enough for a live call", latency: "roughly 120-150ms (mid orbit)" },
-  GEO: { cls: "ok", label: "Email & browsing", why: "High-orbit satellite. The lag is the limit, not the speed", latency: "roughly 600ms and up (high orbit)" },
-  A2G: { cls: "ok", label: "Email & browsing", why: "Ground-based network beamed up from masts. Fine until you need it live", latency: "air-to-ground, no satellite" },
-  VARIES: { cls: "ok", label: "Varies by aircraft", why: "Every aircraft has wifi. Whether it is the quick kind depends which one turns up", latency: "varies by aircraft" },
-  PARTIAL: { cls: "part", label: "Not on every aircraft", why: "Part of this fleet has no wifi at all, and the schedule will not say which aircraft you get", latency: "varies by aircraft" },
-  LEG_PARTIAL: { cls: "part", label: "Not on every aircraft", why: "The legs of this trip do not match. At least one of them has no wifi at all", latency: "varies by leg" },
-  NONE: { cls: "none", label: "No Wi-Fi", why: "No usable internet on this aircraft", latency: null },
-  GOOGLE_YES: { cls: "ok", label: "Wi-Fi, speed unknown", why: "Google lists wifi here. We have not verified the provider, so we will not claim a speed", latency: null },
-  GOOGLE_NO: { cls: "none", label: "No Wi-Fi", why: "Google publishes amenities for this flight and wifi is not among them", latency: null },
-  UNKNOWN: { cls: "unknown", label: "Not verified", why: "We would rather say nothing than guess", latency: null }
+  LEO: { cls: "fast", row: "calls", label: "Video calls work", why: "Low-orbit satellite, quick enough to be treated like ground wifi", latency: "roughly 20-50ms (low orbit)" },
+  MEO: { cls: "fast", row: "calls", label: "Video calls work", why: "Mid-orbit satellite, usually quick enough for a live call", latency: "roughly 120-150ms (mid orbit)" },
+  GEO: { cls: "ok", row: "email", label: "Email & browsing", why: "High-orbit satellite. The lag is the limit, not the speed", latency: "roughly 600ms and up (high orbit)" },
+  A2G: { cls: "ok", row: "email", label: "Email & browsing", why: "Ground-based network beamed up from masts. Fine until you need it live", latency: "air-to-ground, no satellite" },
+  VARIES: { cls: "ok", row: "varies", label: "Varies by aircraft", why: "Every aircraft has wifi. Whether it is the quick kind depends which one turns up", latency: "varies by aircraft" },
+  PARTIAL: { cls: "part", row: "partial", label: "Not on every aircraft", why: "Part of this fleet has no wifi at all, and the schedule will not say which aircraft you get", latency: "varies by aircraft" },
+  LEG_PARTIAL: { cls: "part", row: "partial", label: "Not on every aircraft", why: "The legs of this trip do not match. At least one of them has no wifi at all", latency: "varies by leg" },
+  NONE: { cls: "none", row: "nowifi", label: "No Wi-Fi", why: "No usable internet on this aircraft", latency: null },
+  GOOGLE_YES: { cls: "ok", row: "unsure", label: "Wi-Fi, speed unknown", why: "Google lists wifi here. We have not verified the provider, so we will not claim a speed", latency: null },
+  GOOGLE_NO: { cls: "none", row: "nowifi", label: "No Wi-Fi", why: "Google publishes amenities for this flight and wifi is not among them", latency: null },
+  UNKNOWN: { cls: "unknown", row: "unverified", label: "Not verified", why: "We would rather say nothing than guess", latency: null }
 };
 
 // What the reader is actually deciding. Only latency-bound outcomes belong here: whether an airline
@@ -160,9 +165,9 @@ const CALL_POLICY_TEXT = {
   voice: "Voice permitted, video not"
 };
 
-// Where the airline's policy is known the chip can say what you may actually do; where it is not,
-// it stays a claim about the link alone. Unknown defaults to the cautious wording because most
-// carriers prohibit calls, so assuming permission is the error that would actually mislead.
+// Where the airline's policy is known the chip says what you may actually do, which matters because
+// most carriers prohibit calls however fast the link is. Only the two restrictive cases override:
+// an airline that bans calls reads "Fast, but no calls" rather than the class label.
 const CALL_LABEL = {
   yes: "Video calls work",
   no: "Fast, but no calls",
@@ -585,6 +590,8 @@ function buildChip(v) {
   chip.className = `fw-chip fw-${v.cls}`;
   chip.textContent = v.label;
   chip.__fw = v;
+  // The popup tallies by this, not by class: two different answers share the "ok" class.
+  if (v.row) chip.dataset.fwRow = v.row;
   // aria-label on a bare span is ignored by most screen readers; role="img" makes it authoritative
   // and lets the reasoning be announced. Deliberately not focusable: the chip is informational, and
   // thirty extra tab stops between the reader and "Select flight" is a worse trade than losing the
@@ -638,3 +645,80 @@ if (window.matchMedia) {
 
 const FW_TRACE = [];
 
+
+/* ---------- popup bridge ----------
+   The popup cannot see the page, so the content script answers for it. Counting the rendered
+   summary chips is the honest number: it is exactly what the user can see on screen right now,
+   not what we attempted. Also gates each site behind its own setting, kept here rather than in the
+   three site files so their boot tails stay identical. */
+
+const FW_SITE_LABEL = { google: "Google Flights", skyscanner: "Skyscanner", soar: "Soar" };
+
+function fwCounts() {
+  const out = {};
+  for (const el of document.querySelectorAll(".fw-chip.fw-sum")) {
+    const row = el.dataset.fwRow;
+    if (row) out[row] = (out[row] || 0) + 1;
+  }
+  return out;
+}
+
+function fwRemoveChips() {
+  for (const n of document.querySelectorAll(".fw-chip, .fw-row")) n.remove();
+}
+
+function fwBoot(site, start, stop) {
+  // The popup re-injects this script into tabs an extension update orphaned, so a boot has to tell
+  // three states apart: nothing here yet, a live instance already running, and the remains of one
+  // Chrome orphaned. A boolean flag cannot, because the isolated world's globals outlive the
+  // context that set them, so a corpse looks exactly like a running instance and the repair becomes
+  // a silent no-op. Asking the previous instance to prove it is alive can: touching chrome.runtime
+  // from an orphaned context throws, so only a genuinely live script answers true.
+  let previousIsAlive = false;
+  try {
+    previousIsAlive = typeof window.__fwPing === "function" && window.__fwPing() === true;
+  } catch (e) {
+    previousIsAlive = false;
+  }
+  if (previousIsAlive) return;
+  window.__fwPing = () => {
+    try {
+      return !!(chrome.runtime && chrome.runtime.id);
+    } catch (e) {
+      return false;
+    }
+  };
+
+  // Reaching here means this script owns the page's chips from now on. On a normal load there are
+  // none; on a repair injection the orphaned script left its own behind, and those must go, because
+  // a chip drawn by a dead instance is not one this instance will keep up to date.
+  fwRemoveChips();
+
+  let on = null;
+  const apply = (next) => {
+    if (next === on) return;
+    on = next;
+    if (next) start();
+    else {
+      stop();
+      fwRemoveChips();
+    }
+  };
+  // Fail open: a storage read that throws must never cost the user the product's actual function.
+  chrome.storage.local
+    .get("fwSites")
+    .then((s) => apply(((s && s.fwSites) || {})[site] !== false))
+    .catch(() => apply(true));
+
+  chrome.storage.onChanged.addListener((ch, area) => {
+    if (area === "local" && ch.fwSites) apply(((ch.fwSites.newValue) || {})[site] !== false);
+  });
+
+  // The reply is synchronous, so the listener must return nothing. Returning true tells Chrome to
+  // hold the channel open for an asynchronous answer that never comes, and a channel held open is a
+  // sendMessage promise on the other end that never settles: the popup sits on its placeholder.
+  chrome.runtime.onMessage.addListener((msg, _sender, reply) => {
+    if (!msg || msg.type !== "FW_STATUS") return;
+    reply({ site, label: FW_SITE_LABEL[site], enabled: on === true, counts: fwCounts() });
+  });
+}

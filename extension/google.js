@@ -498,6 +498,17 @@ const observer = new MutationObserver(() => {
   });
 });
 
-observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["aria-expanded"] });
-document.addEventListener("visibilitychange", sweep);
-sweep();
+// Behind the per-site setting from the popup. fwBoot lives in core.js so all three site
+// files boot identically; it calls start() when the site is on and stop() when switched off.
+fwBoot(
+  "google",
+  () => {
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["aria-expanded"] });
+    document.addEventListener("visibilitychange", sweep);
+    sweep();
+  },
+  () => {
+    observer.disconnect();
+    document.removeEventListener("visibilitychange", sweep);
+  }
+);

@@ -367,7 +367,7 @@ function hrefFor(r: Result): string | null {
 
 const EMPTY: CheckerIndex = { airlines: [], whys: [], aircraftPages: [], policy: {} };
 
-export default function Checker({ src = "/checker.json", storeUrl }: { src?: string; storeUrl: string }) {
+export default function Checker({ src = "/checker.json", storeUrl, examples = EXAMPLES }: { src?: string; storeUrl: string; examples?: string[] }) {
   const router = useRouter();
   const [q, setQ] = useState("");
   const [pick, setPick] = useState<{ a: CheckerAirline; t: CheckerType } | null>(null);
@@ -473,7 +473,7 @@ export default function Checker({ src = "/checker.json", storeUrl }: { src?: str
       </form>
       <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-[var(--muted)]">
         <span>Try</span>
-        {EXAMPLES.map((ex) => (
+        {examples.map((ex) => (
           <button
             key={ex}
             type="button"

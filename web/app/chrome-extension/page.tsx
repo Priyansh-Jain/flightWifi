@@ -55,7 +55,7 @@ export default function ExtensionPage() {
             Add to Chrome, free
           </a>
           <span className="text-sm text-[var(--muted)]">
-            {s.airlines} airlines · zero permissions · no tracking
+            {s.airlines} airlines · no tracking · nothing leaves your browser
           </span>
         </div>
       </section>

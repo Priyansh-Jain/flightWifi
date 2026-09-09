@@ -121,7 +121,7 @@ export default async function PairPage({ params }: Props) {
           { name: pair.family.name, href: `/airlines/${slug}/${aircraft}/` }
         ]}
       />
-      <section className="mx-auto w-full max-w-5xl px-5 pt-6">
+      <section className="mx-auto w-full max-w-5xl px-5 pt-3">
         <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
           Does {pair.airline} have Wi-Fi on the {pair.family.name}?
         </h1>
@@ -272,7 +272,7 @@ export default async function PairPage({ params }: Props) {
           mainEntityOfPage: `${SITE_URL}/airlines/${slug}/${aircraft}/`,
           about: [
             { "@type": "Airline", name: pair.airline, iataCode: pair.code },
-            { "@type": "Product", name: `${pair.family.name} airliner` }
+            { "@type": "Thing", name: `${pair.family.name} airliner` }
           ]
         }}
       />

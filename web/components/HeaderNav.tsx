@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { BlogSearchButton } from "./BlogSearch";
 
 const NAV = [
   { href: "/airlines/", label: "Airlines" },
@@ -38,6 +39,7 @@ export function HeaderNav({ siteName, storeUrl }: { siteName: string; storeUrl: 
   }, [open]);
 
   const active = (href: string) => pathname === href || (href !== "/" && pathname.startsWith(href));
+  const onBlog = pathname === "/blog" || pathname.startsWith("/blog/");
 
   return (
     <header className="sticky top-0 z-40">
@@ -45,9 +47,9 @@ export function HeaderNav({ siteName, storeUrl }: { siteName: string; storeUrl: 
       <div className="relative mx-auto grid h-16 w-full max-w-[1200px] grid-cols-[1fr_auto] items-center gap-3 px-5 sm:px-6 md:grid-cols-[1fr_auto_1fr] lg:px-8">
         <Link
           href="/"
-          className="inline-flex min-h-11 items-center gap-2 rounded-md font-bold tracking-tight text-[var(--ink)] hover:no-underline hover:opacity-80"
+          className="inline-flex min-h-11 w-fit items-center gap-2 rounded-md text-[17px] font-bold tracking-tight text-[var(--ink)] hover:no-underline hover:opacity-80"
         >
-          <Image src="/logo.png" alt="" width={26} height={26} priority />
+          <Image src="/logo.png" alt="" width={32} height={32} priority />
           {siteName}
         </Link>
 
@@ -67,6 +69,7 @@ export function HeaderNav({ siteName, storeUrl }: { siteName: string; storeUrl: 
         </nav>
 
         <div className="flex items-center justify-end gap-2">
+          {onBlog ? <BlogSearchButton /> : null}
           <a
             href={storeUrl}
             rel="noopener"

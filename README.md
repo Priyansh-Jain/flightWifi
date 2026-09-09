@@ -126,7 +126,7 @@ chrome://extensions → Developer mode → Load unpacked → select `extension/`
 
 ## Packaging
 
-`./build.sh` stages a production copy under `dist/staging/` and zips it to `dist/flightwifi-<version>.zip`. The dev tree keeps its hot-reloader and instrumentation untouched; the build strips them from the copy: `dev-reload.js`, `reload-token.txt`, the `background` + `permissions` manifest keys, `FW_TRACE`, and every `data-fw-*` attribute write. It then verifies the staged file parses, the manifest carries no permissions, and no instrumentation survived, before zipping. The packaged extension requests **zero permissions**: one content script on `https://www.google.com/travel/flights*`, nothing else.
+`./build.sh` stages a production copy under `dist/staging/` and zips it to `dist/flightwifi-<version>.zip`. The dev tree keeps its hot-reloader and instrumentation untouched; the build strips them from the copy: `dev-reload.js`, `reload-token.txt`, the `background` key (swapped for `uninstall.js`), the dev-only `alarms` permission, `FW_TRACE`, and every `data-fw-*` attribute write. It stages `popup/`, pins the production permissions to exactly `storage`, `activeTab`, `scripting` (none raises an install warning), refuses to zip if the manifest declares a popup that is not staged, and verifies the staged files parse with no instrumentation surviving. The packaged extension has no `host_permissions`: its only site access is the content scripts on the three flight search sites.
 
 ## Before launch
 

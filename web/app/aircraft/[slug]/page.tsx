@@ -57,7 +57,7 @@ export default async function AircraftPage({ params }: Props) {
           { name: def.name, href: `/aircraft/${slug}/` }
         ]}
       />
-      <section className="mx-auto w-full max-w-5xl px-5 pt-6">
+      <section className="mx-auto w-full max-w-5xl px-5 pt-3">
         <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
           Does the {def.name} have Wi-Fi?
         </h1>
@@ -110,7 +110,7 @@ export default async function AircraftPage({ params }: Props) {
           author: { "@id": `${SITE_URL}/#org` },
           publisher: { "@id": `${SITE_URL}/#org` },
           mainEntityOfPage: `${SITE_URL}/aircraft/${slug}/`,
-          about: { "@type": "Product", name: `${def.name} airliner`, sameAs: def.wikipedia }
+          about: { "@type": "Thing", name: `${def.name} airliner`, sameAs: def.wikipedia }
         }}
       />
     </>

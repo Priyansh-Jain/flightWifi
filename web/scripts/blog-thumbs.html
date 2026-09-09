@@ -1,0 +1,217 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>FlightWifi blog thumbnails</title>
+<style>
+  html, body { margin: 0; background: #fff; }
+  .scene { width: 1200px; height: 760px; display: none; }
+  .scene.on { display: block; }
+  svg { display: block; width: 1200px; height: 760px; }
+  text { font-family: -apple-system, "Inter", system-ui, sans-serif; }
+</style>
+
+<svg class="scene" data-scene="defs" viewBox="0 0 1200 760" aria-hidden="true">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d6e7f8"/>
+      <stop offset="1" stop-color="#eef4fb"/>
+    </linearGradient>
+    <linearGradient id="floor" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f7f3ec"/>
+      <stop offset="1" stop-color="#ebe6dd"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2f6fe8"/>
+      <stop offset="1" stop-color="#0f47c0"/>
+    </linearGradient>
+    <linearGradient id="navy" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1b2f6e"/>
+      <stop offset="1" stop-color="#0d1a44"/>
+    </linearGradient>
+    <linearGradient id="white" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#eef1f6"/>
+    </linearGradient>
+    <linearGradient id="screen" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#dfeeff"/>
+      <stop offset="1" stop-color="#c3dcff"/>
+    </linearGradient>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="14"/>
+    </filter>
+    <filter id="softer" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="26"/>
+    </filter>
+    <symbol id="plane" viewBox="-120 -120 240 240">
+      <ellipse cx="0" cy="62" rx="70" ry="10" fill="#0b1a3a" opacity=".16" filter="url(#soft)"/>
+      <path d="M-6-104c8-8 16 0 16 12v42l86 46v16l-86-24v40l24 16v12l-34-8-34 8v-12l24-16v-40l-86 24v-16l86-46v-42c0-12 8-20 14-12z" fill="url(#white)" stroke="#c9d3e3" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M-4-62h8v70h-8z" fill="#dfe6f2"/>
+      <circle cx="0" cy="-70" r="7" fill="#9fc0ff"/>
+      <path d="M-40 34l-6 6v10l6-2zM40 34l6 6v10l-6-2z" fill="#1a5fdf"/>
+    </symbol>
+    <symbol id="wifi" viewBox="0 0 100 80">
+      <path d="M10 34a56 56 0 0 1 80 0" fill="none" stroke="currentColor" stroke-width="9" stroke-linecap="round"/>
+      <path d="M24 48a36 36 0 0 1 52 0" fill="none" stroke="currentColor" stroke-width="9" stroke-linecap="round"/>
+      <path d="M38 61a17 17 0 0 1 24 0" fill="none" stroke="currentColor" stroke-width="9" stroke-linecap="round"/>
+      <circle cx="50" cy="72" r="6" fill="currentColor"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- 1. Which airlines have Starlink -->
+<svg class="scene" data-scene="which-airlines-have-starlink" viewBox="0 0 1200 760">
+  <use href="#defs"/>
+  <rect width="1200" height="760" fill="url(#sky)"/>
+  <ellipse cx="640" cy="620" rx="640" ry="210" fill="url(#floor)"/>
+  <path d="M0 610c220-80 520-110 800-80 160 17 290 60 400 120v110H0z" fill="#f1ede4" opacity=".7"/>
+  <g transform="translate(760 250)">
+    <ellipse cx="0" cy="250" rx="220" ry="34" fill="#0b1a3a" opacity=".14" filter="url(#softer)"/>
+    <g transform="rotate(-14)">
+      <rect x="-300" y="-40" width="190" height="80" rx="10" fill="url(#navy)"/>
+      <rect x="110" y="-40" width="190" height="80" rx="10" fill="url(#navy)"/>
+      <g stroke="#3d5ac0" stroke-width="3" opacity=".9">
+        <path d="M-252-40v80M-204-40v80M-156-40v80M158-40v80M206-40v80M254-40v80M-300 0h190M110 0h190"/>
+      </g>
+      <rect x="-90" y="-62" width="180" height="124" rx="22" fill="url(#blue)"/>
+      <rect x="-70" y="-42" width="140" height="84" rx="14" fill="#1b57d6" opacity=".8"/>
+      <circle cx="0" cy="0" r="30" fill="#ffffff"/>
+      <circle cx="0" cy="0" r="14" fill="#8ab4f8"/>
+      <rect x="-14" y="62" width="28" height="60" rx="6" fill="#0d1a44"/>
+      <ellipse cx="0" cy="128" rx="46" ry="16" fill="#ffffff" stroke="#c9d3e3" stroke-width="2"/>
+    </g>
+  </g>
+  <g fill="none" stroke="#5c8dff" stroke-width="5" stroke-linecap="round" stroke-dasharray="2 22">
+    <path d="M700 420c-60 40-150 80-260 95"/>
+    <path d="M760 445c-40 60-120 110-230 130"/>
+  </g>
+  <use href="#plane" x="250" y="380" width="300" height="300" transform="rotate(-22 400 530)"/>
+  <g transform="translate(330 250)" fill="#ffffff" opacity=".9">
+    <ellipse cx="0" cy="0" rx="90" ry="34"/>
+    <ellipse cx="60" cy="-16" rx="60" ry="30"/>
+    <ellipse cx="-50" cy="-10" rx="50" ry="26"/>
+  </g>
+  <g transform="translate(980 120)" fill="#ffffff" opacity=".8">
+    <ellipse cx="0" cy="0" rx="70" ry="26"/>
+    <ellipse cx="46" cy="-12" rx="46" ry="24"/>
+  </g>
+</svg>
+
+<!-- 2. Which airlines offer free Wi-Fi -->
+<svg class="scene" data-scene="which-airlines-offer-free-wifi" viewBox="0 0 1200 760">
+  <use href="#defs"/>
+  <rect width="1200" height="760" fill="url(#sky)"/>
+  <ellipse cx="600" cy="640" rx="660" ry="220" fill="url(#floor)"/>
+  <g transform="translate(600 400) rotate(-9)">
+    <rect x="-320" y="-190" width="640" height="380" rx="28" fill="#0b1a3a" opacity=".16" filter="url(#softer)" transform="translate(0 36)"/>
+    <rect x="-320" y="-190" width="640" height="380" rx="28" fill="url(#white)" stroke="#c9d3e3" stroke-width="2"/>
+    <rect x="-320" y="-190" width="640" height="92" rx="28" fill="url(#blue)"/>
+    <rect x="-320" y="-140" width="640" height="42" fill="url(#blue)"/>
+    <text x="-284" y="-134" font-size="30" font-weight="700" fill="#ffffff" letter-spacing="2">BOARDING PASS</text>
+    <text x="-284" y="-40" font-size="22" fill="#7a8599" font-weight="600" letter-spacing="3">FROM</text>
+    <text x="-284" y="18" font-size="60" fill="#0d1a44" font-weight="700">DXB</text>
+    <text x="30" y="-40" font-size="22" fill="#7a8599" font-weight="600" letter-spacing="3">TO</text>
+    <text x="30" y="18" font-size="60" fill="#0d1a44" font-weight="700">LHR</text>
+    <path d="M-284 62h580" stroke="#dfe6f2" stroke-width="3" stroke-dasharray="10 10"/>
+    <g fill="#0d1a44">
+      <rect x="-284" y="92" width="6" height="70"/><rect x="-270" y="92" width="14" height="70"/><rect x="-248" y="92" width="6" height="70"/><rect x="-234" y="92" width="10" height="70"/><rect x="-216" y="92" width="6" height="70"/><rect x="-202" y="92" width="16" height="70"/><rect x="-178" y="92" width="6" height="70"/><rect x="-164" y="92" width="10" height="70"/><rect x="-146" y="92" width="6" height="70"/><rect x="-132" y="92" width="14" height="70"/>
+    </g>
+    <g transform="translate(214 96)">
+      <circle cx="0" cy="30" r="74" fill="#e8f0ff"/>
+      <use href="#wifi" x="-46" y="-10" width="92" height="74" color="#1a5fdf"/>
+    </g>
+  </g>
+  <g transform="translate(905 190) rotate(12)">
+    <rect x="-110" y="-44" width="220" height="88" rx="44" fill="#0b1a3a" opacity=".18" filter="url(#soft)" transform="translate(0 20)"/>
+    <rect x="-110" y="-44" width="220" height="88" rx="44" fill="#f08a6a"/>
+    <text x="0" y="16" text-anchor="middle" font-size="46" font-weight="800" fill="#ffffff" letter-spacing="4">FREE</text>
+  </g>
+  <use href="#plane" x="120" y="110" width="200" height="200" transform="rotate(28 220 210)"/>
+  <g transform="translate(240 620)" fill="#ffffff" opacity=".85">
+    <ellipse cx="0" cy="0" rx="80" ry="28"/><ellipse cx="54" cy="-14" rx="54" ry="26"/>
+  </g>
+</svg>
+
+<!-- 3. Can you work on plane Wi-Fi -->
+<svg class="scene" data-scene="can-you-work-on-plane-wifi" viewBox="0 0 1200 760">
+  <use href="#defs"/>
+  <rect width="1200" height="760" fill="url(#sky)"/>
+  <ellipse cx="600" cy="650" rx="680" ry="230" fill="url(#floor)"/>
+  <g transform="translate(960 250)">
+    <rect x="-130" y="-170" width="260" height="340" rx="120" fill="#ffffff" stroke="#c9d3e3" stroke-width="3"/>
+    <rect x="-104" y="-144" width="208" height="288" rx="100" fill="url(#screen)"/>
+    <g fill="#ffffff" opacity=".9"><ellipse cx="-20" cy="-20" rx="60" ry="22"/><ellipse cx="20" cy="-34" rx="44" ry="20"/><ellipse cx="10" cy="60" rx="70" ry="24"/></g>
+    <use href="#plane" x="-70" y="-60" width="120" height="120" transform="rotate(-40 -10 0)"/>
+  </g>
+  <g transform="translate(520 430)">
+    <ellipse cx="0" cy="190" rx="360" ry="40" fill="#0b1a3a" opacity=".16" filter="url(#softer)"/>
+    <g transform="skewX(-6)">
+      <rect x="-300" y="-200" width="600" height="360" rx="24" fill="url(#navy)"/>
+      <rect x="-276" y="-176" width="552" height="312" rx="12" fill="url(#screen)"/>
+      <rect x="-256" y="-156" width="256" height="200" rx="14" fill="#ffffff"/>
+      <circle cx="-128" cy="-70" r="40" fill="#f2c9a8"/>
+      <path d="M-208 44c0-52 36-84 80-84s80 32 80 84z" fill="#1a5fdf"/>
+      <rect x="20" y="-156" width="256" height="200" rx="14" fill="#ffffff"/>
+      <circle cx="148" cy="-70" r="40" fill="#d9b6a0"/>
+      <path d="M68 44c0-52 36-84 80-84s80 32 80 84z" fill="#f08a6a"/>
+      <rect x="-256" y="64" width="532" height="60" rx="12" fill="#ffffff" opacity=".85"/>
+      <g fill="#1a5fdf"><circle cx="-190" cy="94" r="14"/><circle cx="-140" cy="94" r="14"/><circle cx="-90" cy="94" r="14" fill="#f08a6a"/></g>
+      <rect x="140" y="82" width="110" height="24" rx="12" fill="#1a5fdf"/>
+    </g>
+    <path d="M-380 160h760l40 40H-420z" fill="#0d1a44"/>
+    <path d="M-380 160h760l40 40H-420z" fill="url(#blue)" opacity=".85"/>
+    <rect x="-90" y="166" width="180" height="10" rx="5" fill="#0d1a44" opacity=".5"/>
+  </g>
+  <g transform="translate(170 560)">
+    <ellipse cx="0" cy="60" rx="80" ry="16" fill="#0b1a3a" opacity=".16" filter="url(#soft)"/>
+    <path d="M-60-40h120l-14 100H-46z" fill="#ffffff" stroke="#c9d3e3" stroke-width="3"/>
+    <ellipse cx="0" cy="-40" rx="60" ry="16" fill="#3a2a22"/>
+    <path d="M60-20c30 0 40 40 4 56" fill="none" stroke="#c9d3e3" stroke-width="10" stroke-linecap="round"/>
+    <path d="M-20-70c0-14 14-14 14-28M6-70c0-14 14-14 14-28" fill="none" stroke="#c9d3e3" stroke-width="6" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(270 150)" fill="#ffffff" opacity=".85"><ellipse cx="0" cy="0" rx="90" ry="32"/><ellipse cx="60" cy="-16" rx="60" ry="30"/></g>
+</svg>
+
+<!-- 4. How to get free in-flight Wi-Fi -->
+<svg class="scene" data-scene="how-to-get-free-inflight-wifi" viewBox="0 0 1200 760">
+  <use href="#defs"/>
+  <rect width="1200" height="760" fill="url(#sky)"/>
+  <ellipse cx="600" cy="640" rx="680" ry="230" fill="url(#floor)"/>
+  <g transform="translate(560 390) rotate(-8)">
+    <rect x="-170" y="-310" width="340" height="620" rx="54" fill="#0b1a3a" opacity=".18" filter="url(#softer)" transform="translate(10 40)"/>
+    <rect x="-170" y="-310" width="340" height="620" rx="54" fill="url(#navy)"/>
+    <rect x="-152" y="-292" width="304" height="584" rx="40" fill="url(#white)"/>
+    <rect x="-40" y="-292" width="80" height="14" rx="7" fill="#0d1a44"/>
+    <text x="0" y="-200" text-anchor="middle" font-size="22" font-weight="600" fill="#7a8599" letter-spacing="3">ONBOARD WI-FI</text>
+    <circle cx="0" cy="-90" r="80" fill="#e8f0ff"/>
+    <use href="#wifi" x="-50" y="-134" width="100" height="80" color="#1a5fdf"/>
+    <text x="0" y="40" text-anchor="middle" font-size="30" font-weight="700" fill="#0d1a44">Free for members</text>
+    <text x="0" y="82" text-anchor="middle" font-size="20" fill="#7a8599">Sign in with your number</text>
+    <rect x="-112" y="130" width="224" height="64" rx="32" fill="url(#blue)"/>
+    <text x="0" y="172" text-anchor="middle" font-size="26" font-weight="700" fill="#ffffff">Connect</text>
+    <rect x="-112" y="214" width="224" height="52" rx="26" fill="#ffffff" stroke="#c9d3e3" stroke-width="3"/>
+    <text x="0" y="248" text-anchor="middle" font-size="20" font-weight="600" fill="#1a5fdf">Join for free</text>
+  </g>
+  <g transform="translate(900 520) rotate(10)">
+    <rect x="-150" y="-100" width="300" height="200" rx="20" fill="#0b1a3a" opacity=".16" filter="url(#soft)" transform="translate(0 26)"/>
+    <rect x="-150" y="-100" width="300" height="200" rx="20" fill="#1a5fdf"/>
+    <rect x="-150" y="-100" width="300" height="200" rx="20" fill="url(#blue)"/>
+    <rect x="-116" y="-60" width="232" height="8" rx="4" fill="#ffffff" opacity=".8"/>
+    <rect x="-116" y="-30" width="150" height="8" rx="4" fill="#ffffff" opacity=".5"/>
+    <text x="-116" y="60" font-size="26" font-weight="700" fill="#ffffff" letter-spacing="2">PASSPORT</text>
+  </g>
+  <use href="#plane" x="130" y="120" width="260" height="260" transform="rotate(18 260 250)"/>
+  <g fill="none" stroke="#5c8dff" stroke-width="5" stroke-linecap="round" stroke-dasharray="2 22">
+    <path d="M380 300c40 60 60 120 60 190"/>
+  </g>
+  <g transform="translate(960 150)" fill="#ffffff" opacity=".85"><ellipse cx="0" cy="0" rx="80" ry="28"/><ellipse cx="50" cy="-14" rx="50" ry="26"/></g>
+</svg>
+
+<script>
+  const want = new URLSearchParams(location.search).get("scene");
+  document.querySelectorAll(".scene").forEach((s) => {
+    if (s.dataset.scene === "defs" || s.dataset.scene === want) s.classList.add("on");
+  });
+  const defs = document.querySelector('[data-scene="defs"]');
+  defs.style.position = "absolute";
+  defs.style.width = "0";
+  defs.style.height = "0";
+</script>

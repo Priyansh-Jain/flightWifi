@@ -71,7 +71,7 @@ export default async function ProviderPage({ params }: Props) {
           { name: def.name, href: `/providers/${slug}/` }
         ]}
       />
-      <section className="mx-auto w-full max-w-5xl px-5 pt-6">
+      <section className="mx-auto w-full max-w-5xl px-5 pt-3">
         <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
           {def.name} in-flight Wi-Fi
         </h1>

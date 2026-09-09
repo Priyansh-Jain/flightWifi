@@ -15,9 +15,23 @@ export type Rule = {
   orbit?: string;
 };
 
+export type StarlinkProgress = {
+  done?: number;
+  of?: number;
+  pct?: number;
+  scope: string;
+  as_of: string;
+  basis: "airline" | "provider" | "trade" | "tracker";
+  source?: string;
+};
+
+export type StarlinkMilestone = { date: string; text: string; source?: string };
+
 export type StarlinkFact = {
   status: "flying" | "announced" | "none";
   access: "free" | "free_with_account" | "paid" | "unannounced";
+  progress?: StarlinkProgress;
+  milestones?: StarlinkMilestone[];
 };
 
 export type Entry = {
@@ -50,10 +64,11 @@ type Bridge = {
   fleetVerdict: (codes: string[]) => Verdict | null;
   accessPoints: (text: string, cost: unknown) => string[];
   costOf: (text: string) => string | null;
-  VERDICT_UI: Record<string, { cls: string; label: string; why: string; latency: string | null }>;
+  VERDICT_UI: Record<string, { cls: string; row: string; label: string; why: string; latency: string | null }>;
   CALL_POLICY: Record<string, { calls: string; check?: boolean }>;
   CAPABILITY: Record<string, { good: string[]; bad: string[] }>;
   CALL_POLICY_TEXT: Record<string, string>;
+  CALL_LABEL: Record<string, string>;
   cleanProvider: (p: string) => string;
   decorate: (key: string, extra: object) => RawVerdict;
   rollup: (keys: string[]) => string;
@@ -110,7 +125,7 @@ function load(): Bridge {
   const build = new Function(
     "WIFI_REGISTRY",
     `${head}
-    return { verdictFor, classifyOrbit, providerLine, fleetVerdict, accessPoints, costOf, VERDICT_UI, CALL_POLICY, CAPABILITY, CALL_POLICY_TEXT, cleanProvider, decorate, rollup };`
+    return { verdictFor, classifyOrbit, providerLine, fleetVerdict, accessPoints, costOf, VERDICT_UI, CALL_POLICY, CAPABILITY, CALL_POLICY_TEXT, CALL_LABEL, cleanProvider, decorate, rollup };`
   );
 
   cached = { WIFI_REGISTRY: registry, ...build(registry) } as Bridge;
@@ -309,7 +324,10 @@ export function starlinkRows(): StarlinkRow[] {
       status: sl.status,
       detail: src?.provider ?? fromAccess ?? entry.access ?? "",
       access: sl.access,
-      fleetwide: sl.status === "flying" && entry.rules.every((r) => /LEO/.test(r.orbit ?? ""))
+      // "mixed GEO/LEO" is the orbit a mid-retrofit fleet carries, and it contains the substring
+      // LEO, so a loose test called United, Emirates and eleven others whole-fleet while most of
+      // their aircraft still flew the old system. Whole fleet means every rule is purely low orbit.
+      fleetwide: sl.status === "flying" && entry.rules.every((r) => (r.orbit ?? "").trim() === "LEO")
     });
   }
   const order = { flying: 0, announced: 1 };
@@ -439,4 +457,38 @@ export function legsTip(legs: { code: string; aircraft?: string }[]): TipData | 
     entry: null
   });
   return tipFromVerdict(v);
+}
+
+// A fast link the airline forbids calls on is not "fast enough for calls", and the chip the reader
+// saw on the homepage says so. Exposed so the directory can label a fleet the same way.
+export function callLabel(calls: string): string | null {
+  return load().CALL_LABEL[calls] ?? null;
+}
+
+export function verdictUi(key: string): { cls: string; label: string; why: string } | null {
+  return load().VERDICT_UI[key] ?? null;
+}
+
+// A rollout figure is only shown when the registry holds a real count or percentage from a named
+// source; nothing is estimated here. Counts with no denominator carry the airline's own percentage.
+export function progressPct(p: StarlinkProgress): number | null {
+  if (typeof p.pct === "number") return Math.max(0, Math.min(100, Math.round(p.pct)));
+  if (typeof p.done === "number" && typeof p.of === "number" && p.of > 0) {
+    return Math.max(0, Math.min(100, Math.round((p.done / p.of) * 100)));
+  }
+  return null;
+}
+
+export type StarlinkUpdate = StarlinkMilestone & { code: string; airline: string };
+
+// Dated changes across every airline, newest first. Month-only dates sort after a dated entry in
+// the same month, which is the right order for a list that reads top down.
+export function starlinkUpdates(limit = 8): StarlinkUpdate[] {
+  const reg = registry();
+  const out: StarlinkUpdate[] = [];
+  for (const [code, entry] of Object.entries(reg)) {
+    for (const m of entry.starlink?.milestones ?? []) out.push({ ...m, code, airline: entry.airline });
+  }
+  out.sort((a, b) => b.date.localeCompare(a.date) || a.airline.localeCompare(b.airline));
+  return out.slice(0, limit);
 }

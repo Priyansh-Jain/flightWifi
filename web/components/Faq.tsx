@@ -1,17 +1,44 @@
 import { JsonLd, type QA } from "@/components/ui";
 
-export function FaqSection({ items, title = "FAQ", id = "faq" }: { items: QA[]; title?: string; id?: string }) {
+type Variant = "band" | "page";
+
+export function FaqSection({
+  items,
+  title = "FAQ",
+  id = "faq",
+  variant = "band"
+}: {
+  items: QA[];
+  title?: React.ReactNode;
+  id?: string;
+  variant?: Variant;
+}) {
+  const band = variant === "band";
   return (
     <>
       <section
         id={id}
-        className="relative isolate w-full overflow-x-clip border-t border-[var(--line)] py-20 md:py-28 lg:py-32"
+        className={
+          band
+            ? "relative isolate w-full overflow-x-clip border-t border-[var(--line)] py-20 md:py-28 lg:py-32"
+            : "relative isolate w-full overflow-x-clip py-10"
+        }
       >
-        <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-6 lg:px-8">
-          <div className="grid gap-10 md:gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)] lg:gap-16 xl:gap-24">
+        <div
+          className={
+            band
+              ? "mx-auto w-full max-w-[1200px] px-5 sm:px-6 lg:px-8"
+              : "mx-auto w-full max-w-5xl px-5"
+          }
+        >
+          <div
+            className={`grid gap-10 md:gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)] ${
+              band ? "lg:gap-16 xl:gap-24" : "lg:gap-12"
+            }`}
+          >
             <div>
               <div className="lg:sticky lg:top-28">
-                <h2 className="fq-title">{title}</h2>
+                <h2 className={band ? "fq-title" : "fq-title fq-title-sm"}>{title}</h2>
               </div>
             </div>
             <div className="border-t border-[var(--line)]">

@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Breadcrumbs, Chip, Cta, Faq, JsonLd, Section, type QA } from "@/components/ui";
-import { AirlineLink, FleetTable, SourceList } from "@/components/airline";
+import { Breadcrumbs, Cta, JsonLd, Section, type QA } from "@/components/ui";
+import { FaqSection } from "@/components/Faq";
+import { FleetTable, RelatedGrid, SourceList } from "@/components/airline";
 import { accessPoints, callPolicy, entryFor, fleetNotes, fleetRows, fleetVerdict, orbitClass } from "@/lib/extension";
-import { comparisonsFor, relatedAirlines, schemaDates, sourceMix, sourceNote } from "@/lib/derive";
+import { comparisonsFor, monthLabel, relatedRows, schemaDates, sourceMix } from "@/lib/derive";
 import { airlineSlugs, codeForSlug } from "@/lib/slugs";
 import { SITE_URL, og, clampDesc } from "@/lib/site";
 
@@ -81,9 +82,28 @@ function buildFaq(code: string): QA[] {
     calls = `Yes, on the fast-equipped aircraft. Latency there is ${speed}, similar to home broadband.`;
   }
 
+  const lc = (t: string) => t.charAt(0).toLowerCase() + t.slice(1);
+  const prose = (scope: string) => scope.replace(/, ([^,]+)$/, " and $1");
+  const clause = (r: (typeof rows)[number]) => {
+    const sys = r.provider && !/^none$/i.test(r.provider.trim()) ? r.provider.trim().replace(/\.$/, "") : "";
+    const head = `${prose(r.scope)}: ${lc(r.label)}`;
+    if (!sys) return `${head}.`;
+    return sys.length <= 48 && !/[();]/.test(sys) ? `${head} (${sys}).` : `${head}. ${sys}.`;
+  };
+  let whichAnswer: string | null = null;
+  if (!allNone && rows.length === 1) {
+    const r = rows[0];
+    const sys = r.provider && !/^none$/i.test(r.provider.trim()) ? r.provider.trim().replace(/\.$/, "") : "";
+    whichAnswer = r.key === "VARIES" && sys ? `It varies by aircraft. ${sys}.` : clause(r);
+  } else if (!allNone) {
+    whichAnswer = `It depends on the aircraft. ${rows.map(clause).join(" ")}`;
+  }
+  const which = whichAnswer ? { q: `Which ${name} aircraft have Wi-Fi?`, a: whichAnswer } : null;
+
   return [
     { q: `Does ${name} have Wi-Fi?`, a: has.trim() },
     { q: `Is ${name} Wi-Fi free?`, a: free },
+    ...(which ? [which] : []),
     { q: `Can you make video calls on ${name} Wi-Fi?`, a: calls }
   ];
 }
@@ -96,7 +116,7 @@ export default async function AirlinePage({ params }: Props) {
 
   const v = fleetVerdict(code);
   const access = accessPoints(entry.access);
-  const related = relatedAirlines(code);
+  const related = relatedRows(code);
   const faq = buildFaq(code);
   const notes = fleetNotes(code);
   const compares = comparisonsFor(code);
@@ -111,18 +131,18 @@ export default async function AirlinePage({ params }: Props) {
           { name: entry.airline, href: `/airlines/${slug}/` }
         ]}
       />
-      <section className="mx-auto w-full max-w-5xl px-5 pt-6">
+      <section className="mx-auto w-full max-w-5xl px-5 pt-3">
         <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-          Does {entry.airline} have Wi-Fi?
+          Does {entry.airline} have <span className="whitespace-nowrap">Wi-Fi</span>?
         </h1>
-        <p className="mt-3 max-w-2xl text-[var(--muted)]">{faq[0].a}</p>
-        <div className="mt-3 flex flex-wrap items-center gap-3">
-          {v ? <Chip cls={v.cls} label={v.label} /> : null}
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          {v ? <span className={`v v-lg v-${v.cls}`}>{v.label}</span> : null}
           <span className="text-sm text-[var(--muted)]">
             {mix.official ? "Sourced from official pages" : "Sourced from trade reporting"}
-            {entry.needs_verification ? " · verification pending" : ""} · as of {entry.as_of}
+            {entry.as_of ? ` · checked ${monthLabel(entry.as_of)}` : ""}
           </span>
         </div>
+        <p className="mt-4 max-w-2xl text-[var(--muted)]">{faq[0].a}</p>
       </section>
 
       <Section title="Verdict by aircraft">
@@ -149,16 +169,24 @@ export default async function AirlinePage({ params }: Props) {
         </Section>
       ) : null}
 
-      <Faq items={faq} title={`${entry.airline} Wi-Fi questions`} />
-
       <Section title="Sources">
-        <div className="card p-5">
-          <SourceList entry={entry} />
-          <p className="mt-3 text-sm text-[var(--muted)]">
-            {sourceNote(entry)} See the <Link href="/methodology/">methodology</Link>.
-          </p>
-        </div>
+        <SourceList entry={entry} />
+        <p className="src-foot">
+          {mix.total} {mix.total === 1 ? "source" : "sources"}
+          {entry.as_of ? ` · checked ${monthLabel(entry.as_of)}` : ""} ·{" "}
+          <Link href="/methodology/">How verdicts are compiled</Link>
+        </p>
       </Section>
+
+      <FaqSection
+        variant="page"
+        items={faq}
+        title={
+          <>
+            {entry.airline} <span className="whitespace-nowrap">Wi-Fi</span> questions.
+          </>
+        }
+      />
 
       {compares.length ? (
         <Section title="Compared with">
@@ -173,12 +201,8 @@ export default async function AirlinePage({ params }: Props) {
       ) : null}
 
       {related.length ? (
-        <Section title="Airlines with a similar verdict">
-          <p className="link-row flex flex-wrap gap-x-4 gap-y-1 text-[0.95rem]">
-            {related.map((r) => (
-              <AirlineLink key={r.code} code={r.code} airline={r.airline} />
-            ))}
-          </p>
+        <Section title="Other airlines with similar Wi-Fi">
+          <RelatedGrid rows={related} />
         </Section>
       ) : null}
 

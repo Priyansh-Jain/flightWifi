@@ -25,7 +25,27 @@ const WIFI_REGISTRY = {
   "EK": {
     "starlink": {
       "status": "flying",
-      "access": "free"
+      "access": "free",
+      "progress": {
+        "done": 36,
+        "of": 232,
+        "scope": "777 and A380 fleet",
+        "as_of": "2026-07",
+        "basis": "airline",
+        "source": "https://www.emirates.com/media-centre/one-million-connections-and-counting-emirates-customers-embrace-starlink-wi-fi/"
+      },
+      "milestones": [
+        {
+          "date": "2026-07",
+          "text": "One million Starlink connections; 33 Boeing 777s and 3 A380s flying",
+          "source": "https://www.emirates.com/media-centre/one-million-connections-and-counting-emirates-customers-embrace-starlink-wi-fi/"
+        },
+        {
+          "date": "2026-04",
+          "text": "First A380 enters service with Starlink, using a three-antenna installation",
+          "source": "https://www.emirates.com/media-centre/its-time-emirates-iconic-a380-returns-to-dubai-with-world-first-starlink-wi-fi-onboard/"
+        }
+      ]
     },
     "airline": "Emirates",
     "rules": [
@@ -37,7 +57,7 @@ const WIFI_REGISTRY = {
     ],
     "access": "Free in all cabins on Starlink-fitted aircraft; on GEO aircraft, free tiers for Skywards members with full access paid or premium-cabin.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://www.emirates.com/media-centre/gaining-speed-at-40000-feet-emirates-set-to-operate-the-worlds-largest-starlink-enabled-international-wide-body-fleet-bringing-ultra-fast-connectivity-on-232-boeing-777-and-a380-aircraft/",
       "https://awardwallet.com/airlines/emirates-wifi/",
@@ -47,7 +67,22 @@ const WIFI_REGISTRY = {
   "QR": {
     "starlink": {
       "status": "flying",
-      "access": "free_with_account"
+      "access": "free_with_account",
+      "progress": {
+        "done": 150,
+        "pct": 83,
+        "scope": "widebody fleet (777, A350, 787)",
+        "as_of": "2026-08-20",
+        "basis": "airline",
+        "source": "https://www.qatarairways.com/press-releases/en-WW/269475-qatar-airways-150-starlink-equipped-widebody-aircraft-now-include-world-s-first-starlink-equipped-boeing-787-9/"
+      },
+      "milestones": [
+        {
+          "date": "2026-08-20",
+          "text": "150 Starlink widebodies; 787-8 sub-fleet complete and the first 787-9 in service",
+          "source": "https://www.qatarairways.com/press-releases/en-WW/269475-qatar-airways-150-starlink-equipped-widebody-aircraft-now-include-world-s-first-starlink-equipped-boeing-787-9/"
+        }
+      ]
     },
     "airline": "Qatar Airways",
     "rules": [
@@ -58,7 +93,7 @@ const WIFI_REGISTRY = {
       },
       {
         "types": "787",
-        "provider": "787-8 sub-fleet fully equipped; 787-9 fitting under way (world first, August 2026) and due to finish across the 787 fleet by end of 2026; Inmarsat GX/SITA OnAir until fitted",
+        "provider": "787-8 sub-fleet fully equipped (completed in seven months); first Starlink 787-9 in service, more than half the 787 fleet equipped and the type due to complete by end of 2026; Inmarsat GX/SITA OnAir until fitted",
         "orbit": "mixed GEO/LEO"
       },
       {
@@ -73,14 +108,14 @@ const WIFI_REGISTRY = {
       },
       {
         "fleet": "all",
-        "provider": "Starlink on 150 widebodies: the 777 and A350 programmes are complete and the 787-8 sub-fleet is done",
+        "provider": "Starlink on 150 widebodies as of 20 August 2026: the 777, A350 and 787-8 programmes are complete and more than 83% of the widebody fleet is connected",
         "orbit": "mixed GEO/LEO"
       }
     ],
     "access": "Starlink on the 777, A350 and 787 is free, but only 45 minutes for a passenger who is not a Privilege Club member; members get the whole flight and joining is free. Gate-to-gate at select airports only. Legacy widebodies tiered (free 1-hour pass for Privilege Club members, paid from $10); narrowbodies have no wifi yet",
     "confidence": "sourced",
     "needs_verification": true,
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://www.qatarairways.com/press-releases/en-WW/269475-qatar-airways-150-starlink-equipped-widebody-aircraft-now-include-world-s-first-starlink-equipped-boeing-787-9/",
       "https://www.qatarairways.com/en/onboard/connectivity.html",
@@ -92,22 +127,43 @@ const WIFI_REGISTRY = {
   "UA": {
     "starlink": {
       "status": "flying",
-      "access": "free_with_account"
+      "access": "free_with_account",
+      "progress": {
+        "done": 563,
+        "of": 1658,
+        "scope": "mainline and United Express fleet",
+        "as_of": "2026-09-07",
+        "basis": "tracker",
+        "source": "https://unitedstarlinktracker.com/"
+      },
+      "milestones": [
+        {
+          "date": "2026-06-22",
+          "text": "First Starlink widebody flight, UA14 Newark to London on a 777-200",
+          "source": "https://www.united.com/en/us/newsroom/announcements/cision-125469"
+        },
+        {
+          "date": "2026-06",
+          "text": "More than 400 aircraft equipped; close to 1,000 targeted by end of 2026",
+          "source": "https://aerospaceglobalnews.com/news/united-starlink-1000-aircraft-end-2026/"
+        }
+      ]
     },
     "airline": "United",
     "rules": [
       {
         "fleet": "rollout",
-        "provider": "Starlink rollout underway (about 522 of ~1,817 aircraft as of mid-Aug 2026, 1,000 targeted by end of 2026; widebodies complete by summer 2027); legacy Viasat/Panasonic on unconverted tails",
+        "provider": "Starlink rollout underway (United said more than 400 aircraft in June 2026 and close to 1,000 by end of 2026; public trackers count roughly 540 in late August; widebodies complete by summer 2027); legacy Viasat/Panasonic on unconverted tails",
         "orbit": "mixed LEO/GEO"
       }
     ],
     "access": "Free with MileagePlus (free signup) on Starlink-fitted aircraft",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://onemileatatime.com/news/united-airlines-free-starlink-wi-fi/",
-      "https://unitedstarlinktracker.com/"
+      "https://unitedstarlinktracker.com/",
+      "https://aerospaceglobalnews.com/news/united-starlink-1000-aircraft-end-2026/"
     ]
   },
   "AI": {
@@ -136,7 +192,7 @@ const WIFI_REGISTRY = {
     ],
     "access": "Free on wifi-fitted A350/787-9/select A321neo",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://www.airindia.com/in/en/newsroom/press-release/Air-India-becomes-the-first-Indian-airline-to-offer-wi-fi-on-domestic-flights.html",
       "https://livefromalounge.com/hughes-to-power-air-india-in-flight-connectivity-2027-onwards/"
@@ -153,7 +209,7 @@ const WIFI_REGISTRY = {
     ],
     "access": "IndiGo has no inflight wifi today; first A321XLR wifi trials expected late 2026",
     "confidence": "reported",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://www.happyfares.in/blog/inflight-wifi-indian-airlines-2026/"
     ]
@@ -182,32 +238,58 @@ const WIFI_REGISTRY = {
         "fleet": "most",
         "provider": "Viasat (Delta Sync)",
         "orbit": "GEO"
+      },
+      {
+        "fleet": "rollout",
+        "provider": "Amazon Leo LEO agreed 31 March 2026 for an initial 500 aircraft with installation from 2028, free for SkyMiles members; Viasat GEO until then",
+        "orbit": "mixed GEO/LEO"
       }
     ],
     "access": "Free for SkyMiles members (free signup); nearly all domestic + transatlantic fitted, transpacific completing through 2026",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://www.delta.com/us/en/onboard/inflight-entertainment/onboard-wifi",
-      "https://traveltomorrow.com/delta-installs-free-wi-fi-on-1000th-plane-entire-fleet-to-be-equipped-in-2026/"
+      "https://traveltomorrow.com/delta-installs-free-wi-fi-on-1000th-plane-entire-fleet-to-be-equipped-in-2026/",
+      "https://news.delta.com/delta-amazon-leo-sign-agreement-deliver-next-era-connected-travel-and-digital-experiences"
     ]
   },
   "BA": {
     "starlink": {
       "status": "flying",
-      "access": "free"
+      "access": "free",
+      "progress": {
+        "done": 5,
+        "of": 30,
+        "scope": "787 fleet, first phase (12 787-8s, then 18 787-9s)",
+        "as_of": "2026-06",
+        "basis": "trade",
+        "source": "https://simpleflying.com/british-airways-suspends-starlink-installations-later-this-year/"
+      },
+      "milestones": [
+        {
+          "date": "2026-06",
+          "text": "Installations paused for the summer after five 787-8s; resume at the end of October",
+          "source": "https://simpleflying.com/british-airways-suspends-starlink-installations-later-this-year/"
+        },
+        {
+          "date": "2026-03-19",
+          "text": "First Starlink flight, a 787-8 to Houston",
+          "source": "https://mediacentre.britishairways.com/news/19032026/british-airways-first-starlink-flight-takes-off-making-the-airline-the-first-in-the-uk-to-launch-the-fastest-wi-fi-in-the-sky"
+        }
+      ]
     },
     "airline": "British Airways",
     "rules": [
       {
         "fleet": "rollout",
-        "provider": "Legacy GEO wifi on most aircraft; Starlink in service since 19 March 2026 on five Boeing 787s (installations paused for summer, resuming October 2026), free in every cabin on equipped aircraft",
+        "provider": "Legacy GEO wifi on most aircraft; Starlink in service since 19 March 2026 on five Boeing 787-8s (installations paused for summer, resuming end of October 2026 with the remaining seven 787-8s, then the 18 787-9s), free in every cabin on equipped aircraft",
         "orbit": "mixed GEO/LEO"
       }
     ],
     "access": "Paid GEO packages on unequipped aircraft with free messaging for Executive Club members; free full wifi in all cabins on Starlink-equipped aircraft.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://mediacentre.britishairways.com/news/06112025/british-airways-signs-major-deal-with-starlink-to-provide-every-customer-in-every-cabin-free-wi-fi-that-feels-like-home-another-big-investment-for-the-airline-as-part-of-its-7bn-transformation-journey",
       "https://mediacentre.britishairways.com/news/19032026/british-airways-first-starlink-flight-takes-off-making-the-airline-the-first-in-the-uk-to-launch-the-fastest-wi-fi-in-the-sky"
@@ -215,30 +297,54 @@ const WIFI_REGISTRY = {
   },
   "LH": {
     "starlink": {
-      "status": "announced",
-      "access": "free_with_account"
+      "status": "flying",
+      "access": "free_with_account",
+      "progress": {
+        "done": 1,
+        "of": 11,
+        "scope": "A320-family launch batch due by end of 2026",
+        "as_of": "2026-08-19",
+        "basis": "airline",
+        "source": "https://newsroom.lufthansagroup.com/en/lufthansa-takes-off-with-starlink-high-speed-internet-for-the-first-time/"
+      },
+      "milestones": [
+        {
+          "date": "2026-08-19",
+          "text": "First Starlink passenger flight, A320neo D-AINM on LH234 Frankfurt to Rome",
+          "source": "https://newsroom.lufthansagroup.com/en/lufthansa-takes-off-with-starlink-high-speed-internet-for-the-first-time/"
+        }
+      ]
     },
     "airline": "Lufthansa",
     "rules": [
       {
         "fleet": "rollout",
-        "provider": "FlyNet (GEO) today; first Starlink aircraft (A320neo D-AINM) enters service 19 August 2026, free for Miles & More and Travel ID members, 850+ group aircraft through 2029",
+        "provider": "FlyNet (GEO) on most aircraft; Starlink in passenger service since 19 August 2026 (first aircraft A320neo D-AINM, LH234 Frankfurt-Rome), up to ten more A320-family aircraft at Lufthansa and Lufthansa City Airlines due by end of 2026, around 850 group aircraft by 2029",
         "orbit": "mixed GEO/LEO"
       }
     ],
-    "access": "Messaging and tiered paid packages today; Starlink planned free for Miles & More and Travel ID members",
+    "access": "Messaging and tiered paid packages on FlyNet aircraft; Starlink is free for Miles & More and Travel ID users in every class on fitted aircraft",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://aerospaceglobalnews.com/news/lufthansa-group-starlink-in-flight-wifi-global-fleet/",
       "https://liveandletsfly.com/lufthansa-starlink-wi-fi/",
-      "https://runwaygirlnetwork.com/2026/08/lufthansa-a320neo-to-debut-starlink-inflight-wi-fi-on-august-19/"
+      "https://runwaygirlnetwork.com/2026/08/lufthansa-a320neo-to-debut-starlink-inflight-wi-fi-on-august-19/",
+      "https://newsroom.lufthansagroup.com/en/lufthansa-takes-off-with-starlink-high-speed-internet-for-the-first-time/",
+      "https://newsroom.lufthansagroup.com/en/lufthansa-group-launches-free-high-speed-internet-from-starlink/"
     ]
   },
   "AA": {
     "starlink": {
       "status": "announced",
-      "access": "unannounced"
+      "access": "unannounced",
+      "milestones": [
+        {
+          "date": "2026-05",
+          "text": "Starlink selected for 500-plus Airbus narrowbodies, installs from 2027",
+          "source": "https://www.cnbc.com/2026/05/26/american-airlines-spacex-starlink.html"
+        }
+      ]
     },
     "airline": "American Airlines",
     "rules": [
@@ -256,7 +362,7 @@ const WIFI_REGISTRY = {
     ],
     "access": "Free since January 2026 for AAdvantage members (free to join, can enroll onboard), sponsored by AT&T, across the entire narrowbody and dual-class regional fleets; 777s and Panasonic-fitted 787s keep paid Panasonic wifi; Starlink announced May 2026 for 500+ Airbus narrowbodies with installs from 2027.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://news.aa.com/news/news-details/2026/American-Airlines-launches-FREE-high-speed-Wi-Fi-sponsored-by-ATT-available-on-more-aircraft-than-any-other-carrier-in-the-world/default.aspx",
       "https://about.att.com/aboutus/pressrelease/2026/american-airlines-launches-free-wifi.html",
@@ -267,7 +373,27 @@ const WIFI_REGISTRY = {
   "AS": {
     "starlink": {
       "status": "flying",
-      "access": "free_with_account"
+      "access": "free_with_account",
+      "progress": {
+        "done": 142,
+        "of": 400,
+        "scope": "Alaska and Hawaiian combined fleet",
+        "as_of": "2026-09",
+        "basis": "tracker",
+        "source": "https://www.starlinkflights.com/airlines/as"
+      },
+      "milestones": [
+        {
+          "date": "2026-07",
+          "text": "All E175 regional jets equipped; 737 retrofits under way, 787s from autumn 2026",
+          "source": "https://www.futuretravelexperience.com/2026/07/alaska-airlines-and-hawaiian-airlines-accelerate-starlink-wifi-rollout-across-combined-fleet/"
+        },
+        {
+          "date": "2026-07",
+          "text": "Free Atmos Rewards membership now required for free Starlink on Alaska and Hawaiian",
+          "source": "https://news.alaskaair.com/guest-experience/atmos-rewards-members-unlock-free-inflight-wi-fi-on-alaska-hawaiian-airlines-thanks-to-t-mobile/"
+        }
+      ]
     },
     "airline": "Alaska Airlines",
     "rules": [
@@ -279,7 +405,7 @@ const WIFI_REGISTRY = {
     ],
     "access": "Free on Starlink-equipped aircraft, sponsored by T-Mobile; since mid-July 2026 a free Atmos Rewards membership is required (under-18s can connect with reservation details). Non-Starlink aircraft remain paid.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://news.alaskaair.com/guest-experience/atmos-rewards-members-unlock-free-inflight-wi-fi-on-alaska-hawaiian-airlines-thanks-to-t-mobile/",
       "https://www.futuretravelexperience.com/2026/07/alaska-airlines-and-hawaiian-airlines-accelerate-starlink-wifi-rollout-across-combined-fleet/"
@@ -296,13 +422,13 @@ const WIFI_REGISTRY = {
       },
       {
         "fleet": "rollout",
-        "provider": "Amazon Project Kuiper LEO on roughly a quarter of the fleet, installs beginning 2027 and completing 2028, running alongside Viasat as a hybrid GEO/LEO network",
+        "provider": "Amazon Leo (formerly Project Kuiper) LEO on roughly a quarter of the fleet, installs beginning 2027 and completing 2028, running alongside Viasat as a hybrid GEO/LEO network",
         "orbit": "mixed GEO/LEO"
       }
     ],
     "access": "Free for every passenger at every seat with no loyalty membership or purchase required, and has been since 2013.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://investors.viasat.com/news-releases/news-release-details/jetblue-becomes-only-airline-free-high-speed-wi-fi-every-seat",
       "https://www.cnbc.com/2025/09/04/jetblue-in-flight-wifi-amazon-kuiper-satellite.html",
@@ -312,7 +438,19 @@ const WIFI_REGISTRY = {
   "WN": {
     "starlink": {
       "status": "flying",
-      "access": "free_with_account"
+      "access": "free_with_account",
+      "milestones": [
+        {
+          "date": "2026-06",
+          "text": "First Starlink 737-800 enters service; about 300 of 800-plus 737s targeted by end of 2026",
+          "source": "https://www.aerotime.aero/articles/southwest-airlines-debuts-starlink-inflight-wi-fi-connectivity"
+        },
+        {
+          "date": "2025-10-24",
+          "text": "Wi-Fi becomes free for Rapid Rewards members",
+          "source": "https://paxex.aero/southwest-wi-fi-goes-free/"
+        }
+      ]
     },
     "airline": "Southwest",
     "rules": [
@@ -324,7 +462,7 @@ const WIFI_REGISTRY = {
     ],
     "access": "Free for Rapid Rewards members (free to join) since 24 October 2025; non-members pay a flat $8 per device per flight.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://runwaygirlnetwork.com/2025/09/southwest-free-inflight-wi-fi/",
       "https://paxex.aero/southwest-wi-fi-goes-free/",
@@ -335,7 +473,14 @@ const WIFI_REGISTRY = {
   "F9": {
     "starlink": {
       "status": "announced",
-      "access": "unannounced"
+      "access": "unannounced",
+      "milestones": [
+        {
+          "date": "2026-07-14",
+          "text": "Starlink announced, installs from early 2027",
+          "source": "https://news.flyfrontier.com/frontier-airlines-to-offer-starlink-the-fastest-wifi-in-the-sky/"
+        }
+      ]
     },
     "airline": "Frontier",
     "rules": [
@@ -347,7 +492,7 @@ const WIFI_REGISTRY = {
     ],
     "access": "No inflight Wi-Fi available on any Frontier aircraft today; Starlink service starts early 2027 and pricing has not been announced.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://news.flyfrontier.com/frontier-airlines-to-offer-starlink-the-fastest-wifi-in-the-sky/",
       "https://www.cnbc.com/2026/07/14/frontier-airlines-wifi-spacex-starlink.html",
@@ -357,7 +502,21 @@ const WIFI_REGISTRY = {
   "HA": {
     "starlink": {
       "status": "flying",
-      "access": "free_with_account"
+      "access": "free_with_account",
+      "progress": {
+        "pct": 100,
+        "scope": "Airbus fleet (A330 and A321neo); 787s from autumn 2026, 717s never",
+        "as_of": "2024-10",
+        "basis": "trade",
+        "source": "https://www.futuretravelexperience.com/2024/10/hawaiian-airlines-now-offering-fast-and-free-starlink-wifi-connectivity-across-entire-airbus-fleet/"
+      },
+      "milestones": [
+        {
+          "date": "2024-10",
+          "text": "Starlink live across the entire Airbus fleet",
+          "source": "https://www.futuretravelexperience.com/2024/10/hawaiian-airlines-now-offering-fast-and-free-starlink-wifi-connectivity-across-entire-airbus-fleet/"
+        }
+      ]
     },
     "airline": "Hawaiian Airlines",
     "rules": [
@@ -379,7 +538,7 @@ const WIFI_REGISTRY = {
     ],
     "access": "Free on Starlink-equipped Airbus aircraft; since mid-July 2026 requires free Atmos Rewards membership, sponsored by T-Mobile. Boeing 717 inter-island flights have no Wi-Fi and none is planned.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://www.futuretravelexperience.com/2024/10/hawaiian-airlines-now-offering-fast-and-free-starlink-wifi-connectivity-across-entire-airbus-fleet/",
       "https://onemileatatime.com/news/hawaiian-airlines-free-starlink-wi-fi/",
@@ -389,7 +548,22 @@ const WIFI_REGISTRY = {
   "AC": {
     "starlink": {
       "status": "flying",
-      "access": "free_with_account"
+      "access": "free_with_account",
+      "progress": {
+        "done": 9,
+        "of": 25,
+        "scope": "Jazz Dash 8-400 fleet only; mainline stays on Intelsat 2Ku",
+        "as_of": "2026-02",
+        "basis": "trade",
+        "source": "https://paxex.aero/air-canada-q400-starlink/"
+      },
+      "milestones": [
+        {
+          "date": "2026-02",
+          "text": "9 of 25 Dash 8-400s equipped under the Jazz cabin programme",
+          "source": "https://paxex.aero/air-canada-q400-starlink/"
+        }
+      ]
     },
     "airline": "Air Canada",
     "rules": [
@@ -407,7 +581,7 @@ const WIFI_REGISTRY = {
     ],
     "access": "Free for Aeroplan members (free to join), sponsored by Bell, on North America, Mexico and Caribbean flights since 1 May 2025 and expanding to international and widebody routes during 2026; non-members can buy a flat-fee pass.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://www.newswire.ca/news-releases/fast-free-wi-fi-for-aeroplan-members-sponsored-by-bell-now-on-air-canada-air-canada-rouge-and-air-canada-express-flights-in-north-america-mexico-and-the-caribbean-845790877.html",
       "https://paxex.aero/air-canada-free-wifi/",
@@ -419,7 +593,14 @@ const WIFI_REGISTRY = {
   "WS": {
     "starlink": {
       "status": "flying",
-      "access": "free_with_account"
+      "access": "free_with_account",
+      "progress": {
+        "pct": 100,
+        "scope": "737 fleet (completion reported for end of 2025); 787-9 installs run through 2026",
+        "as_of": "2025-12",
+        "basis": "trade",
+        "source": "https://mobilesyrup.com/2025/09/26/westjet-free-wi-fi-starlink-telus-end-of-year/"
+      }
     },
     "airline": "WestJet",
     "rules": [
@@ -473,7 +654,14 @@ const WIFI_REGISTRY = {
   "CM": {
     "starlink": {
       "status": "flying",
-      "access": "paid"
+      "access": "paid",
+      "milestones": [
+        {
+          "date": "2026-07",
+          "text": "First Starlink 737 MAX 9 in service; fleet completion targeted for Q1 2027",
+          "source": "https://www.copaair.com/en-gs/news/copa-airlines-redefines-onboard-connectivity-in-latin-america-with-starlink/"
+        }
+      ]
     },
     "airline": "Copa Airlines",
     "rules": [
@@ -485,7 +673,7 @@ const WIFI_REGISTRY = {
     ],
     "access": "Paid for most passengers via the onboard Starlink portal; free in Business class, for ConnectMiles PreferMember Gold, Platinum and Presidential members, and for existing Starlink Residential or Starlink Roam subscribers.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://www.copaair.com/en-gs/news/copa-airlines-redefines-onboard-connectivity-in-latin-america-with-starlink/",
       "https://onemileatatime.com/news/copa-airlines-starlink-wi-fi/",
@@ -768,19 +956,20 @@ const WIFI_REGISTRY = {
       },
       {
         "types": "A330|787|A380|A350",
-        "provider": "Viasat/ViaSat-3 Ka international; 787 fleet complete July 2026, A380 retrofits underway into early-mid 2027, ViaSat-3 F3 APAC switch-on targeted Sep 2026; A380s still largely unequipped",
+        "provider": "Viasat/ViaSat-3 Ka international; 787 fleet complete July 2026, A380 retrofits underway into early-mid 2027; ViaSat-3 F3 (Asia-Pacific) entered service 31 August 2026; A380s still largely unequipped",
         "orbit": "GEO"
       }
     ],
     "access": "Free to every passenger with no fare-class or frequent-flyer gating, domestically and on the international aircraft switched on so far.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://centreforaviation.com/news/qantas-group-completes-wifi-rollout-across-boeing-787-fleet-1367262",
       "https://www.qantasnewsroom.com.au/media-releases/qantas-switches-on-fast-free-inflight-wifi",
       "https://paxex.aero/qantas-free-wifi-longhaul-fleet/",
       "https://travelweekly.com.au/what-wi-fi-will-be-on-your-flight-in-2026/",
-      "https://onemileatatime.com/news/qantas-free-wi-fi/"
+      "https://onemileatatime.com/news/qantas-free-wi-fi/",
+      "https://www.globenewswire.com/news-release/2026/08/31/3353252/0/en/viasat-3-f3-satellite-enters-service-across-asia-pacific.html"
     ]
   },
   "VA": {
@@ -809,7 +998,19 @@ const WIFI_REGISTRY = {
   "NZ": {
     "starlink": {
       "status": "flying",
-      "access": "free_with_account"
+      "access": "free_with_account",
+      "milestones": [
+        {
+          "date": "2025-07",
+          "text": "World-first Starlink ATR 72 flying in the domestic trial",
+          "source": "https://www.airnewzealandnewsroom.com/onboard-starlink-wi-fi-trial-taking-connectivity-to-the-skies"
+        },
+        {
+          "date": "2025-06",
+          "text": "First Starlink A320 (ZK-OXE) enters domestic trial service",
+          "source": "https://traveltalk.nz/news-opinion/air-nz-rolls-out-its-first-starlink-equipped-a320-aircraft/"
+        }
+      ]
     },
     "airline": "Air New Zealand",
     "rules": [
@@ -868,7 +1069,14 @@ const WIFI_REGISTRY = {
   "SQ": {
     "starlink": {
       "status": "announced",
-      "access": "unannounced"
+      "access": "unannounced",
+      "milestones": [
+        {
+          "date": "2026-05",
+          "text": "Starlink confirmed for A350s and A380s; installs from Q1 2027, completing 2029",
+          "source": "https://mainlymiles.com/2026/05/04/singapore-airlines-confirms-starlink-as-its-new-wi-fi-provider/"
+        }
+      ]
     },
     "airline": "Singapore Airlines",
     "rules": [
@@ -893,7 +1101,7 @@ const WIFI_REGISTRY = {
     ],
     "access": "Free unlimited for Suites/First/Business and all PPS Club members, and free for KrisFlyer members in Premium Economy and Economy (membership is free and can be joined in-flight); non-members pay US$3.99/1h, US$8.99/3h or US$15.99 full flight.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://mainlymiles.com/2026/05/30/complete-guide-sia-wi-fi/",
       "https://mainlymiles.com/2026/05/04/singapore-airlines-confirms-starlink-as-its-new-wi-fi-provider/",
@@ -987,7 +1195,14 @@ const WIFI_REGISTRY = {
   "KE": {
     "starlink": {
       "status": "announced",
-      "access": "free"
+      "access": "free",
+      "milestones": [
+        {
+          "date": "2026-09",
+          "text": "Free long-haul service on 777-300ERs and A350-900s announced for September 2026; not yet confirmed in service",
+          "source": "https://en.sedaily.com/finance/2026/09/04/korean-air-to-offer-free-starlink-wi-fi-on-long-haul"
+        }
+      ]
     },
     "airline": "Korean Air",
     "rules": [
@@ -1003,7 +1218,7 @@ const WIFI_REGISTRY = {
       },
       {
         "types": "A350",
-        "provider": "Panasonic, paid GEO wifi live; Starlink hardware installing since Jul 2026 but passenger service not yet switched on",
+        "provider": "Panasonic, paid GEO wifi live; Starlink installation under way, with Korean Air saying passenger service starts in September 2026 on the 777-300ER and A350-900, free in every seat; not confirmed live as of 5 September 2026",
         "orbit": "GEO"
       },
       {
@@ -1014,12 +1229,14 @@ const WIFI_REGISTRY = {
     ],
     "access": "Paid today on equipped narrowbodies and A350s (about US$10.95 for two hours, US$20.95 full flight); Starlink is announced as free of charge gate-to-gate for all passengers once service starts.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://apex.aero/articles/korean-air-hanjin-group-airlines-select-starlink-for-fleetwide-in-flight-wi-fi/",
       "https://en.sedaily.com/finance/2026/07/21/merged-korean-air-to-offer-free-wi-fi-via-starlink",
       "https://paxex.aero/korean-air-wifi-a321neo-viasat/",
-      "https://onemileatatime.com/news/korean-air-free-starlink-wi-fi/"
+      "https://onemileatatime.com/news/korean-air-free-starlink-wi-fi/",
+      "https://en.sedaily.com/finance/2026/09/04/korean-air-to-offer-free-starlink-wi-fi-on-long-haul",
+      "https://www.koreaherald.com/article/10630658"
     ],
     "needs_verification": true
   },
@@ -1032,7 +1249,7 @@ const WIFI_REGISTRY = {
     "rules": [
       {
         "types": "A350",
-        "provider": "Panasonic Avionics; the Hanjin-group Starlink switch is planned (Korean Air first, Q3 2026 at the earliest) with no Asiana aircraft live yet",
+        "provider": "Panasonic Avionics; Starlink is being installed on the 777-300ER and A350-900 first alongside Korean Air, with group service due from September 2026; no Asiana aircraft confirmed live yet",
         "orbit": "GEO"
       },
       {
@@ -1048,13 +1265,14 @@ const WIFI_REGISTRY = {
     ],
     "access": "Paid today (roughly US$11.95/1h, US$16.95/3h, US$21.95 unlimited) with complimentary messaging on the A321neo fleet; becomes free once Starlink enters service.",
     "confidence": "reported",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://apex.aero/articles/korean-air-hanjin-group-airlines-select-starlink-for-fleetwide-in-flight-wi-fi/",
       "https://en.sedaily.com/finance/2026/07/21/merged-korean-air-to-offer-free-wi-fi-via-starlink",
       "https://m.flyasiana.com/C/JP/EN/contents/cabin-wi-fi",
       "https://seatwifi.com/asiana-wifi",
-      "https://runwaygirlnetwork.com/2025/12/korean-air-and-hanjin-group-to-offer-starlink-fleetwide/"
+      "https://runwaygirlnetwork.com/2025/12/korean-air-and-hanjin-group-to-offer-starlink-fleetwide/",
+      "https://www.koreaherald.com/article/10630658"
     ],
     "needs_verification": true
   },
@@ -1074,14 +1292,15 @@ const WIFI_REGISTRY = {
         "orbit": "NONE"
       }
     ],
-    "access": "Since 1 October 2025 wifi is complimentary for Business Class and Diamond/Gold/Silver Infinity MileageLands members and paid otherwise (from about US$2 for 30 minutes up to US$39.95 for 1GB); a free-browsing promotion still covers some routes until 31 Aug 2026.",
+    "access": "Since 1 October 2025 wifi is complimentary for Business Class and Diamond/Gold Infinity MileageLands members and paid otherwise (from about US$2 for 30 minutes up to US$39.95 for 1GB). A limited-time promotion gives every passenger complimentary full-flight Unlimited Web Browsing until 31 October 2026 (no video streaming, calls or VPN). From 1 November 2026 Business Class keeps unlimited browsing for everyone; in Economy, Diamond/Gold get unlimited browsing, Silver and Green get unlimited text, non-members pay.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://www.evaair.com/en-global/customer-services/faq/detail.html?FaqCategories=inflight-wi-fi",
       "https://www.evaair.com/en-global/fly-prepare/flying-with-eva/inflight-entertainment-service/connectivity-and-Power/",
       "https://www.evaair.com/en-us/about-eva-air/news/news-releases/2025-05-14-evaair-to-launch-exciting-upgrade-for-inflight-wi-fi-service-this-july.html",
-      "https://upgradedpoints.com/news/eva-air-free-wi-fi-messaging/"
+      "https://upgradedpoints.com/news/eva-air-free-wi-fi-messaging/",
+      "https://www.evaair.com/en-global/fly-prepare/flying-with-eva/inflight-entertainment-service/connectivity-and-power/"
     ]
   },
   "CI": {
@@ -1109,12 +1328,12 @@ const WIFI_REGISTRY = {
         "fleet": "rollout",
         "types": "787",
         "orbit": "UNKNOWN",
-        "provider": "787s entering service from mid-2026 advertise complimentary wifi across the 24-jet fleet; the connectivity supplier has not been confirmed"
+        "provider": "787s entering service from June 2026 offer complimentary Wi-Fi to Business and Premium Economy passengers across the 24-jet order; the connectivity supplier has not been confirmed"
       }
     ],
     "access": "Since 1 Aug 2025, complimentary unlimited Wi-Fi for premium-cabin passengers and top-tier Dynasty Flyer members (Gold, Emerald, Paragon), with the free messaging tier open to every other passenger.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://paxex.aero/china-airlines-announces-free-inflight-wi-fi/",
       "https://www.china-airlines.com/cn/en/prepare-for-the-fly/In-flight/wifi",
@@ -1253,7 +1472,22 @@ const WIFI_REGISTRY = {
   "AF": {
     "starlink": {
       "status": "flying",
-      "access": "free_with_account"
+      "access": "free_with_account",
+      "progress": {
+        "done": 130,
+        "of": 186,
+        "scope": "aircraft in the retrofit programme (777-300ER, A350, A220, E190, A320)",
+        "as_of": "2026-06",
+        "basis": "trade",
+        "source": "https://onemileatatime.com/news/air-france-free-starlink-wi-fi/"
+      },
+      "milestones": [
+        {
+          "date": "2026-06",
+          "text": "28 of 31 777-300ERs, 30 of 41 A350s and 45 of 56 A220s equipped",
+          "source": "https://onemileatatime.com/news/air-france-free-starlink-wi-fi/"
+        }
+      ]
     },
     "airline": "Air France",
     "rules": [
@@ -1272,7 +1506,7 @@ const WIFI_REGISTRY = {
     ],
     "access": "Free in every cabin, but you must log into a Flying Blue account (free, can be created onboard).",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://corporate.airfrance.com/en/news/air-france-launches-free-ultra-high-speed-wi-fi-board-all-its-aircraft",
       "https://onemileatatime.com/news/air-france-free-starlink-wi-fi/",
@@ -1309,7 +1543,14 @@ const WIFI_REGISTRY = {
   "IB": {
     "starlink": {
       "status": "flying",
-      "access": "free"
+      "access": "free",
+      "milestones": [
+        {
+          "date": "2026-06-23",
+          "text": "First revenue flight, A330-300 EC-MAA Madrid to Sao Paulo",
+          "source": "https://grupo.iberia.com/pressrelease/details/25713"
+        }
+      ]
     },
     "airline": "Iberia",
     "rules": [
@@ -1321,7 +1562,7 @@ const WIFI_REGISTRY = {
     ],
     "access": "Free for all passengers in every cabin on Starlink-equipped aircraft.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://grupo.iberia.com/pressrelease/details/25713",
       "https://onemileatatime.com/news/iberia-free-starlink-wi-fi/",
@@ -1332,7 +1573,22 @@ const WIFI_REGISTRY = {
   "VS": {
     "starlink": {
       "status": "flying",
-      "access": "free_with_account"
+      "access": "free_with_account",
+      "progress": {
+        "done": 12,
+        "of": 12,
+        "scope": "A350 fleet; 787-9s from H2 2026, A330neos in 2027",
+        "as_of": "2026-06-02",
+        "basis": "airline",
+        "source": "https://corporate.virginatlantic.com/gb/en/media/press-releases/wi-fly-update-virgin-atlantic-accelerates-starlink-rollout-for-take-off.html"
+      },
+      "milestones": [
+        {
+          "date": "2026-06-02",
+          "text": "All 12 A350s complete",
+          "source": "https://corporate.virginatlantic.com/gb/en/media/press-releases/wi-fly-update-virgin-atlantic-accelerates-starlink-rollout-for-take-off.html"
+        }
+      ]
     },
     "airline": "Virgin Atlantic",
     "rules": [
@@ -1343,7 +1599,7 @@ const WIFI_REGISTRY = {
       },
       {
         "types": "787",
-        "provider": "Viasat; Starlink retrofits begin H2 2026, no 787 in Starlink service yet",
+        "provider": "Viasat; Starlink retrofits from H2 2026 with two-thirds of the 787-9s due by end of 2026, no 787 in Starlink service confirmed yet",
         "orbit": "GEO"
       },
       {
@@ -1359,11 +1615,12 @@ const WIFI_REGISTRY = {
     ],
     "access": "Starlink is free gate to gate for Flying Club members (free to join), multiple devices allowed; the legacy Viasat service was paid.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://corporate.virginatlantic.com/gb/en/media/press-releases/virgin-atlantic-becomes-the-first-uk-airline-to-announce-free-fleet-wide-starlink-wi-fi.html",
       "https://onemileatatime.com/news/virgin-atlantic-free-starlink-wi-fi/",
-      "https://www.futuretravelexperience.com/2026/04/virgin-atlantic-accelerates-starlink-rollout-to-create-home-away-from-home-experience/"
+      "https://www.futuretravelexperience.com/2026/04/virgin-atlantic-accelerates-starlink-rollout-to-create-home-away-from-home-experience/",
+      "https://corporate.virginatlantic.com/gb/en/media/press-releases/wi-fly-update-virgin-atlantic-accelerates-starlink-rollout-for-take-off.html"
     ]
   },
   "LX": {
@@ -1391,7 +1648,7 @@ const WIFI_REGISTRY = {
     ],
     "access": "Today: free unlimited messaging in the FlyNet portal for Travel ID / Miles & More customers, full internet is paid on a tiered scale (roughly EUR 4 to 35 by flight length; SWISS Connect data packs CHF 9 / CHF 19; First gets a complimentary 50MB voucher). Once Starlink lands it is free in all classes for status and Travel ID customers.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://runwaygirlnetwork.com/2026/02/lufthansa-group-to-retain-existing-ifc-until-starlink-pivot-is-complete/",
       "https://runwaygirlnetwork.com/2026/01/lufthansa-group-hands-massive-fleet-wide-ifc-contract-to-starlink/",
@@ -1424,7 +1681,7 @@ const WIFI_REGISTRY = {
     ],
     "access": "Today: free unlimited FlyNet messaging for Travel ID / Miles & More customers on equipped A320-family and 787 flights; full internet is paid by flight length (about EUR 4 to 10 short, 10 to 20 medium, 20 to 35 long-haul). Starlink will be free in all classes for status and Travel ID customers.",
     "confidence": "reported",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://www.austrianairlines.ag/en/2026/01/14/free-high-speed-internet-above-the-clouds-austrian-airlines-to-use-starlink-for-all-passengers-in-the-future/",
       "https://www.austrian.com/us/en/internet-on-board",
@@ -1447,7 +1704,7 @@ const WIFI_REGISTRY = {
     ],
     "access": "No onboard internet at all today. When Starlink arrives it will be free of charge across all travel classes for status customers and Travel ID users.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://press.brusselsairlines.com/brussels-airlines-and-lufthansa-group-will-roll-out-free-high-speed-wi-fi-together-with-starlink",
       "https://runwaygirlnetwork.com/2025/05/brussels-airlines-airbaltic-eurobusiness/",
@@ -1457,24 +1714,45 @@ const WIFI_REGISTRY = {
   "SK": {
     "starlink": {
       "status": "flying",
-      "access": "free_with_account"
+      "access": "free_with_account",
+      "progress": {
+        "done": 81,
+        "of": 81,
+        "scope": "A320neo fleet; A330, A350 and regional types due before end of 2026",
+        "as_of": "2026-09-01",
+        "basis": "airline",
+        "source": "https://www.sasgroup.net/newsroom/press-releases/2026/sas-completes-starlink-installation-across-entire-airbus-a320neo-fleet-in-just-six-months/"
+      },
+      "milestones": [
+        {
+          "date": "2026-09-01",
+          "text": "All 81 A320neos equipped, six months after the first flight",
+          "source": "https://www.sasgroup.net/newsroom/press-releases/2026/sas-completes-starlink-installation-across-entire-airbus-a320neo-fleet-in-just-six-months/"
+        },
+        {
+          "date": "2026-03",
+          "text": "Starlink goes live for EuroBonus members",
+          "source": "https://www.sasgroup.net/newsroom/press-releases/2026/sas-goes-live-with-starlink-high-speed-wifi/"
+        }
+      ]
     },
     "airline": "SAS",
     "rules": [
       {
         "fleet": "rollout",
-        "provider": "Starlink live since Mar 2026 (A320 family first, remaining types through Q4 2026); legacy Viasat/Panasonic/GX until converted",
+        "provider": "Starlink live since March 2026; all 81 A320neos equipped as of 1 September 2026, with the A330/A350 widebodies and regional types scheduled before the end of 2026; legacy Viasat/Panasonic/GX until converted",
         "orbit": "mixed GEO/LEO"
       }
     ],
     "access": "Free for EuroBonus members (free to join) on Starlink-equipped aircraft, delivered with mobile operator 3; speeds quoted above 500 Mbps.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://www.sasgroup.net/newsroom/press-releases/2026/sas-goes-live-with-starlink-high-speed-wifi/",
       "https://runwaygirlnetwork.com/2025/01/sas-taps-starlink/",
       "https://www.flysas.com/us-en/travel-extras/starlink-high-speed-wifi",
-      "https://www.businesstravelnewseurope.com/Air-Travel/SAS-launches-Starlink-onboard-wifi-for-EuroBonus-members"
+      "https://www.businesstravelnewseurope.com/Air-Travel/SAS-launches-Starlink-onboard-wifi-for-EuroBonus-members",
+      "https://www.sasgroup.net/newsroom/press-releases/2026/sas-completes-starlink-installation-across-entire-airbus-a320neo-fleet-in-just-six-months/"
     ]
   },
   "AY": {
@@ -1569,7 +1847,14 @@ const WIFI_REGISTRY = {
   "EI": {
     "starlink": {
       "status": "flying",
-      "access": "free"
+      "access": "free",
+      "milestones": [
+        {
+          "date": "2026-03-29",
+          "text": "First Starlink flight, A330 EI-EIN Dublin to New York",
+          "source": "https://mediacentre.aerlingus.com/news/work-stream-or-game-aer-lingus-takes-off-with-starlink-the-fastest-wi-fi-in-the-sky/29032026"
+        }
+      ]
     },
     "airline": "Aer Lingus",
     "rules": [
@@ -1582,7 +1867,7 @@ const WIFI_REGISTRY = {
     ],
     "access": "Free for all passengers on Starlink-equipped aircraft.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://mediacentre.aerlingus.com/news/work-stream-or-game-aer-lingus-takes-off-with-starlink-the-fastest-wi-fi-in-the-sky/29032026",
       "https://runwaygirlnetwork.com/2026/03/press-release-aer-lingus-takes-off-with-starlink-inflight-wi-fi/",
@@ -1610,7 +1895,7 @@ const WIFI_REGISTRY = {
     ],
     "access": "Paid packages for most passengers today; free messaging for business class on long-haul and on international flights over three hours. Starlink will be free in all travel classes for Travel ID registrants and loyalty status holders as it rolls out.",
     "confidence": "reported",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://www.ita-airways.com/en_us/fly-ita/in-flight/connectivity-on-board.html",
       "https://cabincrewhq.com/ita-airways-inflight-wifi/",
@@ -1671,7 +1956,7 @@ const WIFI_REGISTRY = {
     ],
     "access": "No passenger internet today anywhere in the fleet; the Starlink deal does not begin installs until 2027.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://aerospaceglobalnews.com/news/wizz-air-immfly-digital-cabin-wifi/",
       "https://www.aerotime.aero/articles/wizz-air-elon-starlink-wifi-aircraft",
@@ -1759,23 +2044,44 @@ const WIFI_REGISTRY = {
   "GF": {
     "starlink": {
       "status": "flying",
-      "access": "free"
+      "access": "free",
+      "progress": {
+        "done": 6,
+        "pct": 75,
+        "scope": "A320neo-family fleet; 787-9s pending certification",
+        "as_of": "2026-09",
+        "basis": "trade",
+        "source": "https://www.ttnworldwide.com/ArticleTA/467516/gulf-air-equips-75pc-of-a320neo-fleet-with-starlink-connectivity"
+      },
+      "milestones": [
+        {
+          "date": "2026-09",
+          "text": "Six A320neo-family aircraft equipped, about 75% of that fleet",
+          "source": "https://www.ttnworldwide.com/ArticleTA/467516/gulf-air-equips-75pc-of-a320neo-fleet-with-starlink-connectivity"
+        },
+        {
+          "date": "2026-05",
+          "text": "First Starlink aircraft enters service",
+          "source": "https://centreforaviation.com/news/gulf-air-launches-first-aircraft-equipped-with-starlink-1359284"
+        }
+      ]
     },
     "airline": "Gulf Air",
     "rules": [
       {
         "fleet": "rollout",
-        "provider": "Starlink, progressive fleet rollout from mid-2026 (first aircraft May 2026); a given flight may not be fitted yet",
+        "provider": "Starlink, progressive fleet rollout (first aircraft May 2026; six A320neo-family aircraft equipped, about 75% of the A320neo fleet, as of early September 2026); 787-9s still on the legacy Falcon Wi-Fi pending certification; a given flight may not be fitted yet",
         "orbit": "mixed GEO/LEO"
       }
     ],
     "access": "Free, unlimited, gate-to-gate for every passenger regardless of cabin or fare on Starlink-fitted aircraft.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://www.gulfair.com/about-gulf-air/media-center/Gulf-Air-to-Introduce-Starlink-Wi-Fi-Across-Its-Entire-Fleet-from-Mid-2026",
       "https://centreforaviation.com/news/gulf-air-launches-first-aircraft-equipped-with-starlink-1359284",
-      "https://www.futuretravelexperience.com/2026/02/gulf-air-to-introduce-high-speed-starlink-connectivity-across-entire-fleet-from-mid-2026/"
+      "https://www.futuretravelexperience.com/2026/02/gulf-air-to-introduce-high-speed-starlink-connectivity-across-entire-fleet-from-mid-2026/",
+      "https://www.ttnworldwide.com/ArticleTA/467516/gulf-air-equips-75pc-of-a320neo-fleet-with-starlink-connectivity"
     ],
     "needs_verification": true
   },
@@ -1891,7 +2197,7 @@ const WIFI_REGISTRY = {
     ],
     "access": "Paid today: Basic / Social / Business passes bought inflight with a card, Matmid points or FLY CARD, free for top-tier Platinum Matmid members. Starlink service is announced as complimentary from 2027.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://runwaygirlnetwork.com/2026/06/el-al-to-roll-out-starlink-inflight-wi-fi-starting-in-2027/",
       "https://www.aerotime.aero/articles/israels-el-al-becomes-latest-airline-to-sign-starlink-internet-deal",
@@ -1973,12 +2279,13 @@ const WIFI_REGISTRY = {
         "orbit": "NONE"
       }
     ],
-    "access": "No inflight Wi-Fi across the fleet historically. Kenya Airways announced in Mar 2026 that Wi-Fi would launch on the Nairobi-London route by July 2026 on the 777-300ER deployed there from 17 Jul 2026, expanding to other long-haul routes later; pricing, provider and rollout phases were explicitly not disclosed. As of mid-August 2026 there is no confirmation the service is actually live.",
+    "access": "No inflight Wi-Fi in service. The Nairobi-London launch promised for July 2026 did not happen: one 777-300ER has the hardware fitted but is waiting on a connectivity slot, and Kenya Airways now says installation across the long-haul fleet starts in Q2 2027 (London, Paris, New York, China and Amsterdam routes first) at a cost of US$20-22M; pricing and provider undisclosed.",
     "confidence": "reported",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://sokodirectory.com/2026/03/kenya-airways-to-introduce-wi-fi-on-london-route-by-july/",
-      "https://thebusinesswatch.com/kenya-airways-to-introduce-in-flight-wi-fi-on-london-route-by-july/"
+      "https://thebusinesswatch.com/kenya-airways-to-introduce-in-flight-wi-fi-on-london-route-by-july/",
+      "https://allafrica.com/stories/202608260278.html"
     ],
     "needs_verification": true
   },
@@ -2094,7 +2401,7 @@ const WIFI_REGISTRY = {
     ],
     "access": "No internet access is sold today; Volaris TV is a local streaming entertainment network costing about MXN 20 and works without connectivity.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://cms.volaris.com/es/informacion-util/sala-de-prensa/volaris-tv/",
       "https://volaristv.com/",
@@ -2181,7 +2488,7 @@ const WIFI_REGISTRY = {
     ],
     "access": "No inflight wifi is available today.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://www.emol.com/noticias/Economia/2026/07/14/1205595/jetsmart-starlink-wifi.html",
       "https://www.panrotas.com.br/aviacao/tecnologia/2026/07/jetsmart-deve-implementar-internet-starlink-a-bordo-em-2027",
@@ -2402,17 +2709,22 @@ const WIFI_REGISTRY = {
     "rules": [
       {
         "fleet": "all",
-        "provider": "None, no inflight connectivity",
+        "provider": "None in service; Starlink announced December 2025 under the Hanjin Group five-airline deal, with Air Busan's installation timing still to be decided",
         "orbit": "NONE"
       }
     ],
-    "access": "No inflight internet is currently offered on any aircraft.",
+    "access": "No inflight internet today; the group Starlink product is to be free once fitted.",
     "confidence": "reported",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
-      "https://www.airbusan.com"
+      "https://www.airbusan.com",
+      "https://www.koreaherald.com/article/10630658"
     ],
-    "needs_verification": true
+    "needs_verification": true,
+    "starlink": {
+      "status": "announced",
+      "access": "free"
+    }
   },
   "DY": {
     "airline": "Norwegian",
@@ -2488,7 +2800,7 @@ const WIFI_REGISTRY = {
     ],
     "access": "Paid passes only, roughly EUR 2.90 to 3.90 for messaging, EUR 3.90 to 6.90 for 30 or 60 minutes and EUR 7.90 to 9.90 for the whole flight; the free Wings Connect portal carries flight info and partner offers but no internet.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://www.eurowings.com/de/informieren/an-bord/bordunterhaltung.html",
       "https://newsroom.lufthansagroup.com/",
@@ -2565,7 +2877,14 @@ const WIFI_REGISTRY = {
   "BT": {
     "starlink": {
       "status": "flying",
-      "access": "free"
+      "access": "free",
+      "progress": {
+        "pct": 100,
+        "scope": "A220 fleet, the whole airline",
+        "as_of": "2026-08",
+        "basis": "airline",
+        "source": "https://www.airbaltic.com/en/extra-services/fast-and-free-internet-on-board"
+      }
     },
     "airline": "airBaltic",
     "rules": [
@@ -2696,7 +3015,7 @@ const WIFI_REGISTRY = {
     ],
     "access": "No onboard internet at present; the announced Starlink service is to be complimentary for all passengers once it enters service.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://news.flydubai.com/flydubai-announces-starlink-as-its-inflight-connectivity-partner",
       "https://www.exyuaviation.com/2024/05/flydubai-removes-onboard-wifi.html",
@@ -2947,7 +3266,7 @@ const WIFI_REGISTRY = {
     ],
     "access": "No inflight wifi is available today.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://www.philstar.com/business/2026/07/16/2542380/cebu-pacific-light-starlink-wifi-2027",
       "https://www.abs-cbn.com/news/business/2026/7/14/cebu-pacific-to-offer-starlink-wifi-to-passengers-1905"
@@ -2971,7 +3290,7 @@ const WIFI_REGISTRY = {
     ],
     "access": "On refreshed 787s wifi is complimentary in Business Class only, with paid packages in Economy; short-haul A320-family aircraft carry no internet at all.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://www.viasat.com/news/latest-news/aviation/2026/jetstar-selects-viasat-inflight-connectivity-long-haul-international-routes/",
       "https://paxex.aero/refreshed-787-takes-flight-for-jetstar/"
@@ -2993,7 +3312,7 @@ const WIFI_REGISTRY = {
     ],
     "access": "No general passenger internet product; the onboard portal is local streaming and retail only.",
     "confidence": "reported",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://paxex.aero/vietjet-signs-on-for-airfi-leo-trial/",
       "https://news.tuoitre.vn/vietjet-adds-95mn-to-starlink-investment-as-vietnams-in-flight-wi-fi-market-heats-up-103260816103229965.htm"
@@ -3003,7 +3322,14 @@ const WIFI_REGISTRY = {
   "ZG": {
     "starlink": {
       "status": "flying",
-      "access": "free"
+      "access": "free",
+      "progress": {
+        "pct": 100,
+        "scope": "787 fleet, the whole airline",
+        "as_of": "2026-08",
+        "basis": "trade",
+        "source": "https://paxex.aero/first-and-last-installs-for-two-starlink-customers/"
+      }
     },
     "airline": "ZIPAIR",
     "rules": [
@@ -3068,15 +3394,16 @@ const WIFI_REGISTRY = {
       {
         "fleet": "all",
         "types": "737|777",
-        "provider": "none in service; Starlink announced December 2025 under the Hanjin Group and Korean Air five-airline deal",
+        "provider": "none in service; Starlink announced December 2025 under the Hanjin Group deal, with Jin Air's Boeing 737-8s first in line after Korean Air's long-haul fleet",
         "orbit": "NONE"
       }
     ],
     "access": "No inflight wifi in service today; the group Starlink product will be free but installation starts with Korean Air long-haul aircraft.",
     "confidence": "reported",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
-      "https://news.google.com/rss/search?q=%EC%A7%84%EC%97%90%EC%96%B4+%EC%8A%A4%ED%83%80%EB%A7%81%ED%81%AC+%EA%B8%B0%EB%82%B4+%EC%99%80%EC%9D%B4%ED%8C%8C%EC%9D%B4+%EB%8F%84%EC%9E%85&hl=ko&gl=KR&ceid=KR:ko"
+      "https://news.google.com/rss/search?q=%EC%A7%84%EC%97%90%EC%96%B4+%EC%8A%A4%ED%83%80%EB%A7%81%ED%81%AC+%EA%B8%B0%EB%82%B4+%EC%99%80%EC%9D%B4%ED%8C%8C%EC%9D%B4+%EB%8F%84%EC%9E%85&hl=ko&gl=KR&ceid=KR:ko",
+      "https://www.koreaherald.com/article/10630658"
     ],
     "needs_verification": true
   },
@@ -4046,7 +4373,7 @@ const WIFI_REGISTRY = {
     ],
     "access": "No wifi available today; free wifi is announced for the incoming 737 MAX fleet but has not entered service.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://www.skymark.co.jp/en/news/detail/20250331_In-Flight_Wi-Fi_Service.html",
       "https://runwaygirlnetwork.com/2025/04/intelsat-multi-orbit-skymark-airlines/",
@@ -4160,17 +4487,18 @@ const WIFI_REGISTRY = {
       {
         "fleet": "all",
         "types": "A321",
-        "provider": "None in service; Starlink announced Dec 2025 across the Hanjin/Korean Air group with installation from Q3 2026 and completion targeted by 2027",
+        "provider": "None in service; Starlink announced December 2025 across the Hanjin/Korean Air group; Air Seoul's installation order is still to be decided (the group says Air Busan and Air Seoul will review their fleets), completion targeted by end of 2027",
         "orbit": "NONE"
       }
     ],
     "access": "No wifi available today; Starlink is announced but not yet flying.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://en.yna.co.kr/view/AEN20251205002800320",
       "https://www.aerotime.aero/articles/hanjin-group-airlines-launch-starlink-wifi-2027",
-      "https://en.wikipedia.org/wiki/Air_Seoul"
+      "https://en.wikipedia.org/wiki/Air_Seoul",
+      "https://www.koreaherald.com/article/10630658"
     ],
     "needs_verification": true
   },
@@ -4451,7 +4779,7 @@ const WIFI_REGISTRY = {
     ],
     "access": "No inflight internet today; free Starlink is promised with the new A350 cabin from December 2026.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://newsroom.flyedelweiss.com/en/edelweiss-equips-its-entire-fleet-with-high-speed-internet-from-starlink",
       "https://www.flyedelweiss.com/ch/en/fly/on-board/entertainment/short-haul.html",
@@ -4651,7 +4979,7 @@ const WIFI_REGISTRY = {
     ],
     "access": "No onboard internet is available on any PIA flight.",
     "confidence": "sourced",
-    "as_of": "2026-08",
+    "as_of": "2026-09",
     "sources": [
       "https://www.phoneworld.com.pk/pakistan-in-flight-internet-pta-satellite-licence-2026/",
       "https://www.starlinkflights.com/airlines/pk",

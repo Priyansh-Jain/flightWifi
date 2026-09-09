@@ -1,0 +1,298 @@
+/* The popup borrows the verdict palette from chip.css so a verdict reads as the same object here as
+   it does on a flight result. Light is the default; dark follows the browser. */
+:root {
+  --bg: #ffffff;
+  --fg: #1b1d20;
+  --muted: #6b7176;
+  --faint: #8b9197;
+  --line: #e6e9ec;
+  --raised: #f5f6f8;
+  --accent: #1a5fb4;
+  --calls: #0d652d;
+  --email: #1e40af;
+  --varies: #1e40af;
+  --partial: #b45309;
+  --nowifi: #c02626;
+  --unsure: #1e40af;
+  --unverified: #94a1ab;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1b1e23;
+    --fg: #e9ebee;
+    --muted: #9aa1a8;
+    --faint: #7d858d;
+    --line: #31353b;
+    --raised: #23272d;
+    --accent: #8ab4f8;
+    --calls: #81c995;
+    --email: #8ab4f8;
+    --varies: #8ab4f8;
+    --partial: #fdd663;
+    --nowifi: #f28b82;
+    --unsure: #8ab4f8;
+    --unverified: #838b93;
+  }
+}
+
+* { box-sizing: border-box; }
+
+/* Chrome sizes a popup to its document, up to a 600px ceiling, and past that the whole document
+   scrolls, header and footer included. Making the body a capped flex column instead pins both and
+   lets only the middle scroll. The cap must be a fixed length: inside a popup, 100vh is the window
+   Chrome is still sizing from this very document, so a vh cap collapses the middle on first paint
+   and the window never grows past it. */
+body {
+  display: flex;
+  flex-direction: column;
+  width: 320px;
+  max-height: 600px;
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 13px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- header: the logo is the strongest thing on it ---------- */
+
+.hd {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  height: 58px;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 15px;
+  font-weight: 650;
+  letter-spacing: -0.015em;
+}
+
+.icon-btn {
+  display: grid;
+  width: 26px;
+  height: 26px;
+  place-items: center;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--faint);
+  cursor: pointer;
+}
+.icon-btn:hover { background: var(--raised); color: var(--fg); }
+.icon-btn[aria-expanded="true"] { background: var(--raised); color: var(--fg); }
+
+/* The one region allowed to scroll. min-height: 0 is what lets a flex child shrink below its
+   content and actually overflow; without it the body grows and the ceiling never applies. */
+main, #settings {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 14px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+main::-webkit-scrollbar, #settings::-webkit-scrollbar { width: 6px; }
+main::-webkit-scrollbar-thumb, #settings::-webkit-scrollbar-thumb { border-radius: 3px; background: var(--line); }
+main::-webkit-scrollbar-thumb:hover, #settings::-webkit-scrollbar-thumb:hover { background: var(--faint); }
+
+/* ---------- status ---------- */
+
+.status {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin: 0 0 12px;
+}
+
+.status-t { display: block; font-weight: 600; }
+.status-s { display: block; margin-top: 1px; color: var(--muted); font-size: 12px; }
+
+.dot {
+  width: 7px;
+  height: 7px;
+  margin-top: 6px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--unverified);
+}
+.dot.on { background: var(--calls); }
+.dot.off { background: var(--nowifi); }
+.dot.wait { background: var(--partial); }
+
+.found { margin: 0 0 8px; color: var(--muted); }
+
+/* ---------- the tally: verdict dominant, count secondary ---------- */
+
+.tally { margin: 0 0 12px; padding: 0; list-style: none; }
+
+/* The verdict is the answer; the number is only how many times it came up. So the label carries
+   the weight and the count is set small, light and tight against it, right-aligned in a column just
+   two digits wide so the rows still line up without the number turning into a field of its own. */
+.tally li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
+}
+.pip { width: 8px; height: 8px; flex: none; border-radius: 50%; background: var(--c, var(--unverified)); }
+.tally .n {
+  min-width: 2ch;
+  color: var(--faint);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.tally .sep { color: var(--faint); opacity: 0.55; }
+.tally .lbl { font-weight: 500; }
+
+.v-calls      { --c: var(--calls); }
+.v-email      { --c: var(--email); }
+.v-varies     { --c: var(--varies); }
+.v-partial    { --c: var(--partial); }
+.v-nowifi     { --c: var(--nowifi); }
+.v-unsure     { --c: var(--unsure); }
+.v-unverified { --c: var(--unverified); }
+
+/* ---------- accordion: one explanation at a time, never a wall of text ---------- */
+
+.acc { margin: 10px 0 0; border-top: 1px solid var(--line); }
+
+.acc-h {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: none;
+  color: var(--fg);
+  font: inherit;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+}
+.acc-h:hover { color: var(--accent); }
+.acc-h .grow { flex: 1; }
+.acc-h .chev {
+  color: var(--faint);
+  transition: transform 0.15s ease;
+}
+.acc-h[aria-expanded="true"] .chev { transform: rotate(90deg); }
+
+.acc-b {
+  padding: 2px 0 10px 16px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+}
+
+/* ---------- buttons ---------- */
+
+.btn {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--raised);
+  color: var(--fg);
+  font: inherit;
+  font-weight: 550;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn:hover { border-color: var(--faint); }
+
+.btn-solid {
+  border-color: transparent;
+  background: var(--accent);
+  color: #fff;
+}
+.btn-solid:hover { filter: brightness(1.08); border-color: transparent; }
+
+.link-btn {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  cursor: pointer;
+}
+.link-btn:hover { text-decoration: underline; text-underline-offset: 3px; }
+.link-btn[aria-expanded="true"] .arr { transform: rotate(90deg); }
+.arr { display: inline-block; transition: transform 0.15s ease; }
+
+.note { margin: 0 0 12px; color: var(--muted); }
+.note.tiny { margin: 12px 0 0; font-size: 12px; }
+.chips { margin: 10px 0 0; color: var(--faint); font-size: 12px; text-align: center; }
+
+/* ---------- settings ---------- */
+
+.sec-label { margin: 0 0 6px; font-weight: 600; }
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  cursor: pointer;
+}
+.row > span:first-child { flex: 1; }
+
+.sw {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+.track {
+  position: relative;
+  width: 34px;
+  height: 20px;
+  flex: none;
+  border-radius: 999px;
+  background: var(--line);
+  transition: background 0.15s ease;
+}
+.track::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.28);
+  transition: transform 0.15s ease;
+}
+.sw:checked + .track { background: var(--accent); }
+.sw:checked + .track::after { transform: translateX(14px); }
+.sw:focus-visible + .track { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ---------- footer ---------- */
+
+.ft { flex: none; padding: 11px 14px 13px; border-top: 1px solid var(--line); }
+.meta { margin: 0 0 8px; font-size: 12px; color: var(--faint); font-variant-numeric: tabular-nums; }
+.review { margin: 0 0 8px; font-size: 12px; color: var(--muted); }
+.links { display: flex; gap: 7px; margin: 0; font-size: 12px; color: var(--faint); }
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
+
+[hidden] { display: none !important; }
