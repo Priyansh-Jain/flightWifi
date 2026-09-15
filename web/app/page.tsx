@@ -124,6 +124,7 @@ export const metadata: Metadata = {
 
 export default function Home() {
   const s = stats();
+  const flightLookup = Boolean(process.env.AERODATABOX_KEY);
   const starlink = starlinkRows();
   const live = starlink.filter((r) => r.status === "flying");
   const announced = starlink.filter((r) => r.status === "announced");
@@ -144,12 +145,12 @@ export default function Home() {
         </h1>
         <p className="mx-auto mt-5 max-w-2xl text-lg text-[var(--muted)]">
           An airline announcing Starlink does not mean your flight has it. Planes are upgraded one at a
-          time, so the aircraft decides. Check a flight number, an airline or an aircraft and see the
-          same Wi-Fi verdict FlightWifi shows while you search.
+          time, so the aircraft decides. Check {flightLookup ? "a flight number, an airline" : "an airline"}{" "}
+          or an aircraft and see the same Wi-Fi verdict FlightWifi shows while you search.
         </p>
-        <Checker storeUrl={CHROME_STORE_URL} />
+        <Checker storeUrl={CHROME_STORE_URL} flightLookup={flightLookup} />
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <a href={CHROME_STORE_URL} rel="noopener" className="flare-btn">
+          <a href={CHROME_STORE_URL} rel="noopener" className="flare-btn btn-pointer">
             <span aria-hidden="true" className="flare-ring">
               <span className="flare-spin" />
               <span className="flare-heat" />
@@ -157,10 +158,21 @@ export default function Home() {
             <ChromeMark size={16} />
             Get the free extension
           </a>
+          <Link href="/airlines/" className="flare-btn btn-touch">
+            <span aria-hidden="true" className="flare-ring">
+              <span className="flare-spin" />
+              <span className="flare-heat" />
+            </span>
+            Browse all {s.airlines} airlines
+          </Link>
           <Link href="/starlink/" className="ghost-btn">
             Starlink on flights
           </Link>
         </div>
+        <p className="note-touch mx-auto mt-5 max-w-sm text-sm text-[var(--muted)]">
+          On a phone the checker above is the whole product. The extension itself runs in Chrome on a
+          computer.
+        </p>
         <p className="mt-6 text-sm text-[var(--muted)]">
           {s.airlines} airlines · {s.sources} cited sources · last verified {s.asOf}
         </p>

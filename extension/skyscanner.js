@@ -3,7 +3,7 @@
 // logo alt text. The booking page is the exception and gets its own treatment further down. There
 // is no amenity fallback on this site, so an airline the registry has not sourced simply gets no
 // chip rather than a guess.
-const SKY_CARD_SEL = '[data-testid="ticket"], [class*="FlightsTicket_container"]';
+var SKY_CARD_SEL = '[data-testid="ticket"], [class*="FlightsTicket_container"]';
 
 // Single-airline tickets carry the name in the logo's alt text. Multi-airline tickets drop the
 // imgs entirely and print a label like "IndiGo + Scoot"; the last resort is the card's own
@@ -68,11 +68,11 @@ function processTicket(card) {
 // ("A321 (narrowbody)"), so this page upgrades from fleet-level to exact per-segment verdicts:
 // a leg-level chip beside the leg summary while collapsed, replaced by a chip beside each flight
 // number once the panel is open and the aircraft is in the DOM.
-const SKY_LEG_SEL = '[data-testid^="itinerary-leg-"]';
+var SKY_LEG_SEL = '[data-testid^="itinerary-leg-"]';
 // IATA codes can lead with a digit ("6E5007"), so the class is [A-Z0-9] twice; the letter guard in
 // the code below is what rejects pure numbers, and lowercase exclusion is what rejects "1h 05"
-const SKY_FLIGHTNO_RX = /^([A-Z0-9]{2})\s?\d{1,4}$/;
-const SKY_AC_RX = /^(A2\d\d\w*|A3\d\d\w*|7\d7\w*|ATR ?\d+|Embraer ?\d+|E-?\d{2,3}\w*|Dash ?8|Q400|CRJ ?\d+|Comac ?\d+)/;
+var SKY_FLIGHTNO_RX = /^([A-Z0-9]{2})\s?\d{1,4}$/;
+var SKY_AC_RX = /^(A2\d\d\w*|A3\d\d\w*|7\d7\w*|ATR ?\d+|Embraer ?\d+|E-?\d{2,3}\w*|Dash ?8|Q400|CRJ ?\d+|Comac ?\d+)/;
 
 function after(a, b) {
   return !!(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING);
@@ -161,9 +161,9 @@ function processLeg(leg) {
   FW_TRACE.push(`sky-leg:${codes.join("+")}:${v.cls}`);
 }
 
-const FW_VER = "54";
-let sweepCount = 0;
-let totalMs = 0;
+var FW_VER = "54";
+var sweepCount = 0;
+var totalMs = 0;
 
 function sweep() {
   const t0 = performance.now();
@@ -193,8 +193,8 @@ function sweep() {
   }
 }
 
-let queued = false;
-const observer = new MutationObserver(() => {
+var queued = false;
+var observer = new MutationObserver(() => {
   if (queued) return;
   queued = true;
   queueMicrotask(() => {

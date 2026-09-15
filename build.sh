@@ -12,7 +12,7 @@ STAGE="dist/staging"
 rm -rf dist
 mkdir -p "$STAGE"
 
-cp -R extension/data extension/icons extension/popup extension/chip.css extension/core.js extension/google.js extension/google-bridge.js extension/skyscanner.js extension/soar.js extension/uninstall.js "$STAGE/"
+cp -R extension/data extension/icons extension/popup extension/chip.css extension/core.js extension/header.js extension/google.js extension/google-bridge.js extension/skyscanner.js extension/soar.js extension/uninstall.js "$STAGE/"
 
 python3 - "$STAGE" <<'PY'
 import json, re, sys
@@ -75,7 +75,7 @@ if (m.action) {
 }
 if (m.background.service_worker !== 'uninstall.js') throw new Error('background is not the uninstall worker');
 if (fs.readFileSync('$STAGE/uninstall.js', 'utf8').includes('importScripts')) throw new Error('dev reloader reached the shipped worker');
-for (const f of ['core.js', 'google.js', 'google-bridge.js', 'skyscanner.js', 'soar.js', 'uninstall.js', 'popup/popup.js']) {
+for (const f of ['core.js', 'header.js', 'google.js', 'google-bridge.js', 'skyscanner.js', 'soar.js', 'uninstall.js', 'popup/popup.js']) {
   new Function(fs.readFileSync('$STAGE/' + f, 'utf8'));
   const s = fs.readFileSync('$STAGE/' + f, 'utf8');
   for (const bad of ['FW_TRACE', 'data-fw-', 'FW-DEVSTAT']) if (s.includes(bad)) throw new Error(bad + ' survived the strip in ' + f);

@@ -32,6 +32,9 @@ export default async function BlogIndex({ searchParams }: { searchParams: Promis
   const categories = Object.entries(CATEGORY_META)
     .map(([category, meta]) => ({ category, ...meta, count: POSTS.filter((p) => p.category === category).length }))
     .filter((c) => c.count > 0);
+  // A card that advertises "1 story" tells the reader the section is empty. Counts earn their place
+  // once every category has a few, and until then the card just invites the click.
+  const showCounts = categories.every((c) => c.count >= 3);
 
   return (
     <>
@@ -92,7 +95,7 @@ export default async function BlogIndex({ searchParams }: { searchParams: Promis
                   <h3 className="mt-[47px] text-[28.8px] leading-[1.1] tracking-[-0.025em] text-[var(--ink)]">{c.label}</h3>
                   <span className="mt-3 flex-1 text-[13px] leading-[1.55] text-[var(--muted)]">{c.blurb}</span>
                   <span className="flex items-center justify-between pt-4 text-[10px] text-[var(--muted)]">
-                    {c.count} {c.count === 1 ? "story" : "stories"}
+                    {showCounts ? `${c.count} ${c.count === 1 ? "story" : "stories"}` : "Read"}
                     <ArrowRight className="text-[var(--ink)] transition-transform group-hover:translate-x-1" />
                   </span>
                 </Link>

@@ -32,7 +32,7 @@ const SITE_INJECT = [
     rx: /^https:\/\/www\.google\.[a-z.]{2,7}\/travel\/flights/,
     label: "Google Flights",
     main: ["google-bridge.js"],
-    iso: ["data/registry.js", "core.js", "google.js"]
+    iso: ["data/registry.js", "core.js", "header.js", "google.js"]
   },
   {
     rx: /^https?:\/\/www\.skyscanner\.[a-z.]{2,7}\/transport\//,
@@ -281,15 +281,28 @@ $("turnOn").addEventListener("click", () => {
 
 // The unreachable state's one action. Closing the popup is deliberate: the reload will re-run the
 // content script and the next open will find it.
-$("reloadTab").addEventListener("click", () => {
-  if (currentTab) chrome.tabs.reload(currentTab.id);
+$("reloadTab").addEventListener("click", async () => {
+  // Close only after the reload has been accepted: closing first tore down this context before
+  // the request went out, and the button did nothing.
+  try {
+    let tab = currentTab;
+    if (!tab) [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (tab) await chrome.tabs.reload(tab.id);
+  } catch (e) {
+    console.warn("[FlightWifi] reload failed:", e && e.message);
+  }
   window.close();
 });
 
 meta();
-renderGlossary();
-loadSettings();
 loadStatus();
+// The status read is asynchronous and starts at once. The glossary is built after the first frame
+// so the shell is on screen before that work runs; the popup is not shown until it has painted, and
+// a click is waiting on it. Settings follow in the same frame.
+requestAnimationFrame(() => {
+  renderGlossary();
+  loadSettings();
+});
 
 // Belt and braces under the deadlines above: if nothing has painted by now, something hung past
 // every timeout, and the placeholder must not be what the user is left looking at.
@@ -304,3 +317,22 @@ setTimeout(() => {
 // A popup only lives while it is open, so this interval dies with it and never runs in the
 // background. It exists so a search whose results are still loading updates the count in place.
 setInterval(loadStatus, 1200);
+
+// The header button on Google Flights frames this same page rather than keeping a second copy of
+// it. An iframe cannot size itself to its content, so when we are framed we report our height and
+// let the host set it. The message carries nothing but a number.
+if (window.parent !== window) {
+  const reportHeight = () => {
+    try {
+      window.parent.postMessage({ type: "FW_POPUP_HEIGHT", height: document.documentElement.scrollHeight }, "*");
+    } catch (e) {
+      /* the host went away */
+    }
+  };
+  reportHeight();
+  try {
+    new ResizeObserver(reportHeight).observe(document.documentElement);
+  } catch (e) {
+    setInterval(reportHeight, 500);
+  }
+}

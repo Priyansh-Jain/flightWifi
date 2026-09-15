@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import { og } from "@/lib/site";
 import Link from "next/link";
 import { Breadcrumbs, Cta, Section, CollectionJsonLd } from "@/components/ui";
-import { COMPARISONS } from "@/lib/derive";
+import { COMPARISONS, comparisonGroups } from "@/lib/derive";
 
 export const metadata: Metadata = {
   title: "Airline Wi-Fi comparisons",
   description:
-    "Side-by-side Wi-Fi comparisons for airlines that compete on the same routes: Qatar vs Emirates, United vs Delta and more.",
+    "Side-by-side Wi-Fi comparisons for airlines that compete on the same routes: Qatar vs Emirates, United vs Delta, easyJet vs Ryanair and 95 more.",
   alternates: { canonical: "/compare/" },
     openGraph: og("/compare/")
 };
@@ -25,19 +25,21 @@ export default function CompareIndex() {
           difference. These comparisons render live from the registry.
         </p>
       </section>
-      <Section>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {COMPARISONS.map((c) => (
-            <Link
-              key={c.slug}
-              href={`/compare/${c.slug}/`}
-              className="card block p-5 font-semibold text-[var(--ink)] hover:border-[var(--accent)] hover:no-underline"
-            >
-              {c.title}
-            </Link>
-          ))}
-        </div>
-      </Section>
+      {comparisonGroups().map((g) => (
+        <Section key={g.title} title={g.title}>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {g.pairs.map((c) => (
+              <Link
+                key={c.slug}
+                href={`/compare/${c.slug}/`}
+                className="card block p-5 font-semibold text-[var(--ink)] hover:border-[var(--accent)] hover:no-underline"
+              >
+                {c.title.replace(/ Wi-Fi$/, "")}
+              </Link>
+            ))}
+          </div>
+        </Section>
+      ))}
       <CollectionJsonLd
         name="Airline Wi-Fi comparisons"
         description="Airline Wi-Fi comparisons on FlightWifi."

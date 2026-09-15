@@ -1,11 +1,11 @@
-const AIRCRAFT_NODE_RX = /^(Airbus|Boeing|Embraer|ATR|De Havilland|Canadair|Bombardier|Mitsubishi|McDonnell|Saab|Fokker|Dornier|Sukhoi|Antonov|Tupolev|Ilyushin|Comac|COMAC|Cessna|Beechcraft|Pilatus|Viking|Xian)\b.*\d/;
-const FLIGHT_AFTER_AIRCRAFT_RX = /\b([A-Z][A-Z0-9])\s?(\d{1,4})\b/;
-const WIDEBODY_RX = /(A3[358]0|A340|747|767|777|787)/;
+var AIRCRAFT_NODE_RX = /^(Airbus|Boeing|Embraer|ATR|De Havilland|Canadair|Bombardier|Mitsubishi|McDonnell|Saab|Fokker|Dornier|Sukhoi|Antonov|Tupolev|Ilyushin|Comac|COMAC|Cessna|Beechcraft|Pilatus|Viking|Xian)\b.*\d/;
+var FLIGHT_AFTER_AIRCRAFT_RX = /\b([A-Z][A-Z0-9])\s?(\d{1,4})\b/;
+var WIDEBODY_RX = /(A3[358]0|A340|747|767|777|787)/;
 
-const NAME_INDEX = {};
+var NAME_INDEX = {};
 for (const code in WIFI_REGISTRY) NAME_INDEX[WIFI_REGISTRY[code].airline.toLowerCase()] = code;
 // longest first: "Thai AirAsia" must not resolve to AirAsia, "Air India Express" must not resolve to Air India
-const NAME_KEYS = Object.keys(NAME_INDEX).sort((a, b) => b.length - a.length);
+var NAME_KEYS = Object.keys(NAME_INDEX).sort((a, b) => b.length - a.length);
 
 // Google shortens what it prints: the registry's "Vietjet Air" shows on the card as "Vietjet", which
 // substring matching can never reach because the stored name is the longer of the two. The trimmed
@@ -13,7 +13,7 @@ const NAME_KEYS = Object.keys(NAME_INDEX).sort((a, b) => b.length - a.length);
 // lookups are exact so "Singapore" can never be read out of "Singapore Changi Airport".
 // Normalising away spacing and punctuation is what lets the registry's "airBaltic" meet Google's
 // "Air Baltic"; it cannot manufacture a match between two genuinely different strings.
-const GENERIC_SUFFIX_RX = /\s+(air lines|airlines|airways|airline|air|aviation|airlink)$/i;
+var GENERIC_SUFFIX_RX = /\s+(air lines|airlines|airways|airline|air|aviation|airlink)$/i;
 
 function norm(s) {
   return s.toLowerCase().replace(/[^a-z0-9]/g, "");
@@ -23,19 +23,19 @@ function norm(s) {
 // normalising will bridge. Added only when a route sweep shows a real gap, never guessed.
 // "lot" is safe only because these lookups match the whole cell text exactly; as a substring it
 // would fire on the English word.
-const TRADE_NAMES = { "scandinavian airlines": "SK", lot: "LO", "air baltic corporation a/s": "BT" };
+var TRADE_NAMES = { "scandinavian airlines": "SK", lot: "LO", "air baltic corporation a/s": "BT" };
 
 // Sister AOCs flying the same branded fleet under a second code. This is NOT for lookalike names
 // (Batik Malaysia is a different airline from Batik Indonesia and stays out): an alias is only
 // added when the registry entry's own sources cover both codes. Norwegian's wifi page describes
 // the group service without distinguishing the Shuttle (DY) and Sweden (D8) AOCs.
-const CODE_ALIASES = { D8: "DY" };
+var CODE_ALIASES = { D8: "DY" };
 
 function regCode(cc) {
   return WIFI_REGISTRY[cc] ? cc : CODE_ALIASES[cc] && WIFI_REGISTRY[CODE_ALIASES[cc]] ? CODE_ALIASES[cc] : cc;
 }
 
-const EXACT_INDEX = {};
+var EXACT_INDEX = {};
 for (const code in WIFI_REGISTRY) EXACT_INDEX[norm(WIFI_REGISTRY[code].airline)] = code;
 for (const code in WIFI_REGISTRY) {
   const short = norm(WIFI_REGISTRY[code].airline.replace(GENERIC_SUFFIX_RX, ""));
@@ -103,7 +103,7 @@ function carrierByName(text) {
 //
 // Amber is the only colour that asks the reader to stop, so it is reserved for the one case that
 // warrants it: part of the fleet has no wifi at all and the schedule will not say which you get.
-const VERDICT_UI = {
+var VERDICT_UI = {
   LEO: { cls: "fast", row: "calls", label: "Video calls work", why: "Low-orbit satellite, quick enough to be treated like ground wifi", latency: "roughly 20-50ms (low orbit)" },
   MEO: { cls: "fast", row: "calls", label: "Video calls work", why: "Mid-orbit satellite, usually quick enough for a live call", latency: "roughly 120-150ms (mid orbit)" },
   GEO: { cls: "ok", row: "email", label: "Email & browsing", why: "High-orbit satellite. The lag is the limit, not the speed", latency: "roughly 600ms and up (high orbit)" },
@@ -119,7 +119,7 @@ const VERDICT_UI = {
 
 // What the reader is actually deciding. Only latency-bound outcomes belong here: whether an airline
 // lets you stream is a policy of its access tier, not a property of the link, so it stays out.
-const CAPABILITY = {
+var CAPABILITY = {
   LEO: { good: ["Video calls", "Email & chat", "Browsing"], bad: [] },
   MEO: { good: ["Video calls", "Email & chat", "Browsing"], bad: [] },
   GEO: { good: ["Email & chat", "Browsing"], bad: ["Video calls", "Anything live"] },
@@ -131,7 +131,7 @@ const CAPABILITY = {
 // questions, and the second one is the trap. Most carriers prohibit voice and video over wifi as a
 // term of carriage no matter how fast the connection is, so a latency verdict alone reads as
 // permission it cannot grant. Only airlines that state a policy are listed; absent means unknown.
-const CALL_POLICY = {
+var CALL_POLICY = {
   // taken from the airline's own page or contract of carriage
   DL: { calls: "no", src: "delta.com" },
   UA: { calls: "no", src: "united.com contract of carriage, rule 21" },
@@ -159,7 +159,7 @@ const CALL_POLICY = {
   EI: { calls: "yes", src: "reported", check: true }
 };
 
-const CALL_POLICY_TEXT = {
+var CALL_POLICY_TEXT = {
   no: "Not permitted by the airline",
   yes: "Permitted, headphones expected",
   voice: "Voice permitted, video not"
@@ -168,7 +168,7 @@ const CALL_POLICY_TEXT = {
 // Where the airline's policy is known the chip says what you may actually do, which matters because
 // most carriers prohibit calls however fast the link is. Only the two restrictive cases override:
 // an airline that bans calls reads "Fast, but no calls" rather than the class label.
-const CALL_LABEL = {
+var CALL_LABEL = {
   yes: "Video calls work",
   no: "Fast, but no calls",
   voice: "Voice calls only"
@@ -178,7 +178,7 @@ const CALL_LABEL = {
 // flights" reads as evasion once the card has already named the aircraft sitting next to it. When
 // the type is known the uncertainty is real but narrower: the sub-fleet is part-fitted, so the
 // individual airframe decides, not the schedule. Saying that is more precise and less like a dodge.
-const TYPED_UI = {
+var TYPED_UI = {
   VARIES: {
     label: "Varies by aircraft",
     why: "Every plane of this type has wifi, but some carry the fast system and some still have the older one"
@@ -188,7 +188,7 @@ const TYPED_UI = {
   }
 };
 
-const RANK = { NONE: 0, PARTIAL: 1, UNKNOWN: 2, GEO: 3, A2G: 3, VARIES: 4, MEO: 5, LEO: 6 };
+var RANK = { NONE: 0, PARTIAL: 1, UNKNOWN: 2, GEO: 3, A2G: 3, VARIES: 4, MEO: 5, LEO: 6 };
 
 function classifyOrbit(orbit) {
   if (!orbit) return "UNKNOWN";
@@ -263,14 +263,14 @@ function rollup(keys) {
 // Attribution is stripped rather than dropped: "a 2026 review reports free messaging for all cabins"
 // is nine words of hedge wrapped around the one fact the reader wants, and the footnote already
 // carries the confidence level. Only a clause that is *nothing but* provenance goes.
-const HEDGE_PREFIX_RX =
+var HEDGE_PREFIX_RX =
   /^(((a|an|the)\s+)?((\d{4}|recent|one|independent)\s+)?(review|report|teardown|test)s?\s+(reports?|says?|found|shows?)|reportedly|according to [^,]+,|[\w' ]+'s own (site|website) (lists|shows|quotes)|the airline (lists|quotes))\s+/i;
-const PURE_PROVENANCE_RX = /^(not confirmed by|no official|unverified|we could not)/i;
-const ACCESS_POINTS = 3;
-const ACCESS_LEN = 120;
+var PURE_PROVENANCE_RX = /^(not confirmed by|no official|unverified|we could not)/i;
+var ACCESS_POINTS = 3;
+var ACCESS_LEN = 120;
 
 // ", plus X" and ", with X" hang a sub-detail off the main fact, so each earns its own line
-const CLAUSE_SEPS = [", plus ", ", with "];
+var CLAUSE_SEPS = [", plus ", ", with "];
 
 // clause boundaries, but never inside brackets: splitting there strands a price range's opening paren
 function splitClauses(text) {
@@ -333,7 +333,7 @@ function accessPoints(text, cost) {
 // "Inmarsat GX Aviation Ka-band (Inmarsat now owned by Viasat) - not confirmed by Oman Air itself"
 // is a research note. The reader wants the brand, so the parenthetical, the caveat after the dash
 // and the rollout narrative after the semicolon all go.
-const PROVIDER_LEN = 90;
+var PROVIDER_LEN = 90;
 
 function cleanProvider(p) {
   return trimTo(
@@ -385,7 +385,7 @@ function fleetVerdict(codes) {
 // A native title= tooltip waits half a second, cannot be styled and cannot hold a table, and the
 // whole point of the chip is to answer the question without expanding the card. One fixed-position
 // node on <body> keeps this entirely outside Google's own layout.
-let tip = null;
+var tip = null;
 
 // `html` is for markup this file builds itself; anything page- or registry-derived goes through `v`
 function tipRow(k, v, html) {
@@ -523,7 +523,7 @@ function tipHtml(v) {
   );
 }
 
-let activeChip = null;
+var activeChip = null;
 
 function placeTip(chip) {
   const r = chip.getBoundingClientRect();
@@ -605,7 +605,7 @@ function buildChip(v) {
 // real page background is. Same probe the GetStopover extension uses: a transparent background says
 // nothing about what the reader actually sees, so it is skipped rather than read as black, and text
 // colour is the last word because it is never transparent.
-const RGB_RX = /(\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?/;
+var RGB_RX = /(\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?/;
 
 function lum(r, g, b) {
   return 0.299 * r + 0.587 * g + 0.114 * b;
@@ -621,7 +621,7 @@ function readTheme() {
   return "fw-light";
 }
 
-let themeSeen = "";
+var themeSeen = "";
 function syncTheme() {
   const theme = readTheme();
   if (theme === themeSeen) return;
@@ -643,7 +643,7 @@ if (window.matchMedia) {
   if (mq.addEventListener) mq.addEventListener("change", syncTheme);
 }
 
-const FW_TRACE = [];
+var FW_TRACE = [];
 
 
 /* ---------- popup bridge ----------
@@ -652,7 +652,7 @@ const FW_TRACE = [];
    not what we attempted. Also gates each site behind its own setting, kept here rather than in the
    three site files so their boot tails stay identical. */
 
-const FW_SITE_LABEL = { google: "Google Flights", skyscanner: "Skyscanner", soar: "Soar" };
+var FW_SITE_LABEL = { google: "Google Flights", skyscanner: "Skyscanner", soar: "Soar" };
 
 function fwCounts() {
   const out = {};
@@ -692,7 +692,20 @@ function fwBoot(site, start, stop) {
   // Reaching here means this script owns the page's chips from now on. On a normal load there are
   // none; on a repair injection the orphaned script left its own behind, and those must go, because
   // a chip drawn by a dead instance is not one this instance will keep up to date.
+  // The orphan's timers and observer are still running, though, and would keep redrawing over us,
+  // so it is told to stand down through the one channel a dead extension context still has: a DOM
+  // event. This instance listens for the same event so that the next repair can stop it in turn.
+  // Dispatch first, listen second, or an instance would stop itself.
+  document.dispatchEvent(new CustomEvent("fw:takeover"));
   fwRemoveChips();
+  const onTakeover = () => {
+    document.removeEventListener("fw:takeover", onTakeover);
+    try {
+      stop();
+    } catch (e) {}
+    fwRemoveChips();
+  };
+  document.addEventListener("fw:takeover", onTakeover);
 
   let on = null;
   const apply = (next) => {

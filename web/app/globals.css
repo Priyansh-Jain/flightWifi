@@ -1012,6 +1012,46 @@ details.faq > div {
 .src-provider .src-pill { background: #33260f; color: #f5c26b; }
 .src-trade .src-ico { border-color: #3a424c; background: #171b21; color: #9aa6b4; }
 .src-trade .src-pill { background: #1c232c; color: #9aa6b4; }
+.src-news .src-ico { border-color: #35404e; background: #151a21; color: #93a3b8; }
+.src-news .src-pill { background: #1a212b; color: #93a3b8; }
+.src-blog .src-ico { border-color: #4a3f52; background: #1b1620; color: #b9a3c4; }
+.src-blog .src-pill { background: #221b29; color: #b9a3c4; }
+.src-reference .src-ico { border-color: #44423a; background: #1a1915; color: #bcb49a; }
+.src-reference .src-pill { background: #23211a; color: #bcb49a; }
+.src-other .src-ico { border-color: #3d3a3a; background: #171616; color: #9a9494; }
+.src-other .src-pill { background: #201e1e; color: #9a9494; }
+.btn-touch,
+.note-touch {
+  display: none;
+}
+@media (pointer: coarse) and (max-width: 900px) {
+  .btn-pointer { display: none; }
+  .btn-touch { display: inline-flex; }
+  .note-touch { display: block; }
+}
+
+.cmp-more {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.cmp-more a {
+  display: inline-block;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 0.875rem;
+  color: var(--ink);
+  transition: border-color 150ms ease, color 150ms ease;
+}
+.cmp-more a:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  text-decoration: none;
+}
 .src-foot {
   margin-top: 12px;
   font-size: 0.8125rem;
@@ -1064,6 +1104,14 @@ details.faq > div {
   .src-provider .src-pill { background: #fdf1dc; color: #8a5a00; }
   .src-trade .src-ico { border-color: #d8dde3; background: #eceff2; color: #57636f; }
   .src-trade .src-pill { background: #eceff2; color: #57636f; }
+  .src-news .src-ico { border-color: #d5dbe2; background: #eef1f4; color: #5b6774; }
+  .src-news .src-pill { background: #eef1f4; color: #5b6774; }
+  .src-blog .src-ico { border-color: #ddd4e4; background: #f4eff7; color: #6c5780; }
+  .src-blog .src-pill { background: #f4eff7; color: #6c5780; }
+  .src-reference .src-ico { border-color: #ded9c8; background: #f5f2e7; color: #6d6647; }
+  .src-reference .src-pill { background: #f5f2e7; color: #6d6647; }
+  .src-other .src-ico { border-color: #ded9d9; background: #f3f1f1; color: #6b6565; }
+  .src-other .src-pill { background: #f3f1f1; color: #6b6565; }
 }
 
 .fltr {
@@ -2419,4 +2467,286 @@ a.sb-card:hover .sb-img {
     grid-template-columns: 1fr;
     gap: 2px;
   }
+}
+
+/* ---------- Starlink: primary status switch + refinements ---------- */
+/* The flying / announced line is the page's whole point, so it gets a segmented control rather
+   than a chip among chips. Counts sit inside each option so the split is legible before a click. */
+.seg-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 16px;
+}
+.seg {
+  display: inline-flex;
+  gap: 4px;
+  max-width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--bg-raised);
+  padding: 4px;
+}
+.seg-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  padding: 9px 14px;
+  color: var(--muted);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.seg-btn:hover { color: var(--ink); }
+.seg-btn[aria-pressed="true"] {
+  background: var(--cta);
+  color: var(--cta-ink);
+}
+.seg-dot {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 50%;
+}
+.seg-n {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.7;
+}
+/* On a phone the three options do not fit at desktop size, and a clipped third option reads as a
+   two-way choice, which is exactly the misreading the control exists to prevent. */
+@media (max-width: 480px) {
+  .seg { display: flex; flex-wrap: wrap; width: 100%; overflow: visible; }
+  .seg-btn { flex: 1 1 auto; justify-content: center; gap: 6px; padding: 8px 10px; font-size: 0.875rem; }
+}
+.refine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+.refine + .refine { margin-top: 8px; }
+.refine-lbl {
+  min-width: 68px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ---------- Airline page: at-a-glance card ---------- */
+/* Five facts a reader would otherwise assemble from the intro sentence. dd carries the value;
+   <small> inside it is the one-line qualifier (rollout share, source kind). */
+.glance {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
+}
+.glance > div {
+  min-width: 0;
+  padding: 0.85rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+}
+.glance > div:nth-child(odd) { border-right: 1px solid var(--line); }
+.glance > div:nth-last-child(-n + 1) { border-bottom: none; }
+/* Five facts on a two-column phone grid leave the last one beside an empty cell; let it span. */
+.glance > div:nth-child(odd):last-child { grid-column: span 2; border-right: none; }
+.glance dt {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.glance dd {
+  margin: 0.4rem 0 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.glance dd small {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: var(--muted);
+}
+@media (min-width: 720px) {
+  .glance { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .glance > div { border-bottom: none; border-right: 1px solid var(--line); }
+  .glance > div:nth-child(odd):last-child { grid-column: auto; }
+  .glance > div:last-child { border-right: none; }
+}
+
+/* ---------- Methodology: the rules, numbered because they are applied in that order ---------- */
+.rules {
+  counter-reset: rule;
+  display: grid;
+  gap: 0.55rem;
+  margin: 0.85rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.rules li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 600;
+}
+.rules li::before {
+  counter-increment: rule;
+  content: counter(rule);
+  display: grid;
+  width: 1.5rem;
+  height: 1.5rem;
+  flex: none;
+  place-items: center;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* ---------- MCP page: the one string the page exists to hand over ---------- */
+
+.copyfield {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 10px 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--raised);
+  text-align: left;
+}
+
+.copyfield-label {
+  flex: none;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* The URL is the longest unbreakable string on the page, so it scrolls inside the field rather
+   than widening the layout on a phone. */
+.copyfield-value {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+  white-space: nowrap;
+  font-size: 0.875rem;
+  scrollbar-width: none;
+}
+.copyfield-value::-webkit-scrollbar { display: none; }
+
+.copyfield-btn {
+  flex: none;
+  padding: 7px 14px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.copyfield-btn:hover { opacity: 0.9; }
+
+@media (max-width: 460px) {
+  .copyfield { flex-wrap: wrap; }
+  .copyfield-value { flex-basis: 100%; order: 2; }
+  .copyfield-btn { order: 3; margin-left: auto; }
+}
+
+/* ---------- MCP client setup: numbered steps with copyable commands ---------- */
+
+.steps { margin: 18px 0 0; padding: 0; list-style: none; display: grid; gap: 14px; }
+
+.step { display: flex; gap: 14px; align-items: flex-start; }
+
+.step-n {
+  display: grid;
+  flex: none;
+  width: 26px;
+  height: 26px;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.step-body { flex: 1 1 auto; min-width: 0; }
+
+/* Field name and the value to type, so a form the reader is filling in reads as one. */
+.step-form {
+  margin: 12px 0 0;
+  display: grid;
+  gap: 1px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--line);
+}
+.step-form > div {
+  display: flex;
+  gap: 12px;
+  padding: 9px 12px;
+  background: var(--raised);
+}
+.step-form dt { flex: none; min-width: 8.5rem; font-size: 0.8125rem; color: var(--muted); }
+.step-form dd { margin: 0; min-width: 0; overflow-x: auto; white-space: nowrap; font-size: 0.8125rem; font-weight: 600; }
+.step-form dd::-webkit-scrollbar { display: none; }
+
+.codeline {
+  position: relative;
+  margin: 12px 0 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--raised);
+}
+.codeline-pre {
+  margin: 0;
+  padding: 12px 74px 12px 14px;
+  overflow-x: auto;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  /* A ligating mono face renders "--transport" as an em dash, so anyone retyping the command by
+     hand gets it wrong even though the copied text is correct. */
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "calt" 0;
+}
+.codeline-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 5px 10px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--bg);
+  color: var(--fg);
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.codeline-btn:hover { border-color: var(--muted); }
+
+@media (max-width: 480px) {
+  .step-form > div { flex-direction: column; gap: 2px; }
+  .step-form dt { min-width: 0; }
 }

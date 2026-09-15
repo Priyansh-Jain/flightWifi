@@ -112,11 +112,10 @@ function load(): Bridge {
   if (cached) return cached;
 
   const registrySrc = fs.readFileSync(path.join(EXT, "data", "registry.js"), "utf8");
+  const verdictsAt = registrySrc.search(/\b(?:const|let|var)\s+VERDICTS\b/);
+  if (verdictsAt < 0) throw new Error("registry.js: could not find the VERDICTS declaration");
   const registry = JSON.parse(
-    registrySrc.slice(
-      registrySrc.indexOf("{"),
-      registrySrc.lastIndexOf("};", registrySrc.indexOf("const VERDICTS")) + 1
-    )
+    registrySrc.slice(registrySrc.indexOf("{"), registrySrc.lastIndexOf("};", verdictsAt) + 1)
   ) as Record<string, Entry>;
 
   const coreSrc = fs.readFileSync(path.join(EXT, "core.js"), "utf8");

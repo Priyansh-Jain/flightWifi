@@ -3,7 +3,7 @@
 // into the DOM whose segment line reads "Economy · American Airlines · Boeing 777-300ER · AA 0142",
 // which is everything needed for an exact per-segment verdict. Like Skyscanner there is no amenity
 // data on this site, so an airline the registry has not sourced gets no chip rather than a guess.
-const SOAR_OFFER_SEL = ".offer[data-id]";
+var SOAR_OFFER_SEL = ".offer[data-id]";
 
 // Tailwind utility classes here are generated and churn between builds, so nothing is selected by
 // class below the offer itself: rows are found by the shape of their text.
@@ -12,13 +12,13 @@ const SOAR_OFFER_SEL = ".offer[data-id]";
 // JFK and LHR also rejected every three-letter airline: KLM and ANA silently lost their chips. The
 // codes are harmless to probe, because resolution is an exact match against registry names and no
 // airline is named after an airport, so a code simply resolves to nothing and falls through.
-const SOAR_SKIP_RX = /^(BEST|CHEAPEST|FASTEST|Book|Direct|Nonstop|one-way|round trip)$|^\d|^[₹$€£]|\d\s?(am|pm)$|^\+\d/i;
-const SOAR_FLIGHTNO_RX = /^([A-Z0-9]{2})\s?(\d{1,4})$/;
-const SOAR_AC_RX = /(Boeing|Airbus|Embraer|Bombardier|ATR|De Havilland|Comac|Sukhoi|Mitsubishi|CRJ|Dash ?8|Q400)\b|^[AB]\d{3}/i;
+var SOAR_SKIP_RX = /^(BEST|CHEAPEST|FASTEST|Book|Direct|Nonstop|one-way|round trip)$|^\d|^[₹$€£]|\d\s?(am|pm)$|^\+\d/i;
+var SOAR_FLIGHTNO_RX = /^([A-Z0-9]{2})\s?(\d{1,4})$/;
+var SOAR_AC_RX = /(Boeing|Airbus|Embraer|Bombardier|ATR|De Havilland|Comac|Sukhoi|Mitsubishi|CRJ|Dash ?8|Q400)\b|^[AB]\d{3}/i;
 
 // Script and style bodies are leaf nodes too, and this app inlines JSON that mentions aircraft
 // types, so they are excluded by tag rather than left to the length filter to catch by accident.
-const SOAR_NON_TEXT = { SCRIPT: 1, STYLE: 1, NOSCRIPT: 1, TEMPLATE: 1, SVG: 1, PATH: 1 };
+var SOAR_NON_TEXT = { SCRIPT: 1, STYLE: 1, NOSCRIPT: 1, TEMPLATE: 1, SVG: 1, PATH: 1 };
 
 function soarLeaves(root) {
   return [...root.querySelectorAll("*")].filter((e) => !e.children.length && !SOAR_NON_TEXT[e.tagName]);
@@ -125,9 +125,9 @@ function processSegment(node) {
   FW_TRACE.push(`soar-seg:${code}:${v.cls}`);
 }
 
-const FW_VER = "1";
-let sweepCount = 0;
-let totalMs = 0;
+var FW_VER = "1";
+var sweepCount = 0;
+var totalMs = 0;
 
 function sweep() {
   const t0 = performance.now();
@@ -160,8 +160,8 @@ function sweep() {
   }
 }
 
-let queued = false;
-const observer = new MutationObserver(() => {
+var queued = false;
+var observer = new MutationObserver(() => {
   if (queued) return;
   queued = true;
   queueMicrotask(() => {

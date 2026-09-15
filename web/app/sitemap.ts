@@ -29,6 +29,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     page("/aircraft/", 0.7),
     page("/compare/", 0.7),
     page("/blog/", 0.7),
+    page("/mcp/", 0.6),
+    ...["claude", "chatgpt", "cursor"].map((c) => page(`/mcp/${c}/`, 0.5)),
     page("/methodology/", 0.5),
     page("/about/", 0.4),
     page("/contact/", 0.4),

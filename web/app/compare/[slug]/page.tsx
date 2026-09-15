@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Breadcrumbs, Cta, Faq, JsonLd, Section } from "@/components/ui";
 import { FleetTable } from "@/components/airline";
-import { COMPARISONS, monthLabel, schemaDates } from "@/lib/derive";
+import { COMPARISONS, monthLabel, schemaDates, siblingComparisons } from "@/lib/derive";
 import { accessPoints, entryFor, fleetVerdict, stats } from "@/lib/extension";
 import { SITE_URL, og } from "@/lib/site";
 import { slugForCode } from "@/lib/slugs";
@@ -54,6 +54,7 @@ export default async function ComparePage({ params }: Props) {
   if (!def) notFound();
 
   const month = monthLabel(stats().asOf);
+  const siblings = siblingComparisons(slug);
   const a = entryFor(def.a)!;
   const b = entryFor(def.b)!;
   const va = fleetVerdict(def.a);
@@ -98,6 +99,17 @@ export default async function ComparePage({ params }: Props) {
         </div>
       </Section>
       <Faq items={faqs} title={`${def.title} questions`} />
+      {siblings.length ? (
+        <Section title="Compare these instead">
+          <ul className="cmp-more">
+            {siblings.map((c) => (
+              <li key={c.slug}>
+                <Link href={`/compare/${c.slug}/`}>{c.title.replace(/ Wi-Fi$/, "")}</Link>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      ) : null}
       <Cta />
       <JsonLd
         data={{

@@ -31,6 +31,7 @@ const GROUPS: { title: string; items: { href: string; label: string; external?: 
   {
     title: "Open data",
     items: [
+      { href: "/mcp/", label: "MCP server" },
       { href: "/data.json", label: "Registry JSON", plain: true },
       { href: "/llms.txt", label: "llms.txt", plain: true },
       { href: GITHUB_URL, label: "GitHub", external: true }

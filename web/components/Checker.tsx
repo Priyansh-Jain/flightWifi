@@ -367,7 +367,24 @@ function hrefFor(r: Result): string | null {
 
 const EMPTY: CheckerIndex = { airlines: [], whys: [], aircraftPages: [], policy: {} };
 
-export default function Checker({ src = "/checker.json", storeUrl, examples = EXAMPLES }: { src?: string; storeUrl: string; examples?: string[] }) {
+// A flight number only resolves to a specific aircraft while the schedule provider is configured.
+// When it is not, the input still accepts one (it identifies the airline) but nothing advertises a
+// precision the deployment cannot deliver, and the examples come back on their own once the key is
+// set. FLIGHT_RX has to match parse()'s flight-number shape so the right chips are dropped.
+const FLIGHT_RX = /^([a-z][a-z0-9]|[0-9][a-z])\s?(\d{1,4})$/i;
+
+export default function Checker({
+  src = "/checker.json",
+  storeUrl,
+  examples = EXAMPLES,
+  flightLookup = true
+}: {
+  src?: string;
+  storeUrl: string;
+  examples?: string[];
+  flightLookup?: boolean;
+}) {
+  const shown = flightLookup ? examples : examples.filter((ex) => !FLIGHT_RX.test(ex.trim()));
   const router = useRouter();
   const [q, setQ] = useState("");
   const [pick, setPick] = useState<{ a: CheckerAirline; t: CheckerType } | null>(null);
@@ -458,7 +475,7 @@ export default function Checker({ src = "/checker.json", storeUrl, examples = EX
           onChange={(e) => onChange(e.target.value)}
           onFocus={load}
           onPointerEnter={load}
-          placeholder="Flight number, airline or aircraft"
+          placeholder={flightLookup ? "Flight number, airline or aircraft" : "Airline or aircraft"}
           autoComplete="off"
           autoCapitalize="off"
           spellCheck={false}
@@ -473,7 +490,7 @@ export default function Checker({ src = "/checker.json", storeUrl, examples = EX
       </form>
       <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-[var(--muted)]">
         <span>Try</span>
-        {examples.map((ex) => (
+        {shown.map((ex) => (
           <button
             key={ex}
             type="button"

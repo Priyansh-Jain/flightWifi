@@ -13,6 +13,7 @@
 - [By provider](https://flightwifi.app/providers/): how each satellite system works and what its orbit costs in latency
 - [Comparisons](https://flightwifi.app/compare/): two carriers side by side, per aircraft type
 - [Open dataset](https://flightwifi.app/data.json): the full registry as JSON under CC BY 4.0, attribution required
+- [MCP server](https://flightwifi.app/mcp/): connect Claude, ChatGPT or Cursor to the registry at https://flightwifi.app/api/mcp/ and ask about any airline's Wi-Fi, free, no key
 
 ## Guides
 

@@ -69,7 +69,11 @@ export function AirlineLink({ code, airline }: { code: string; airline: string }
 const SRC_LABEL: Record<SourceKind, string> = {
   airline: "Airline",
   provider: "Provider",
-  trade: "Trade press"
+  trade: "Trade press",
+  news: "News",
+  blog: "Blog",
+  reference: "Reference",
+  other: "Other source"
 };
 
 function SourceIcon({ kind }: { kind: SourceKind }) {
@@ -88,6 +92,28 @@ function SourceIcon({ kind }: { kind: SourceKind }) {
     return (
       <svg {...common}>
         <path d="M17.8 19.8 16 14l-4 1.5V19l-2.5 2 .5-4-2-1 .5-2.5L3 15l-.5-2.5 8-4.5V4a1.5 1.5 0 0 1 3 0v4l8 4.5-.5 2.5-5.5-1.5" />
+      </svg>
+    );
+  if (kind === "reference")
+    return (
+      <svg {...common}>
+        <path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10a2 2 0 0 1 2 2v13a1.5 1.5 0 0 0-1.5-1.5h-5A1.5 1.5 0 0 1 4 16z" />
+        <path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H14a2 2 0 0 0-2 2v13a1.5 1.5 0 0 1 1.5-1.5h5A1.5 1.5 0 0 0 20 16z" />
+      </svg>
+    );
+  if (kind === "blog")
+    return (
+      <svg {...common}>
+        <path d="M12 20h8" />
+        <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7.5 18.5 3.5 20l1.5-4z" />
+      </svg>
+    );
+  if (kind === "other")
+    return (
+      <svg {...common}>
+        <circle cx="12" cy="12" r="9" />
+        <path d="M9.5 9.5a2.6 2.6 0 0 1 5 .9c0 1.7-2.5 2.2-2.5 3.6" />
+        <path d="M12 17h.01" />
       </svg>
     );
   if (kind === "provider")
@@ -110,13 +136,13 @@ function SourceIcon({ kind }: { kind: SourceKind }) {
   );
 }
 
-export function SourceList({ entry }: { entry: Entry }) {
+export function SourceList({ entry, code }: { entry: Entry; code: string }) {
   const list = entry.sources ?? [];
   if (!list.length) return null;
   return (
     <ul className="src-list">
       {list.map((s) => {
-        const kind = sourceKind(s, entry.airline);
+        const kind = sourceKind(s, entry.airline, code);
         const bare = s.replace(/^https?:\/\/(www\.)?/, "");
         const [domain, ...rest] = bare.split("/");
         const path = rest.join("/").replace(/\/$/, "");

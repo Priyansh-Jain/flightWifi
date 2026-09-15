@@ -121,13 +121,27 @@ export function HeaderNav({ siteName, storeUrl }: { siteName: string; storeUrl: 
               {n.label}
             </Link>
           ))}
+          <Link
+            href="/#fw-check"
+            onClick={() => setOpen(false)}
+            className="hdr-cta btn-touch mt-2 h-11 items-center justify-center rounded-full px-4 text-xs font-bold uppercase tracking-wide hover:no-underline"
+          >
+            Check your flight
+          </Link>
           <a
             href={storeUrl}
             rel="noopener"
-            className="hdr-cta mt-2 inline-flex h-11 items-center justify-center rounded-full px-4 text-xs font-bold uppercase tracking-wide hover:no-underline"
+            className="hdr-cta btn-pointer mt-2 inline-flex h-11 items-center justify-center rounded-full px-4 text-xs font-bold uppercase tracking-wide hover:no-underline"
           >
             Get the extension
           </a>
+          <Link
+            href="/chrome-extension/"
+            onClick={() => setOpen(false)}
+            className="note-touch mt-3 text-center text-xs text-[var(--muted)]"
+          >
+            The extension, for Chrome on desktop
+          </Link>
         </nav>
       </div>
     </header>

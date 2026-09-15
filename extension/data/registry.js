@@ -1,4 +1,4 @@
-const WIFI_REGISTRY = {
+var WIFI_REGISTRY = {
   "TK": {
     "airline": "Turkish Airlines",
     "rules": [
@@ -3362,8 +3362,7 @@ const WIFI_REGISTRY = {
     "confidence": "sourced",
     "as_of": "2026-08",
     "sources": [
-      "https://www.flypeach.com/lm/ai/inflights/inflight-service",
-      "https://news.google.com/rss/search?q=%E3%83%94%E3%83%BC%E3%83%81%E3%83%BB%E3%82%A2%E3%83%93%E3%82%A8%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3+%E6%A9%9F%E5%86%85+Wi-Fi+%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%BC%E3%83%8D%E3%83%83%E3%83%88&hl=ja&gl=JP&ceid=JP:ja"
+      "https://www.flypeach.com/lm/ai/inflights/inflight-service"
     ]
   },
   "TW": {
@@ -3380,7 +3379,6 @@ const WIFI_REGISTRY = {
     "confidence": "reported",
     "as_of": "2026-08",
     "sources": [
-      "https://news.google.com/rss/search?q=%ED%8B%B0%EC%9B%A8%EC%9D%B4%ED%95%AD%EA%B3%B5+%EA%B8%B0%EB%82%B4+%EC%99%80%EC%9D%B4%ED%8C%8C%EC%9D%B4+%EB%8F%84%EC%9E%85+%EC%9E%A5%EA%B1%B0%EB%A6%AC&hl=ko&gl=KR&ceid=KR:ko"
     ],
     "needs_verification": true
   },
@@ -3402,7 +3400,6 @@ const WIFI_REGISTRY = {
     "confidence": "reported",
     "as_of": "2026-09",
     "sources": [
-      "https://news.google.com/rss/search?q=%EC%A7%84%EC%97%90%EC%96%B4+%EC%8A%A4%ED%83%80%EB%A7%81%ED%81%AC+%EA%B8%B0%EB%82%B4+%EC%99%80%EC%9D%B4%ED%8C%8C%EC%9D%B4+%EB%8F%84%EC%9E%85&hl=ko&gl=KR&ceid=KR:ko",
       "https://www.koreaherald.com/article/10630658"
     ],
     "needs_verification": true
@@ -3421,7 +3418,6 @@ const WIFI_REGISTRY = {
     "confidence": "reported",
     "as_of": "2026-08",
     "sources": [
-      "https://news.google.com/rss/search?q=%EC%A0%9C%EC%A3%BC%ED%95%AD%EA%B3%B5+%EA%B8%B0%EB%82%B4+%EC%99%80%EC%9D%B4%ED%8C%8C%EC%9D%B4+%EC%97%94%ED%84%B0%ED%85%8C%EC%9D%B8%EB%A8%BC%ED%8A%B8&hl=ko&gl=KR&ceid=KR:ko"
     ],
     "needs_verification": true
   },
@@ -3439,7 +3435,6 @@ const WIFI_REGISTRY = {
     "confidence": "reported",
     "as_of": "2026-08",
     "sources": [
-      "https://news.google.com/rss/search?q=Lion+Air+Batik+Air+wifi+entertainment+AirFi+pesawat&hl=id&gl=ID&ceid=ID:id"
     ],
     "needs_verification": true
   },
@@ -3457,8 +3452,7 @@ const WIFI_REGISTRY = {
     "confidence": "reported",
     "as_of": "2026-08",
     "sources": [
-      "https://en.wikipedia.org/wiki/Batik_Air",
-      "https://news.google.com/rss/search?q=Lion+Air+Batik+Air+wifi+entertainment+AirFi+pesawat&hl=id&gl=ID&ceid=ID:id"
+      "https://en.wikipedia.org/wiki/Batik_Air"
     ],
     "needs_verification": true
   },
@@ -5434,7 +5428,7 @@ const WIFI_REGISTRY = {
 ;
 ;
 
-const VERDICTS = {
+var VERDICTS = {
   LEO: { label: "Video calls work", cls: "good" },
   MEO: { label: "Video calls usually work", cls: "good" },
   GEO: { label: "Email and messaging only", cls: "mid" },

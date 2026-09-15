@@ -4,8 +4,8 @@ import { notFound } from "next/navigation";
 import { Breadcrumbs, Cta, JsonLd, Section, type QA } from "@/components/ui";
 import { FaqSection } from "@/components/Faq";
 import { FleetTable, RelatedGrid, SourceList } from "@/components/airline";
-import { accessPoints, callPolicy, entryFor, fleetNotes, fleetRows, fleetVerdict, orbitClass } from "@/lib/extension";
-import { comparisonsFor, monthLabel, relatedRows, schemaDates, sourceMix } from "@/lib/derive";
+import { accessPoints, callPolicy, costOf, entryFor, fleetNotes, fleetRows, fleetVerdict, orbitClass, progressPct, starlinkRows } from "@/lib/extension";
+import { comparisonsFor, monthLabel, relatedRows, relatedTitle, schemaDates, sourceMix, sourceNote } from "@/lib/derive";
 import { airlineSlugs, codeForSlug } from "@/lib/slugs";
 import { SITE_URL, og, clampDesc } from "@/lib/site";
 
@@ -120,7 +120,17 @@ export default async function AirlinePage({ params }: Props) {
   const faq = buildFaq(code);
   const notes = fleetNotes(code);
   const compares = comparisonsFor(code);
-  const mix = sourceMix(entry);
+  const mix = sourceMix(entry, code);
+
+  // The glance card is assembled from the same helpers the rest of the page uses, so it can never
+  // say something the fleet table, cost section or Starlink tracker would contradict.
+  const sl = starlinkRows().find((r) => r.code === code) ?? null;
+  const slPct = sl?.status === "flying" && entry.starlink?.progress ? progressPct(entry.starlink.progress) : null;
+  const types = Array.from(new Set(fleetRows(code).flatMap((r) => r.types)));
+  const aircraft = types.length
+    ? `${types.slice(0, 4).join(" · ")}${types.length > 4 ? ` +${types.length - 4}` : ""}`
+    : (fleetRows(code)[0]?.scope ?? "All aircraft");
+  const cost = costOf(entry.access);
 
   return (
     <>
@@ -135,14 +145,46 @@ export default async function AirlinePage({ params }: Props) {
         <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
           Does {entry.airline} have <span className="whitespace-nowrap">Wi-Fi</span>?
         </h1>
-        <div className="mt-4 flex flex-wrap items-center gap-3">
-          {v ? <span className={`v v-lg v-${v.cls}`}>{v.label}</span> : null}
-          <span className="text-sm text-[var(--muted)]">
-            {mix.official ? "Sourced from official pages" : "Sourced from trade reporting"}
-            {entry.as_of ? ` · checked ${monthLabel(entry.as_of)}` : ""}
-          </span>
-        </div>
-        <p className="mt-4 max-w-2xl text-[var(--muted)]">{faq[0].a}</p>
+        <dl className="glance card mt-5">
+          <div>
+            <dt>Wi-Fi</dt>
+            <dd>{v ? <span className={`v v-${v.cls}`}>{v.label}</span> : <span className="v v-unknown">Not verified</span>}</dd>
+          </div>
+          <div>
+            <dt>Starlink</dt>
+            <dd>
+              {!sl ? (
+                <span className="text-[var(--muted)]">None announced</span>
+              ) : sl.status === "flying" ? (
+                <>
+                  <span className="star-badge star-flying">Flying</span>
+                  <small>{sl.fleetwide ? "Whole fleet" : slPct !== null ? `${slPct}% of ${entry.starlink!.progress!.scope}` : "Rolling out"}</small>
+                </>
+              ) : (
+                <>
+                  <span className="star-badge star-announced">Announced</span>
+                  <small>Nothing flying yet</small>
+                </>
+              )}
+            </dd>
+          </div>
+          <div>
+            <dt>Cost</dt>
+            <dd>{cost ?? <span className="text-[var(--muted)]">Not published</span>}</dd>
+          </div>
+          <div>
+            <dt>Aircraft</dt>
+            <dd>{aircraft}</dd>
+          </div>
+          <div>
+            <dt>Last verified</dt>
+            <dd>
+              {entry.as_of ? monthLabel(entry.as_of) : <span className="text-[var(--muted)]">Not dated</span>}
+              <small>{!mix.total ? "No sources yet" : mix.primary ? "Official pages" : mix.corroborating ? "Trade and news" : "Secondary sources"}</small>
+            </dd>
+          </div>
+        </dl>
+        <p className="mt-5 max-w-2xl text-[var(--muted)]">{faq[0].a}</p>
       </section>
 
       <Section title="Verdict by aircraft">
@@ -156,27 +198,42 @@ export default async function AirlinePage({ params }: Props) {
         ) : null}
       </Section>
 
-      {access.length ? (
-        <Section title="Cost and access">
-          <ul className="card grid gap-2 p-5 text-[0.95rem]">
-            {access.map((a) => (
-              <li key={a} className="flex gap-2">
-                <span className="text-[var(--accent)]">·</span>
-                {a}
-              </li>
-            ))}
-          </ul>
-        </Section>
-      ) : null}
-
-      <Section title="Sources">
-        <SourceList entry={entry} />
-        <p className="src-foot">
-          {mix.total} {mix.total === 1 ? "source" : "sources"}
-          {entry.as_of ? ` · checked ${monthLabel(entry.as_of)}` : ""} ·{" "}
-          <Link href="/methodology/">How verdicts are compiled</Link>
-        </p>
-      </Section>
+      <section className="mx-auto grid w-full max-w-5xl gap-10 px-5 py-10 lg:grid-cols-2 lg:gap-8">
+        {access.length ? (
+          <div>
+            <h2 className="mb-5 text-xl font-semibold tracking-tight">Cost and access</h2>
+            <ul className="card grid gap-2 p-5 text-[0.95rem]">
+              {access.map((a) => (
+                <li key={a} className="flex gap-2">
+                  <span className="text-[var(--accent)]">·</span>
+                  {a}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+        <div>
+          <h2 className="mb-5 text-xl font-semibold tracking-tight">Sources</h2>
+          {mix.total ? (
+            <>
+              <SourceList entry={entry} code={code} />
+              <p className="src-foot">
+                {mix.total} {mix.total === 1 ? "source" : "sources"}
+                {entry.as_of ? ` · checked ${monthLabel(entry.as_of)}` : ""} ·{" "}
+                <Link href="/methodology/">How verdicts are compiled</Link>
+              </p>
+            </>
+          ) : (
+            <div className="card p-5 text-[0.95rem] text-[var(--muted)]">
+              <p>{sourceNote(entry, code)}</p>
+              <p className="mt-3">
+                Know a page that documents this? <Link href="/contact/">Tell us</Link> and we will
+                cite it. <Link href="/methodology/">How verdicts are compiled</Link>.
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
 
       <FaqSection
         variant="page"
@@ -201,7 +258,7 @@ export default async function AirlinePage({ params }: Props) {
       ) : null}
 
       {related.length ? (
-        <Section title="Other airlines with similar Wi-Fi">
+        <Section title={relatedTitle(code, related, v ? v.label : "Not verified")}>
           <RelatedGrid rows={related} />
         </Section>
       ) : null}

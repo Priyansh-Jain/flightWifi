@@ -4,13 +4,36 @@ import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 import type { StarlinkTableRow } from "@/lib/derive";
 
-type FilterId = "all" | "flying" | "announced";
+type StatusId = "flying" | "announced" | "all";
+type CostId = "any" | "free" | "free_with_account" | "paid";
+type CoverId = "any" | "whole" | "partial";
 type SortId = "coverage" | "updated" | "cost" | "az";
+type Test = (r: StarlinkTableRow) => boolean;
 
-const FILTERS: { id: FilterId; label: string; test: (r: StarlinkTableRow) => boolean }[] = [
-  { id: "all", label: "All", test: () => true },
-  { id: "flying", label: "Flying", test: (r) => r.status === "flying" },
-  { id: "announced", label: "Announced", test: (r) => r.status === "announced" }
+// The line between a passenger aircraft carrying Starlink today and a signed contract with nothing
+// in the air is the reason this page exists, so it is the primary control, it defaults to what is
+// flying, and every row repeats the answer as a coloured status instead of relying on which section
+// the reader scrolled past.
+const STATUS: { id: StatusId; label: string; dot: string | null; test: Test }[] = [
+  { id: "flying", label: "Flying today", dot: "fast", test: (r) => r.status === "flying" },
+  { id: "announced", label: "Announced", dot: "part", test: (r) => r.status === "announced" },
+  { id: "all", label: "All", dot: null, test: () => true }
+];
+
+// Behind "which airlines have Starlink" sits "can I get it on my flight", and two things decide
+// that: whether it costs anything, and whether every aircraft has it or only the converted tails.
+// Coverage only means something for a fleet that is flying it, so that group hides on Announced.
+const COST: { id: CostId; label: string; test: Test }[] = [
+  { id: "any", label: "Any cost", test: () => true },
+  { id: "free", label: "Free", test: (r) => r.access === "free" },
+  { id: "free_with_account", label: "Free with account", test: (r) => r.access === "free_with_account" },
+  { id: "paid", label: "Paid", test: (r) => r.access === "paid" }
+];
+
+const COVER: { id: CoverId; label: string; test: Test }[] = [
+  { id: "any", label: "Any coverage", test: () => true },
+  { id: "whole", label: "Whole fleet", test: (r) => r.status === "flying" && r.fleetwide },
+  { id: "partial", label: "Partial rollout", test: (r) => r.status === "flying" && !r.fleetwide }
 ];
 
 const STATUS_RANK: Record<string, number> = { flying: 0, announced: 1 };
@@ -107,24 +130,52 @@ function Coverage({ r }: { r: StarlinkTableRow }) {
 
 export default function StarlinkTable({ rows }: { rows: StarlinkTableRow[] }) {
   const [q, setQ] = useState("");
-  const [filter, setFilter] = useState<FilterId>("all");
+  const [status, setStatus] = useState<StatusId>("flying");
+  const [cost, setCost] = useState<CostId>("any");
+  const [cover, setCover] = useState<CoverId>("any");
   const [sort, setSort] = useState<SortId>("coverage");
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
 
-  const counts = useMemo(() => {
-    const out = {} as Record<FilterId, number>;
-    for (const f of FILTERS) out[f.id] = rows.filter(f.test).length;
+  const statusTest = STATUS.find((s) => s.id === status)!.test;
+  const costTest = COST.find((c) => c.id === cost)!.test;
+  const coverTest = status === "announced" ? COVER[0].test : COVER.find((c) => c.id === cover)!.test;
+
+  const statusCounts = useMemo(() => {
+    const out = {} as Record<StatusId, number>;
+    for (const s of STATUS) out[s.id] = rows.filter(s.test).length;
     return out;
   }, [rows]);
 
-  const shown = useMemo(() => {
-    const n = q.trim().toLowerCase();
-    const test = FILTERS.find((f) => f.id === filter)!.test;
-    const out = rows.filter((r) => test(r) && (!n || r.airline.toLowerCase().includes(n) || r.code.toLowerCase() === n));
-    out.sort(SORTS.find((s) => s.id === sort)!.cmp);
+  // Refinement counts answer "how many of the ones I am looking at", so they are taken inside the
+  // current status, and each group is counted with the other group applied.
+  const costCounts = useMemo(() => {
+    const out = {} as Record<CostId, number>;
+    for (const c of COST) out[c.id] = rows.filter((r) => statusTest(r) && coverTest(r) && c.test(r)).length;
     return out;
-  }, [rows, q, filter, sort]);
+  }, [rows, statusTest, coverTest]);
+
+  const coverCounts = useMemo(() => {
+    const out = {} as Record<CoverId, number>;
+    for (const c of COVER) out[c.id] = rows.filter((r) => statusTest(r) && costTest(r) && c.test(r)).length;
+    return out;
+  }, [rows, statusTest, costTest]);
+
+  // Every row stays in the document and non-matching ones are hidden, rather than filtered out of
+  // the list. The page is statically exported with "Flying today" selected, and dropping the
+  // announced rows from the markup would drop 21 airline links from the page a crawler sees.
+  const sorted = useMemo(() => [...rows].sort(SORTS.find((s) => s.id === sort)!.cmp), [rows, sort]);
+
+  const visible = useMemo(() => {
+    const n = q.trim().toLowerCase();
+    const out = new Set<string>();
+    for (const r of rows) {
+      if (!statusTest(r) || !costTest(r) || !coverTest(r)) continue;
+      if (n && !r.airline.toLowerCase().includes(n) && r.code.toLowerCase() !== n) continue;
+      out.add(r.code);
+    }
+    return out;
+  }, [rows, q, statusTest, costTest, coverTest]);
 
   const onSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -132,9 +183,60 @@ export default function StarlinkTable({ rows }: { rows: StarlinkTableRow[] }) {
     listRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
   };
 
+  const pickStatus = (id: StatusId) => {
+    setStatus(id);
+    if (id === "announced") setCover("any");
+  };
+
+  const summary = [
+    `${visible.size} ${visible.size === 1 ? "airline" : "airlines"}`,
+    STATUS.find((s) => s.id === status)!.label,
+    cost !== "any" ? COST.find((c) => c.id === cost)!.label : null,
+    status !== "announced" && cover !== "any" ? COVER.find((c) => c.id === cover)!.label : null,
+    q.trim() ? `matching “${q.trim()}”` : null
+  ]
+    .filter(Boolean)
+    .join(" · ");
+
   return (
     <div>
-      <form onSubmit={onSearch} className="flex flex-col gap-3 sm:flex-row sm:items-center">
+      <div className="seg-wrap">
+        <div className="seg" role="group" aria-label="Starlink status">
+          {STATUS.map((s) => (
+            <button key={s.id} type="button" className="seg-btn" aria-pressed={status === s.id} onClick={() => pickStatus(s.id)}>
+              {s.dot ? <span className={`seg-dot dot-${s.dot}`} aria-hidden="true" /> : null}
+              {s.label}
+              <span className="seg-n">{statusCounts[s.id]}</span>
+            </button>
+          ))}
+        </div>
+        <p className="text-sm text-[var(--muted)]" aria-live="polite">
+          {summary}
+        </p>
+      </div>
+
+      <div className="refine" role="group" aria-label="Filter by cost">
+        <span className="refine-lbl">Cost</span>
+        {COST.map((c) => (
+          <button key={c.id} type="button" className="fltr" aria-pressed={cost === c.id} onClick={() => setCost(c.id)}>
+            {c.label}
+            <span className="fltr-n">{costCounts[c.id]}</span>
+          </button>
+        ))}
+      </div>
+      {status !== "announced" ? (
+        <div className="refine" role="group" aria-label="Filter by fleet coverage">
+          <span className="refine-lbl">Coverage</span>
+          {COVER.map((c) => (
+            <button key={c.id} type="button" className="fltr" aria-pressed={cover === c.id} onClick={() => setCover(c.id)}>
+              {c.label}
+              <span className="fltr-n">{coverCounts[c.id]}</span>
+            </button>
+          ))}
+        </div>
+      ) : null}
+
+      <form onSubmit={onSearch} className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
         <label htmlFor="sl-q" className="sr-only">
           Search Starlink airlines
         </label>
@@ -151,23 +253,7 @@ export default function StarlinkTable({ rows }: { rows: StarlinkTableRow[] }) {
           <SearchIcon />
           Search
         </button>
-      </form>
-
-      <div className="mt-3 flex flex-wrap items-center gap-2 sm:justify-end">
-        <p className="order-last mt-1 w-full text-sm text-[var(--muted)] sm:order-none sm:mt-0 sm:me-auto sm:w-auto" aria-live="polite">
-          {shown.length} {shown.length === 1 ? "airline" : "airlines"}
-          {filter !== "all" ? ` · ${FILTERS.find((f) => f.id === filter)!.label}` : ""}
-          {q.trim() ? ` · matching “${q.trim()}”` : ""}
-        </p>
-        <div className="flex flex-wrap gap-2 sm:justify-end" role="group" aria-label="Filter Starlink airlines">
-          {FILTERS.map((f) => (
-            <button key={f.id} type="button" onClick={() => setFilter(f.id)} aria-pressed={filter === f.id} className="fltr">
-              {f.label}
-              <span className="fltr-n">{counts[f.id]}</span>
-            </button>
-          ))}
-        </div>
-        <label className="sort-ctl ms-1 inline-flex shrink-0 items-center gap-2 rounded-full border border-[var(--line)] px-3.5 py-[7px] text-[0.8125rem]">
+        <label className="sort-ctl inline-flex shrink-0 items-center gap-2 rounded-full border border-[var(--line)] px-3.5 py-[7px] text-[0.8125rem]">
           <span className="text-[var(--muted)]">Sort</span>
           <select
             value={sort}
@@ -189,7 +275,7 @@ export default function StarlinkTable({ rows }: { rows: StarlinkTableRow[] }) {
             </span>
           </span>
         </label>
-      </div>
+      </form>
 
       <div className="sl-head" aria-hidden="true">
         <span>Airline</span>
@@ -199,8 +285,8 @@ export default function StarlinkTable({ rows }: { rows: StarlinkTableRow[] }) {
         <span>Cost</span>
       </div>
       <ul ref={listRef} className="mt-4 min-[900px]:mt-1">
-        {shown.map((r) => (
-          <li key={r.code}>
+        {sorted.map((r) => (
+          <li key={r.code} hidden={!visible.has(r.code)}>
             <Link href={`/airlines/${r.slug}/`} className="sl-row">
               <span className="sl-name">{r.airline}</span>
               <span className="sl-meta">
@@ -218,7 +304,7 @@ export default function StarlinkTable({ rows }: { rows: StarlinkTableRow[] }) {
           </li>
         ))}
       </ul>
-      {!shown.length ? (
+      {!visible.size ? (
         <p className="mt-6 text-[var(--muted)]">
           No Starlink airline matches that. If one is flying it and we missed it, <Link href="/contact/">tell us</Link>.
         </p>

@@ -113,11 +113,11 @@ export function Cta({ secondary = { href: "/starlink/", label: "Starlink on flig
       <div className="relative mx-auto w-full max-w-[760px] px-5 text-center sm:px-6">
         <h2 className="sec-title">Know before you book.</h2>
         <p className="mx-auto mt-5 max-w-[580px] text-base text-[var(--muted)]">
-          The free FlightWifi extension shows these verdicts inline on Google Flights, Skyscanner and
-          Soar, matched to the exact aircraft on your flight.
+          FlightWifi shows these verdicts inline on Google Flights, Skyscanner and Soar, matched to
+          the exact aircraft on your flight.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <a href={CHROME_STORE_URL} rel="noopener" className="flare-btn">
+          <a href={CHROME_STORE_URL} rel="noopener" className="flare-btn btn-pointer">
             <span aria-hidden="true" className="flare-ring">
               <span className="flare-spin" />
               <span className="flare-heat" />
@@ -125,10 +125,21 @@ export function Cta({ secondary = { href: "/starlink/", label: "Starlink on flig
             <ChromeMark size={16} />
             Get the free extension
           </a>
+          <Link href="/#fw-check" className="flare-btn btn-touch">
+            <span aria-hidden="true" className="flare-ring">
+              <span className="flare-spin" />
+              <span className="flare-heat" />
+            </span>
+            Check your flight
+          </Link>
           <Link href={secondary.href} className="ghost-btn">
             {secondary.label}
           </Link>
         </div>
+        <p className="note-touch mt-5 text-sm text-[var(--muted)]">
+          The extension itself runs in Chrome on a computer.{" "}
+          <Link href="/chrome-extension/">What it does</Link>.
+        </p>
       </div>
     </section>
   );

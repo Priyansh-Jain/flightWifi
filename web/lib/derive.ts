@@ -1,5 +1,7 @@
 import { STARLINK_ACCESS_UI, callLabel, callPolicy, capability, codes, costOf, entryFor, fleetRows, fleetVerdict, orbitClass, progressPct, registry, starlinkRows, verdict, verdictUi, type Entry, type Rule, type StarlinkFact, type StarlinkProgress } from "./extension";
 import { slugForCode } from "./slugs";
+import { regionOf } from "./regions";
+import { CORROBORATING, PRIMARY, sourceKind } from "./sources";
 import { SITE_LAUNCH } from "./site";
 
 export type ProviderDef = {
@@ -242,7 +244,8 @@ export function aircraftAirlines(def: AircraftDef) {
 
 export type ComparePair = { slug: string; a: string; b: string; title: string };
 
-export const COMPARISONS: ComparePair[] = [
+// The six original comparisons are live URLs, so their hand-written slugs stay exactly as they are.
+const LEGACY: ComparePair[] = [
   { slug: "qatar-airways-vs-emirates", a: "QR", b: "EK", title: "Qatar Airways vs Emirates Wi-Fi" },
   { slug: "united-vs-delta", a: "UA", b: "DL", title: "United vs Delta Wi-Fi" },
   { slug: "american-vs-united", a: "AA", b: "UA", title: "American vs United Wi-Fi" },
@@ -250,6 +253,89 @@ export const COMPARISONS: ComparePair[] = [
   { slug: "singapore-airlines-vs-cathay-pacific", a: "SQ", b: "CX", title: "Singapore Airlines vs Cathay Pacific Wi-Fi" },
   { slug: "air-india-vs-emirates", a: "AI", b: "EK", title: "Air India vs Emirates Wi-Fi" }
 ];
+
+// Pairs people actually choose between: same routes, same market, same week of searching. Anything
+// that would only ever be an accidental query is left out, because a comparison nobody is looking
+// for is a page nobody reads.
+const RIVALS: [string, string][] = [
+  ["AA", "DL"], ["DL", "AS"], ["AS", "UA"], ["B6", "DL"], ["B6", "AA"], ["WN", "DL"], ["WN", "AA"],
+  ["WN", "UA"], ["F9", "WN"], ["B6", "WN"], ["HA", "AS"], ["G4", "F9"],
+  ["BA", "AA"], ["VS", "DL"], ["AF", "DL"], ["KL", "DL"], ["LH", "UA"], ["BA", "AF"], ["BA", "LH"],
+  ["AF", "KL"], ["LH", "LX"], ["AZ", "LH"], ["EI", "BA"], ["IB", "BA"], ["TP", "IB"], ["FI", "BT"],
+  ["DY", "SK"], ["AY", "SK"], ["LO", "LH"], ["A3", "TK"],
+  ["U2", "FR"], ["FR", "W6"], ["U2", "W6"], ["VY", "FR"], ["LS", "U2"], ["HV", "FR"],
+  ["EK", "EY"], ["QR", "EY"], ["EK", "TK"], ["QR", "TK"], ["SV", "EK"], ["GF", "QR"], ["WY", "EK"],
+  ["FZ", "G9"], ["EK", "SQ"], ["QR", "SQ"], ["EK", "BA"], ["QR", "BA"],
+  ["AI", "6E"], ["6E", "SG"], ["AI", "QR"], ["IX", "6E"], ["6E", "AK"], ["AI", "BA"],
+  ["SQ", "TG"], ["SQ", "MH"], ["CX", "JL"], ["JL", "NH"], ["KE", "OZ"], ["BR", "CI"], ["TG", "MH"],
+  ["GA", "SQ"], ["VN", "SQ"], ["CA", "MU"], ["MU", "CZ"], ["CA", "CZ"], ["CX", "BR"], ["JX", "BR"],
+  ["AK", "TR"], ["TR", "SQ"],
+  ["QF", "VA"], ["QF", "NZ"], ["VA", "JQ"], ["QF", "SQ"], ["NZ", "FJ"], ["QF", "EK"],
+  ["AC", "WS"], ["AC", "UA"], ["AC", "TS"],
+  ["LA", "AV"], ["LA", "G3"], ["G3", "AD"], ["AM", "Y4"], ["AV", "CM"], ["LA", "AM"], ["AR", "LA"],
+  ["ET", "KQ"], ["ET", "MS"], ["SA", "ET"], ["AT", "MS"], ["FA", "SA"], ["ET", "QR"]
+];
+
+let comparisons: ComparePair[] | null = null;
+
+export function allComparisons(): ComparePair[] {
+  if (comparisons) return comparisons;
+  const seen = new Set(LEGACY.map((c) => [c.a, c.b].sort().join("-")));
+  const slugs = new Set(LEGACY.map((c) => c.slug));
+  const out = [...LEGACY];
+  for (const [a, b] of RIVALS) {
+    const ea = entryFor(a);
+    const eb = entryFor(b);
+    if (!ea || !eb) continue;
+    const key = [a, b].sort().join("-");
+    if (seen.has(key)) continue;
+    const slug = `${slugForCode(a)}-vs-${slugForCode(b)}`;
+    if (slugs.has(slug)) continue;
+    seen.add(key);
+    slugs.add(slug);
+    out.push({ slug, a, b, title: `${ea.airline} vs ${eb.airline} Wi-Fi` });
+  }
+  comparisons = out;
+  return out;
+}
+
+export const COMPARISONS: ComparePair[] = allComparisons();
+
+// 98 comparisons in one flat grid is a wall, so the index groups them the way a traveller thinks
+// about them: the market they are choosing inside, and the long-haul pairs that cross markets.
+export function comparisonGroups(): { title: string; pairs: ComparePair[] }[] {
+  const buckets = new Map<string, ComparePair[]>();
+  for (const c of COMPARISONS) {
+    const ra = regionOf(c.a);
+    const rb = regionOf(c.b);
+    const key = ra && ra === rb ? `${ra} carriers` : "Long-haul rivals";
+    const list = buckets.get(key) ?? [];
+    list.push(c);
+    buckets.set(key, list);
+  }
+  return [...buckets.entries()]
+    .map(([title, pairs]) => ({ title, pairs: pairs.sort((x, y) => x.title.localeCompare(y.title)) }))
+    .sort((x, y) => (x.title === "Long-haul rivals" ? 1 : y.title === "Long-haul rivals" ? -1 : y.pairs.length - x.pairs.length));
+}
+
+// Every comparison used to have exactly one inbound link, from its own index. Siblings give the
+// crawler a path between them and give the reader the next question they were going to ask.
+export function siblingComparisons(slug: string, n = 6): ComparePair[] {
+  const me = COMPARISONS.find((c) => c.slug === slug);
+  if (!me) return [];
+  const region = regionOf(me.a);
+  const scored = COMPARISONS.filter((c) => c.slug !== slug).map((c) => {
+    let score = 0;
+    if (c.a === me.a || c.b === me.b || c.a === me.b || c.b === me.a) score += 4;
+    if (region && (regionOf(c.a) === region || regionOf(c.b) === region)) score += 2;
+    return { c, score };
+  });
+  return scored
+    .filter((x) => x.score > 0)
+    .sort((x, y) => y.score - x.score || x.c.title.localeCompare(y.c.title))
+    .slice(0, n)
+    .map((x) => x.c);
+}
 
 // A carrier's headline class is its best genuinely-flying tier, which is what "related airlines"
 // and comparison verdicts key off.
@@ -263,23 +349,88 @@ export function headlineClass(entry: Entry): string {
   return best;
 }
 
-// Slicing the head of an alphabetical pool gave 122 pages the identical six links and left most
-// airlines unlinked from anywhere. Starting the window at the airline's own position spreads the
-// links across the whole pool while staying deterministic between builds.
+// Ranking the pool alphabetically from the airline's own position spread the links but produced
+// nonsense neighbours: TAROM linked six other T-airlines, Fiji linked Finnair. Relevance now comes
+// first (region, then system, then how it is sold, then shared aircraft) and the alphabetical
+// rotation only breaks ties, so the links stay spread without reading as machine output.
+function providerKey(entry: Entry): string {
+  const text = entry.rules.map((r) => r.provider ?? "").join(" ");
+  const hit = PROVIDERS.find((p) => p.match.test(text));
+  return hit ? hit.slug : "";
+}
+
+function accessKey(entry: Entry): string {
+  const a = (entry.access ?? "").toLowerCase();
+  if (!a || /no passenger internet|not offered/.test(a)) return "none";
+  if (/free for all|free to all|free for every|complimentary for all/.test(a)) return "free-all";
+  if (/free/.test(a) && /(member|loyalty|sign|account|programme|program)/.test(a)) return "free-account";
+  if (/free/.test(a) && /(tier|messag|chat|then|first)/.test(a)) return "free-tier";
+  if (/free/.test(a)) return "free-all";
+  return "paid";
+}
+
+function typeKeys(code: string): Set<string> {
+  const out = new Set<string>();
+  for (const row of fleetRows(code)) for (const t of row.types) out.add(t.toLowerCase().replace(/[^a-z0-9]/g, ""));
+  return out;
+}
+
 export function relatedAirlines(code: string, n = 6): { code: string; airline: string }[] {
-  const me = entryFor(code);
+  const up = code.toUpperCase();
+  const me = entryFor(up);
   if (!me) return [];
   const mine = headlineClass(me);
+  const myRegion = regionOf(up);
+  const myProvider = providerKey(me);
+  const myAccess = accessKey(me);
+  const myTypes = typeKeys(up);
+
   const pool = codes()
+    .filter((c) => c !== up)
     .map((c) => ({ code: c, entry: entryFor(c)! }))
-    .filter((x) => x.code !== code.toUpperCase() && headlineClass(x.entry) === mine);
-  if (pool.length <= n) return pool.map((x) => ({ code: x.code, airline: x.entry.airline }));
-  const start = pool.findIndex((x) => x.entry.airline.localeCompare(me.airline) > 0);
-  const from = start < 0 ? 0 : start;
-  return Array.from({ length: n }, (_, i) => pool[(from + i) % pool.length]).map((x) => ({
-    code: x.code,
-    airline: x.entry.airline
-  }));
+    .filter((x) => headlineClass(x.entry) === mine);
+  if (!pool.length) return [];
+
+  const scored = pool.map((x) => {
+    let score = 0;
+    if (myRegion && regionOf(x.code) === myRegion) score += 6;
+    if (myProvider && providerKey(x.entry) === myProvider) score += 3;
+    if (accessKey(x.entry) === myAccess) score += 2;
+    if (myTypes.size) {
+      const theirs = typeKeys(x.code);
+      for (const t of myTypes) if (theirs.has(t)) { score += 2; break; }
+    }
+    const sl = me.starlink?.status ?? "none";
+    if (sl !== "none" && (x.entry.starlink?.status ?? "none") === sl) score += 1;
+    return { ...x, score };
+  });
+
+  const bands = new Map<number, typeof scored>();
+  for (const row of scored) {
+    const band = bands.get(row.score) ?? [];
+    band.push(row);
+    bands.set(row.score, band);
+  }
+  const out: { code: string; airline: string }[] = [];
+  for (const score of [...bands.keys()].sort((a, b) => b - a)) {
+    const band = bands.get(score)!;
+    const start = band.findIndex((x) => x.entry.airline.localeCompare(me.airline) > 0);
+    const from = start < 0 ? 0 : start;
+    for (let i = 0; i < band.length && out.length < n; i++) {
+      const x = band[(from + i) % band.length];
+      out.push({ code: x.code, airline: x.entry.airline });
+    }
+    if (out.length >= n) break;
+  }
+  return out;
+}
+
+// The heading has to describe what the list actually is, or it reads as filler.
+export function relatedTitle(code: string, rows: { code: string }[], label: string): string {
+  const region = regionOf(code);
+  if (region && rows.length && rows.every((r) => regionOf(r.code) === region))
+    return `Other ${region} airlines where the answer is "${label}"`;
+  return `Other airlines where the answer is "${label}"`;
 }
 
 // Comparison pages had exactly one inbound link each, from their own index.
@@ -391,57 +542,40 @@ export function schemaDates(asOf: string): { datePublished: string; dateModified
 // A denylist counted every unknown domain as official, so 18 airlines whose only citation was a
 // trade outlet still claimed "sourced from official pages". Officialness is now positive evidence:
 // the host must be the airline's own domain or a known connectivity provider.
-const PROVIDER_DOMAINS = [
-  "starlink.com", "spacex.com", "viasat.com", "panasonic.aero", "panasonic.com", "intelsat.com",
-  "ses.com", "anuvu.com", "sita.aero", "oneweb.net", "eutelsat.com", "inmarsat.com",
-  "gogoair.com", "aboutamazon.com", "thalesgroup.com", "hughes.com", "nsg.com.sa"
-];
+export type { SourceKind } from "./sources";
+export { sourceKind } from "./sources";
 
-function hostOf(url: string): string {
-  const m = url.match(/^https?:\/\/([^/]+)/i);
-  return m ? m[1].toLowerCase().replace(/^www\./, "") : "";
-}
-
-// "Turkish Airlines" -> ["turkishairlines", "turkish"], so turkishairlines.com counts and a blog
-// that merely mentions the airline does not.
-function airlineTokens(name: string): string[] {
-  const bare = name.toLowerCase().replace(/[^a-z0-9 ]/g, "");
-  const joined = bare.replace(/ /g, "");
-  const first = bare.split(" ")[0];
-  return [joined, first].filter((t) => t.length >= 4);
-}
-
-function isOfficial(url: string, airline: string): boolean {
-  const host = hostOf(url);
-  if (!host) return false;
-  if (PROVIDER_DOMAINS.some((d) => host === d || host.endsWith(`.${d}`))) return true;
-  const label = host.split(".")[0];
-  return airlineTokens(airline).some((t) => host.includes(t) || t.includes(label));
-}
-
-export type SourceKind = "airline" | "provider" | "trade";
-
-export function sourceKind(url: string, airline: string): SourceKind {
-  const host = hostOf(url);
-  if (!host) return "trade";
-  if (PROVIDER_DOMAINS.some((d) => host === d || host.endsWith(`.${d}`))) return "provider";
-  const label = host.split(".")[0];
-  return airlineTokens(airline).some((t) => host.includes(t) || t.includes(label)) ? "airline" : "trade";
-}
-
-export function sourceMix(entry: Entry): { official: number; trade: number; total: number } {
+export function sourceMix(entry: Entry, code: string): { primary: number; corroborating: number; weak: number; total: number } {
   const list = entry.sources ?? [];
-  const official = list.filter((u) => isOfficial(u, entry.airline)).length;
-  return { official, trade: list.length - official, total: list.length };
+  let primary = 0;
+  let corroborating = 0;
+  for (const u of list) {
+    const k = sourceKind(u, entry.airline, code);
+    if (PRIMARY.includes(k)) primary += 1;
+    else if (CORROBORATING.includes(k)) corroborating += 1;
+  }
+  return { primary, corroborating, weak: list.length - primary - corroborating, total: list.length };
 }
 
-export function sourceNote(entry: Entry): string {
-  const { official, trade } = sourceMix(entry);
-  if (!official && !trade) return "No sources are recorded for this entry yet.";
+// The badge under a verdict used to read "trade reporting" for anything that was not the airline's
+// own page, which flattered a Wikipedia article and understated a provider announcement.
+export function sourceStrength(entry: Entry, code: string): string {
+  const { primary, corroborating, total } = sourceMix(entry, code);
+  if (!total) return "No sources recorded";
+  if (primary) return "Sourced from official pages";
+  if (corroborating) return "Sourced from trade reporting";
+  return "Sourced from secondary reporting";
+}
+
+export function sourceNote(entry: Entry, code: string): string {
+  const { primary, corroborating, weak } = sourceMix(entry, code);
   const poss = entry.airline.endsWith("s") ? `${entry.airline}'` : `${entry.airline}'s`;
-  if (!official)
+  if (!primary && !corroborating && !weak) return "No sources are recorded for this entry yet.";
+  if (!primary && !corroborating)
+    return `${entry.airline} does not publish its Wi-Fi terms in a form we could cite and no trade title has covered them, so this entry rests on secondary sources and is due a re-check.`;
+  if (!primary)
     return `${entry.airline} does not publish its Wi-Fi terms in a form we could cite, so this entry rests on aviation trade reporting rather than the airline's own pages.`;
-  if (!trade)
+  if (!corroborating && !weak)
     return `Every fact on this page comes from ${poss} own publications or its connectivity provider's announcements.`;
   return `Facts on this page come from ${poss} own publications and its connectivity provider's announcements, with aviation trade reporting used for corroboration.`;
 }
@@ -449,14 +583,18 @@ export function sourceNote(entry: Entry): string {
 export function sourceTotals() {
   let official = 0;
   let trade = 0;
+  let secondary = 0;
   let tradeOnly = 0;
+  let secondaryOnly = 0;
   for (const code of codes()) {
-    const m = sourceMix(entryFor(code)!);
-    official += m.official;
-    trade += m.trade;
-    if (!m.official && m.total) tradeOnly += 1;
+    const m = sourceMix(entryFor(code)!, code);
+    official += m.primary;
+    trade += m.corroborating;
+    secondary += m.weak;
+    if (!m.primary && m.total) tradeOnly += 1;
+    if (!m.primary && !m.corroborating && m.total) secondaryOnly += 1;
   }
-  return { official, trade, tradeOnly, total: official + trade };
+  return { official, trade, secondary, tradeOnly, secondaryOnly, total: official + trade + secondary };
 }
 
 // Nobody publishes the negative list, and the mainstream guides get it wrong: several airlines

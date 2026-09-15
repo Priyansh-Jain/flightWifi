@@ -102,7 +102,7 @@ export default function StarlinkPage() {
             has progressed. Check a flight number, an airline or an aircraft for the answer on your
             own flight.
           </p>
-          <Checker storeUrl={CHROME_STORE_URL} examples={EXAMPLES} />
+          <Checker storeUrl={CHROME_STORE_URL} examples={EXAMPLES} flightLookup={Boolean(process.env.AERODATABOX_KEY)} />
           <p className="sl-stats mt-8">
             <span>
               <b>{flying.length}</b> airlines flying Starlink

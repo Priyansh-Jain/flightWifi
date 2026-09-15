@@ -23,7 +23,7 @@ function carrierForLeg(aircraftNode, li) {
 // Google publishes a per-leg amenity block. Its wifi line is the fallback verdict for any airline
 // the registry has not sourced yet, and the other amenity lines tell us the block exists at all,
 // which is what separates "Google says no wifi" from "Google says nothing".
-const AMENITY_RX = /legroom|in-seat (power|usb)|stream media|on-demand video|live tv|emissions|carbon/i;
+var AMENITY_RX = /legroom|in-seat (power|usb)|stream media|on-demand video|live tv|emissions|carbon/i;
 
 function collectNodes(li) {
   const aircraft = [];
@@ -85,7 +85,7 @@ function codesIn(text) {
 // "Operated by Air Seychelles for Etihad Airways" means the aircraft is a Seychelles one, and its
 // cabin is what the passenger actually sits in. Believing the marketing carrier here would promise
 // Etihad's satellite wifi on an aircraft that has no internet at all.
-const OPERATED_BY_RX = /operated by\s+(.+?)(?:\s+for\s+.+)?$/i;
+var OPERATED_BY_RX = /operated by\s+(.+?)(?:\s+for\s+.+)?$/i;
 
 function summaryTarget(li) {
   const walker = document.createTreeWalker(li, NodeFilter.SHOW_TEXT);
@@ -126,8 +126,8 @@ function summaryTarget(li) {
 // keyed by nothing: matching to a card happens here, by first-departure and last-arrival clock
 // time plus carrier overlap plus stop count. Anything ambiguous keeps the fleet verdict; a wrong
 // exact answer is worse than an honest coarse one.
-let bridgeSeen = "";
-let bridgeIndex = null;
+var bridgeSeen = "";
+var bridgeIndex = null;
 
 function bridgeRead() {
   const node = document.getElementById("__fwGF");
@@ -149,10 +149,10 @@ function bridgeRead() {
   }
 }
 
-const CARD_TIME_RX = /^(\d{1,2}):(\d{2})\s*(AM|PM)?$/;
+var CARD_TIME_RX = /^(\d{1,2}):(\d{2})\s*(AM|PM)?$/;
 // the booking header prints both clocks in one text node ("3:25 AM \u2013 2:10 PM"), where the list
 // keeps them in separate leaves; the range form is only consulted when the exact form fails
-const CARD_TIME_RANGE_RX = /^(\d{1,2}):(\d{2})\s*(AM|PM)?\s*[\u2013\u2014-]\s*(\d{1,2}):(\d{2})\s*(AM|PM)?/;
+var CARD_TIME_RANGE_RX = /^(\d{1,2}):(\d{2})\s*(AM|PM)?\s*[\u2013\u2014-]\s*(\d{1,2}):(\d{2})\s*(AM|PM)?/;
 
 function toMin(h, mm, ap) {
   h = +h;
@@ -314,7 +314,7 @@ function processExpandedCard(li) {
   });
 }
 
-const FW_VER = "55";
+var FW_VER = "55";
 /* ---------- booking view (/travel/flights/booking) ---------- */
 
 // Selecting a flight leaves the results list entirely. The booking view rebuilds the itinerary
@@ -439,9 +439,9 @@ function sweepBooking() {
   return processed;
 }
 
-let sweepCount = 0;
+var sweepCount = 0;
 
-let totalMs = 0;
+var totalMs = 0;
 
 function sweep() {
   const t0 = performance.now();
@@ -488,8 +488,8 @@ function sweep() {
   }
 }
 
-let queued = false;
-const observer = new MutationObserver(() => {
+var queued = false;
+var observer = new MutationObserver(() => {
   if (queued) return;
   queued = true;
   queueMicrotask(() => {
@@ -500,15 +500,21 @@ const observer = new MutationObserver(() => {
 
 // Behind the per-site setting from the popup. fwBoot lives in core.js so all three site
 // files boot identically; it calls start() when the site is on and stop() when switched off.
+var headerTimer = null;
+
 fwBoot(
   "google",
   () => {
     observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["aria-expanded"] });
     document.addEventListener("visibilitychange", sweep);
     sweep();
+    headerTimer = fwStartHeaderButton();
   },
   () => {
     observer.disconnect();
     document.removeEventListener("visibilitychange", sweep);
+    if (headerTimer) clearInterval(headerTimer);
+    headerTimer = null;
+    fwRemoveHeaderButton();
   }
 );

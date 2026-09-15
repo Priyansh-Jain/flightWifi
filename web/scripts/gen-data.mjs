@@ -6,7 +6,7 @@ import path from "node:path";
 const root = path.join(process.cwd(), "..");
 const src = fs.readFileSync(path.join(root, "extension", "data", "registry.js"), "utf8");
 const registry = JSON.parse(
-  src.slice(src.indexOf("{"), src.lastIndexOf("};", src.indexOf("const VERDICTS")) + 1)
+  src.slice(src.indexOf("{"), src.lastIndexOf("};", src.search(/\b(?:const|let|var)\s+VERDICTS\b/)) + 1)
 );
 
 const out = {

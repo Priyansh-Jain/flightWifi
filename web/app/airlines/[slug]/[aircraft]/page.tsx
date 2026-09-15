@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { Breadcrumbs, Chip, Cta, Faq, JsonLd, Section, type QA } from "@/components/ui";
 import { AirlineLink, SourceList } from "@/components/airline";
 import { accessPoints, callPolicy, callPolicyText, capability, entryFor, type Entry } from "@/lib/extension";
-import { monthLabel, schemaDates, sourceMix, sourceNote } from "@/lib/derive";
+import { monthLabel, schemaDates, sourceMix, sourceNote, sourceStrength } from "@/lib/derive";
 import { aircraftPageFor, allPairs, pairFor, pairHref, pairsFor, poss, sameAircraft, type Pair } from "@/lib/matrix";
 import { codeForSlug } from "@/lib/slugs";
 import { SITE_URL, og, clampDesc } from "@/lib/site";
@@ -105,7 +105,7 @@ export default async function PairPage({ params }: Props) {
   const cap = capability(v.key);
   const policy = callPolicy(pair.code);
   const access = accessPoints(entry.access);
-  const mix = sourceMix(entry);
+  const mix = sourceMix(entry, pair.code);
   const siblings = pairsFor(pair.code).filter((p) => p.family.slug !== pair.family.slug);
   const peers = sameAircraft(pair.family, pair.code).slice(0, 8);
   const aircraftPage = aircraftPageFor(pair.family);
@@ -138,7 +138,7 @@ export default async function PairPage({ params }: Props) {
         </div>
         <p className="mt-3 max-w-2xl text-[var(--muted)]">{faq[0].a}</p>
         <p className="mt-2 text-sm text-[var(--muted)]">
-          {mix.official ? "Sourced from official pages" : "Sourced from trade reporting"}
+          {sourceStrength(entry, pair.code)}
           {entry.needs_verification ? " · verification pending" : ""} · as of {entry.as_of}
         </p>
       </section>
@@ -251,9 +251,9 @@ export default async function PairPage({ params }: Props) {
 
       <Section title="Sources">
         <div className="card p-5">
-          <SourceList entry={entry} />
+          <SourceList entry={entry} code={pair.code} />
           <p className="mt-3 text-sm text-[var(--muted)]">
-            {sourceNote(entry)} See the <Link href="/methodology/">methodology</Link>.
+            {sourceNote(entry, pair.code)} See the <Link href="/methodology/">methodology</Link>.
           </p>
         </div>
       </Section>
