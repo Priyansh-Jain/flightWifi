@@ -125,7 +125,9 @@
         depT: segs[0].depT,
         arrT: segs[segs.length - 1].arrT,
         stops: segs.length - 1,
-        segs: segs.map((s) => ({ cc: s.cc, ac: s.ac })),
+        // airports per segment let the hover card label each leg by route and let the consumer tell
+        // apart itineraries that share every time and differ only by connection point
+        segs: segs.map((s) => ({ cc: s.cc, ac: s.ac, dep: s.dep, arr: s.arr })),
       });
       found++;
     }

@@ -2,7 +2,7 @@
  "name": "FlightWifi airline wifi registry",
  "license": "CC-BY-4.0",
  "attribution": "FlightWifi, https://flightwifi.app",
- "compiled": "2026-09-15",
+ "compiled": "2026-09-28",
  "airlines": {
   "TK": {
    "airline": "Turkish Airlines",
@@ -19,6 +19,7 @@
     }
    ],
    "access": "Gated by cabin + Miles&Smiles tier; Classic gets free unlimited messaging, Classic Plus adds 250MB and Elite tiers 400MB in economy with unlimited free in business; paid international passes $5-35",
+   "access_short": "Free messaging for Miles&Smiles. Paid passes $5 to $35",
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
@@ -61,6 +62,7 @@
     }
    ],
    "access": "Free in all cabins on Starlink-fitted aircraft; on GEO aircraft, free tiers for Skywards members with full access paid or premium-cabin.",
+   "access_short": "Free on Starlink planes. Free tiers for Skywards on the rest",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
@@ -118,6 +120,7 @@
     }
    ],
    "access": "Starlink on the 777, A350 and 787 is free, but only 45 minutes for a passenger who is not a Privilege Club member; members get the whole flight and joining is free. Gate-to-gate at select airports only. Legacy widebodies tiered (free 1-hour pass for Privilege Club members, paid from $10); narrowbodies have no wifi yet",
+   "access_short": "Free, but 45 minutes only unless you join Privilege Club",
    "confidence": "sourced",
    "needs_verification": true,
    "as_of": "2026-09",
@@ -163,6 +166,7 @@
     }
    ],
    "access": "Free with MileagePlus (free signup) on Starlink-fitted aircraft",
+   "access_short": "Free for MileagePlus members on Starlink planes",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
@@ -196,6 +200,7 @@
     }
    ],
    "access": "Free on wifi-fitted A350/787-9/select A321neo",
+   "access_short": "Free on the planes that have it",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
@@ -213,6 +218,7 @@
     }
    ],
    "access": "IndiGo has no inflight wifi today; first A321XLR wifi trials expected late 2026",
+   "access_short": "No Wi-Fi on IndiGo today",
    "confidence": "reported",
    "as_of": "2026-09",
    "sources": [
@@ -229,6 +235,7 @@
     }
    ],
    "access": "Wi-Fly Chat free for all passengers via Etihad Guest sign-in (free to join); Surf US$9.99 on flights under 7h and US$19.99 over 7h, free in First and for Guest Platinum and Exclusive tiers, 25% off for Gold",
+   "access_short": "Free chat with an Etihad Guest account. Browsing $9.99 to $19.99",
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
@@ -251,6 +258,7 @@
     }
    ],
    "access": "Free for SkyMiles members (free signup); nearly all domestic + transatlantic fitted, transpacific completing through 2026",
+   "access_short": "Free for SkyMiles members, free to join",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
@@ -293,6 +301,7 @@
     }
    ],
    "access": "Paid GEO packages on unequipped aircraft with free messaging for Executive Club members; free full wifi in all cabins on Starlink-equipped aircraft.",
+   "access_short": "Free on Starlink planes. Paid packages on the rest",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
@@ -329,6 +338,7 @@
     }
    ],
    "access": "Messaging and tiered paid packages on FlyNet aircraft; Starlink is free for Miles & More and Travel ID users in every class on fitted aircraft",
+   "access_short": "Free on Starlink planes for Miles & More or Travel ID. Paid on FlyNet",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
@@ -366,6 +376,7 @@
     }
    ],
    "access": "Free since January 2026 for AAdvantage members (free to join, can enroll onboard), sponsored by AT&T, across the entire narrowbody and dual-class regional fleets; 777s and Panasonic-fitted 787s keep paid Panasonic wifi; Starlink announced May 2026 for 500+ Airbus narrowbodies with installs from 2027.",
+   "access_short": "Free for AAdvantage members. Paid on 777s and some 787s",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
@@ -409,6 +420,7 @@
     }
    ],
    "access": "Free on Starlink-equipped aircraft, sponsored by T-Mobile; since mid-July 2026 a free Atmos Rewards membership is required (under-18s can connect with reservation details). Non-Starlink aircraft remain paid.",
+   "access_short": "Free on Starlink planes with a free Atmos Rewards account",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
@@ -432,6 +444,7 @@
     }
    ],
    "access": "Free for every passenger at every seat with no loyalty membership or purchase required, and has been since 2013.",
+   "access_short": "Free for everyone, no sign-up",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
@@ -466,6 +479,7 @@
     }
    ],
    "access": "Free for Rapid Rewards members (free to join) since 24 October 2025; non-members pay a flat $8 per device per flight.",
+   "access_short": "Free for Rapid Rewards members, $8 a device for everyone else",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
@@ -496,6 +510,7 @@
     }
    ],
    "access": "No inflight Wi-Fi available on any Frontier aircraft today; Starlink service starts early 2027 and pricing has not been announced.",
+   "access_short": "No Wi-Fi on any Frontier plane today",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
@@ -542,6 +557,7 @@
     }
    ],
    "access": "Free on Starlink-equipped Airbus aircraft; since mid-July 2026 requires free Atmos Rewards membership, sponsored by T-Mobile. Boeing 717 inter-island flights have no Wi-Fi and none is planned.",
+   "access_short": "Free on Starlink Airbus planes with a free account. None on the 717s",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
@@ -585,6 +601,7 @@
     }
    ],
    "access": "Free for Aeroplan members (free to join), sponsored by Bell, on North America, Mexico and Caribbean flights since 1 May 2025 and expanding to international and widebody routes during 2026; non-members can buy a flat-fee pass.",
+   "access_short": "Free for Aeroplan members. Others can buy a flat-fee pass",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
@@ -621,6 +638,7 @@
     }
    ],
    "access": "Free for WestJet Rewards members (free to join), presented by TELUS under a multi-year partnership.",
+   "access_short": "Free for WestJet Rewards members, free to join",
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
@@ -646,6 +664,7 @@
     }
    ],
    "access": "Free onboard messaging fleetwide (Aeromexico says it is the only Latin American carrier to offer this); browsing and streaming are sold as paid passes.",
+   "access_short": "Free messaging fleetwide. Browsing and streaming paid",
    "confidence": "reported",
    "as_of": "2026-08",
    "sources": [
@@ -677,6 +696,7 @@
     }
    ],
    "access": "Paid for most passengers via the onboard Starlink portal; free in Business class, for ConnectMiles PreferMember Gold, Platinum and Presidential members, and for existing Starlink Residential or Starlink Roam subscribers.",
+   "access_short": "Paid for most. Free in Business and for higher ConnectMiles tiers",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
@@ -703,6 +723,7 @@
     }
    ],
    "access": "Sold as three paid tiers (Messaging, Browsing, Streaming) through the Avianca On Air portal; fewer than 10 of 160+ aircraft were equipped as of late 2025.",
+   "access_short": "Paid: messaging, browsing or streaming",
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
@@ -736,6 +757,7 @@
     }
    ],
    "access": "Wi-Fi is available on close to 90% of short- and medium-haul flights and is sold as paid passes; specific tier pricing and any free messaging or LATAM Pass benefit were not confirmed.",
+   "access_short": "Sold as paid passes",
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
@@ -764,6 +786,7 @@
     }
    ],
    "access": "Paid packages through the GOL Online portal: messaging about R$10, browsing R$25 per hour or R$40 for the flight, streaming R$45 per hour or R$58 for the flight; Smiles members have at times had free messaging. Entertainment streaming on GOL Online is free for everyone.",
+   "access_short": "Paid packages. Messaging about R$10, a flight R$40",
    "confidence": "reported",
    "as_of": "2026-08",
    "sources": [
@@ -817,6 +840,7 @@
     }
    ],
    "access": "Mostly paid session packages requiring advance registration, though Air China gives free basic Wi-Fi on a minority of domestic flights and complimentary access is commonly offered in premium cabins.",
+   "access_short": "Mostly paid, with free basic on some domestic flights",
    "confidence": "reported",
    "as_of": "2026-08",
    "sources": [
@@ -843,6 +867,7 @@
     }
    ],
    "access": "Free on every wide-body flight worldwide since 3 July 2026 (domestic wide-body free since 1 January 2026), with First/Business on the high-speed tier and premium economy/economy on the standard tier after registering the ticket and receiving an SMS verification code.",
+   "access_short": "Free on every widebody flight",
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
@@ -873,6 +898,7 @@
     }
    ],
    "access": "Cabin-gated: First and Business get a basic internet product free (upgradeable to a paid high-speed product) while economy buys a package in advance or onboard after logging in at fly.csair.com, with a limited set of routes fully complimentary.",
+   "access_short": "Free basic in First and Business. Economy buys a package",
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
@@ -918,6 +944,7 @@
     }
    ],
    "access": "No inflight internet service in operation.",
+   "access_short": "No inflight internet",
    "confidence": "reported",
    "as_of": "2026-08",
    "sources": [
@@ -966,6 +993,7 @@
     }
    ],
    "access": "Free to every passenger with no fare-class or frequent-flyer gating, domestically and on the international aircraft switched on so far.",
+   "access_short": "Free for everyone, no membership needed",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
@@ -992,6 +1020,7 @@
     }
    ],
    "access": "Paid 30-minute or full-flight passes by credit card, complimentary for Business Class and Velocity Platinum / Platinum Plus, with the entertainment portal free to everyone.",
+   "access_short": "Paid passes. Free in Business and for Velocity Platinum",
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
@@ -1036,6 +1065,7 @@
     }
    ],
    "access": "Free and unlimited for all passengers on equipped aircraft after a one-off registration at wifi.airnz.com, and free during the domestic Starlink trial.",
+   "access_short": "Free for everyone on equipped planes after a one-off sign-up",
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
@@ -1105,6 +1135,7 @@
     }
    ],
    "access": "Free unlimited for Suites/First/Business and all PPS Club members, and free for KrisFlyer members in Premium Economy and Economy (membership is free and can be joined in-flight); non-members pay US$3.99/1h, US$8.99/3h or US$15.99 full flight.",
+   "access_short": "Free for KrisFlyer members. Others pay $3.99 to $15.99",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
@@ -1130,6 +1161,7 @@
     }
    ],
    "access": "Paid by default (US$3.95 messaging, US$9.95/1h, US$12.95 full flight under 6h, US$19.95-24.95 full flight over 6h, no data caps); free for First and Business, for Diamond members, since 19 Dec 2025 for Gold members in any cabin, and for Premium Economy when a Cathay membership number is attached to the booking.",
+   "access_short": "Free in First, Business and for Gold. Others $3.95 to $24.95",
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
@@ -1158,6 +1190,7 @@
     }
    ],
    "access": "Free for everyone on domestic flights (streaming-grade since Oct 2024); on international, unlimited free for First and Business, one complimentary hour for Premium Economy and Economy, paid thereafter.",
+   "access_short": "Free on domestic. One free hour on international, then paid",
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
@@ -1188,6 +1221,7 @@
     }
    ],
    "access": "Free in all cabins on international routes aboard Viasat Amara-equipped aircraft; on the remaining Panasonic-equipped aircraft it stays paid at US$6.95/30min, US$16.95/3h or US$21.95 full flight.",
+   "access_short": "Free on Amara planes. Paid on the rest, $6.95 to $21.95",
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
@@ -1233,6 +1267,7 @@
     }
    ],
    "access": "Paid today on equipped narrowbodies and A350s (about US$10.95 for two hours, US$20.95 full flight); Starlink is announced as free of charge gate-to-gate for all passengers once service starts.",
+   "access_short": "Paid today, about $10.95 for two hours or $20.95 a flight",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
@@ -1269,6 +1304,7 @@
     }
    ],
    "access": "Paid today (roughly US$11.95/1h, US$16.95/3h, US$21.95 unlimited) with complimentary messaging on the A321neo fleet; becomes free once Starlink enters service.",
+   "access_short": "Paid today, about $11.95 an hour to $21.95 unlimited",
    "confidence": "reported",
    "as_of": "2026-09",
    "sources": [
@@ -1298,6 +1334,7 @@
     }
    ],
    "access": "Since 1 October 2025 wifi is complimentary for Business Class and Diamond/Gold Infinity MileageLands members and paid otherwise (from about US$2 for 30 minutes up to US$39.95 for 1GB). A limited-time promotion gives every passenger complimentary full-flight Unlimited Web Browsing until 31 October 2026 (no video streaming, calls or VPN). From 1 November 2026 Business Class keeps unlimited browsing for everyone; in Economy, Diamond/Gold get unlimited browsing, Silver and Green get unlimited text, non-members pay.",
+   "access_short": "Free browsing for everyone until 31 October 2026",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
@@ -1337,6 +1374,7 @@
     }
    ],
    "access": "Since 1 Aug 2025, complimentary unlimited Wi-Fi for premium-cabin passengers and top-tier Dynasty Flyer members (Gold, Emerald, Paragon), with the free messaging tier open to every other passenger.",
+   "access_short": "Free for premium cabins and top members. Free messaging for all",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
@@ -1365,6 +1403,7 @@
     }
    ],
    "access": "Paid data packages by default (roughly US$4.99-34.99 for 10-100MB and US$39.99-59.99 unlimited), plus a complimentary allowance for all Royal Orchid Plus members since 1 May 2025: unlimited for Platinum, 60 minutes for Gold and 30 minutes for Silver/Member, redeemed with a code printed on the boarding pass.",
+   "access_short": "Free allowance for Royal Orchid members. Paid packages otherwise",
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
@@ -1391,6 +1430,7 @@
     }
    ],
    "access": "Complimentary on MHconnect-equipped aircraft for every passenger in every cabin with an email registration to connect, covering unlimited messaging and social media, with larger data packages purchasable on board by cash or card; video streaming is not supported.",
+   "access_short": "Free for everyone after an email sign-in",
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
@@ -1420,6 +1460,7 @@
     }
    ],
    "access": "Paid time-based packages (about US$11.95/1h, US$16.95/3h, US$21.95 full flight) with 15 minutes free on Wi-Fi-equipped Airbus aircraft and complimentary access for First Class.",
+   "access_short": "15 minutes free. Paid from about $11.95 an hour",
    "confidence": "reported",
    "as_of": "2026-08",
    "sources": [
@@ -1444,6 +1485,7 @@
     }
    ],
    "access": "Paid plans priced by route band (full-flight messaging about US$5-7, one hour US$8-12, full-flight internet US$18-25), with 15 minutes of free messaging for every passenger.",
+   "access_short": "15 minutes of free messaging. Paid plans from about $5",
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
@@ -1465,6 +1507,7 @@
     }
    ],
    "access": "Complimentary 10MB plan for every passenger on equipped aircraft; free unlimited messaging for Mabuhay Miles members (free to join); Business Class and Million Milers get 100MB free; paid 1-hour, 3-hour and unlimited plans on top.",
+   "access_short": "10MB free for everyone. Free messaging for Mabuhay members",
    "confidence": "reported",
    "as_of": "2026-08",
    "sources": [
@@ -1510,6 +1553,7 @@
     }
    ],
    "access": "Free in every cabin, but you must log into a Flying Blue account (free, can be created onboard).",
+   "access_short": "Free in every cabin with a free Flying Blue account",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
@@ -1535,6 +1579,7 @@
     }
    ],
    "access": "European narrowbody/regional flights: free full wifi for Flying Blue members, sign-up available onboard. Intercontinental widebodies: free messaging pass for all, paid Surf (about EUR 18) and Stream (about EUR 30) full-flight passes.",
+   "access_short": "Free for Flying Blue members in Europe. Long-haul paid, messaging free",
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
@@ -1566,6 +1611,7 @@
     }
    ],
    "access": "Free for all passengers in every cabin on Starlink-equipped aircraft.",
+   "access_short": "Free for everyone on Starlink planes",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
@@ -1619,6 +1665,7 @@
     }
    ],
    "access": "Starlink is free gate to gate for Flying Club members (free to join), multiple devices allowed; the legacy Viasat service was paid.",
+   "access_short": "Free gate to gate for Flying Club members",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
@@ -1652,6 +1699,7 @@
     }
    ],
    "access": "Today: free unlimited messaging in the FlyNet portal for Travel ID / Miles & More customers, full internet is paid on a tiered scale (roughly EUR 4 to 35 by flight length; SWISS Connect data packs CHF 9 / CHF 19; First gets a complimentary 50MB voucher). Once Starlink lands it is free in all classes for status and Travel ID customers.",
+   "access_short": "Free messaging with Travel ID. Full internet paid, about EUR 4 to 35",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
@@ -1685,6 +1733,7 @@
     }
    ],
    "access": "Today: free unlimited FlyNet messaging for Travel ID / Miles & More customers on equipped A320-family and 787 flights; full internet is paid by flight length (about EUR 4 to 10 short, 10 to 20 medium, 20 to 35 long-haul). Starlink will be free in all classes for status and Travel ID customers.",
+   "access_short": "Free messaging with Travel ID. Full internet paid, about EUR 4 to 35",
    "confidence": "reported",
    "as_of": "2026-09",
    "sources": [
@@ -1708,6 +1757,7 @@
     }
    ],
    "access": "No onboard internet at all today. When Starlink arrives it will be free of charge across all travel classes for status customers and Travel ID users.",
+   "access_short": "No onboard internet today",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
@@ -1750,6 +1800,7 @@
     }
    ],
    "access": "Free for EuroBonus members (free to join) on Starlink-equipped aircraft, delivered with mobile operator 3; speeds quoted above 500 Mbps.",
+   "access_short": "Free for EuroBonus members on Starlink planes",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
@@ -1771,6 +1822,7 @@
     }
    ],
    "access": "Paid for most passengers (about USD 9 for an hour up to about USD 28 full flight); free unlimited messaging for all Finnair Plus members (free to join) on European A319/A320/A321 flights; complimentary 1 hour long-haul / 30 minutes intra-Europe for Business Classic and Flex tickets and Finnair Plus Gold, free for the whole flight for Platinum.",
+   "access_short": "Free messaging for Finnair Plus members. Browsing about $9 to $28",
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
@@ -1800,6 +1852,7 @@
     }
    ],
    "access": "Free messaging (iMessage, Messenger, WhatsApp) for everyone on equipped aircraft; paid Light (1 hour), Premium (3 hours) and Full Flight browsing passes. No published elite or cabin-based free tier.",
+   "access_short": "Free messaging for everyone. Browsing sold by the hour",
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
@@ -1820,6 +1873,7 @@
     }
    ],
    "access": "Free for business class; roughly USD 7 to 29 for other passengers depending on package.",
+   "access_short": "Free in business. About $7 to $29 for everyone else",
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
@@ -1840,6 +1894,7 @@
     }
    ],
    "access": "Free Text and Surf pass (up to 1.5 Mbps, normally EUR 6) for any Miles+Bonus member; free Stream pass (up to 15 Mbps, normally EUR 12) in business class and for Gold members; non-members pay, with a 10-minute free trial.",
+   "access_short": "Free Text and Surf pass for Miles+Bonus members",
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
@@ -1871,6 +1926,7 @@
     }
    ],
    "access": "Free for all passengers on Starlink-equipped aircraft.",
+   "access_short": "Free for everyone on Starlink planes",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
@@ -1899,6 +1955,7 @@
     }
    ],
    "access": "Paid packages for most passengers today; free messaging for business class on long-haul and on international flights over three hours. Starlink will be free in all travel classes for Travel ID registrants and loyalty status holders as it rolls out.",
+   "access_short": "Paid for most. Free messaging in long-haul business",
    "confidence": "reported",
    "as_of": "2026-09",
    "sources": [
@@ -1919,6 +1976,7 @@
     }
    ],
    "access": "No internet at any price; the only onboard Wi-Fi is AirFi's free local streaming portal (games, content, retail) with no route off the aircraft.",
+   "access_short": "No internet. The portal is streaming only",
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
@@ -1938,6 +1996,7 @@
     }
    ],
    "access": "No Wi-Fi and no internet of any kind on any Ryanair aircraft.",
+   "access_short": "No Wi-Fi on any Ryanair plane",
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
@@ -1960,6 +2019,7 @@
     }
    ],
    "access": "No passenger internet today anywhere in the fleet; the Starlink deal does not begin installs until 2027.",
+   "access_short": "No passenger internet anywhere in the fleet",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
@@ -1980,6 +2040,7 @@
     }
    ],
    "access": "Free for every passenger, ad-sponsored with no paid tier, on the EAN-equipped A320s since October 2025.",
+   "access_short": "Free for everyone, ads instead of a fee",
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
@@ -2036,6 +2097,7 @@
     }
    ],
    "access": "Free for all passengers in all cabins on NSG-equipped aircraft (up to 300 Mbps, 800 Mbps planned); aircraft still on the legacy Panasonic system sell paid per-flight packages.",
+   "access_short": "Free for everyone on the new system. Paid on older planes",
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
@@ -2080,6 +2142,7 @@
     }
    ],
    "access": "Free, unlimited, gate-to-gate for every passenger regardless of cabin or fare on Starlink-fitted aircraft.",
+   "access_short": "Free for everyone, gate to gate, on Starlink planes",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
@@ -2106,6 +2169,7 @@
     }
    ],
    "access": "Paid. Oman Air's own site lists data-capped passes from $6/30min to $29/3h, with Business Studio getting a complimentary 3h/40MB allowance; a 2026 review reports free messaging for all cabins plus $8.99 for 1h or $17.99 full-flight, and free full-flight Wi-Fi for Sindbad Gold+ in Business since Oct 2025.",
+   "access_short": "Paid passes from $6 for 30 minutes",
    "confidence": "reported",
    "as_of": "2026-08",
    "sources": [
@@ -2154,6 +2218,7 @@
     }
    ],
    "access": "Not disclosed: no source found states Royal Jordanian's Wi-Fi pricing or whether any tier is complimentary.",
+   "access_short": "Pricing not published",
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
@@ -2228,6 +2293,7 @@
     }
    ],
    "access": "Paid Sheba SkyConnect passes: $5 for 1 hour, $10 for 2 hours, $25 full flight; complimentary 1-hour pass for Business Class passengers and Platinum ShebaMiles members. Vouchers can be bought pre-flight at ticket offices, check-in or the gate, or onboard from crew.",
+   "access_short": "Paid: $5 an hour to $25 a flight. Free hour in Business",
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
@@ -2247,6 +2313,7 @@
     }
    ],
    "access": "Free tier launched 22 Apr 2026: unlimited text and voice messaging plus app-based voice calls throughout the flight, and free browsing and email for the first 2 hours. Heavier use falls back to paid bundles (previously $6/60MB to $20/240MB, $25/300MB streaming).",
+   "access_short": "Free messaging and calls, plus 2 hours of browsing",
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
@@ -2266,6 +2333,7 @@
     }
    ],
    "access": "No inflight internet on the overwhelming majority of the fleet. Only the two most recently delivered 787-9s (from 24 Nov 2024) reportedly carry inflight internet, assigned to long-haul routes such as Casablanca-Beijing; RAM publishes no pricing. Older aircraft carry 'Wi-Fi on Stream' streaming entertainment only, not internet access.",
+   "access_short": "No internet on almost the whole fleet",
    "confidence": "reported",
    "as_of": "2026-08",
    "sources": [
@@ -2285,6 +2353,7 @@
     }
    ],
    "access": "No inflight Wi-Fi in service. The Nairobi-London launch promised for July 2026 did not happen: one 777-300ER has the hardware fitted but is waiting on a connectivity slot, and Kenya Airways now says installation across the long-haul fleet starts in Q2 2027 (London, Paris, New York, China and Amsterdam routes first) at a cost of US$20-22M; pricing and provider undisclosed.",
+   "access_short": "No Wi-Fi in service yet",
    "confidence": "reported",
    "as_of": "2026-09",
    "sources": [
@@ -2510,6 +2579,7 @@
     }
    ],
    "access": "No inflight internet; the onboard wireless system streams a local entertainment library only.",
+   "access_short": "No internet, entertainment streaming only",
    "confidence": "reported",
    "as_of": "2026-08",
    "sources": [
@@ -2742,6 +2812,7 @@
     }
    ],
    "access": "Free 15-minute limited-speed SURF tier on 737-800s then paid Stream Limited (30 or 60 minutes) or Stream Unlimited passes, with no wifi of any kind on the 737 MAX 8 fleet.",
+   "access_short": "15 minutes free, then paid. No Wi-Fi on the 737 MAX",
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
@@ -2804,6 +2875,7 @@
     }
    ],
    "access": "Paid passes only, roughly EUR 2.90 to 3.90 for messaging, EUR 3.90 to 6.90 for 30 or 60 minutes and EUR 7.90 to 9.90 for the whole flight; the free Wings Connect portal carries flight info and partner offers but no internet.",
+   "access_short": "Paid only, about EUR 3 to 10. The free portal has no internet",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
@@ -2995,6 +3067,7 @@
     }
    ],
    "access": "Five minutes of free Wi-Fi per flight, then paid data or messaging 'Chat' packages, and only on aircraft already fitted with the connectivity hardware.",
+   "access_short": "5 minutes free, then paid",
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
@@ -3019,6 +3092,7 @@
     }
    ],
    "access": "No onboard internet at present; the announced Starlink service is to be complimentary for all passengers once it enters service.",
+   "access_short": "No onboard internet yet",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
@@ -3206,6 +3280,7 @@
     }
    ],
    "access": "No onboard Wi-Fi.",
+   "access_short": "No onboard Wi-Fi",
    "confidence": "reported",
    "as_of": "2026-08",
    "sources": [
@@ -3230,6 +3305,7 @@
     }
    ],
    "access": "Paid data-bundle passes on 787s only, from US$1.50 pre-purchase for 20MB up to US$31.80 for 1GB (US$5-US$55 if bought onboard), with 200MB included for ScootPlus passengers.",
+   "access_short": "Paid data bundles on 787s, from about $1.50 for 20MB",
    "confidence": "sourced",
    "as_of": "2026-08",
    "sources": [
@@ -3247,6 +3323,7 @@
     }
    ],
    "access": "Paid data passes bought through the onboard portal, with a cheap or free chat/messaging tier historically offered on equipped aircraft.",
+   "access_short": "Paid data passes on the onboard portal",
    "confidence": "reported",
    "as_of": "2026-08",
    "sources": [
@@ -3294,6 +3371,7 @@
     }
    ],
    "access": "On refreshed 787s wifi is complimentary in Business Class only, with paid packages in Economy; short-haul A320-family aircraft carry no internet at all.",
+   "access_short": "Free in Business on the 787s. Paid in Economy, none on A320s",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [

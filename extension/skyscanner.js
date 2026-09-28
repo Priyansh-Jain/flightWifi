@@ -34,6 +34,8 @@ function skyCodes(card) {
 // Beside the airline logo is the only spot that exists on every ticket variant; the exact wrapper
 // is probed at runtime because Skyscanner's class names are build hashes that churn.
 function skyAnchor(card) {
+  const nameRow = card.querySelector('[class*="partnershipRow"]');
+  if (nameRow) return nameRow;
   const logo = card.querySelector('img[alt], [class*="LogoImage_container"]');
   if (!logo) return null;
   let el = logo.parentElement;
@@ -45,21 +47,59 @@ function skyAnchor(card) {
   return logo.parentElement;
 }
 
+var skyBridgeSeen = "";
+var skyBridgeMap = null;
+
+function skyBridgeRead() {
+  const node = document.getElementById("__fwSKY");
+  if (!node) return;
+  const v = node.getAttribute("v") || "";
+  if (v === skyBridgeSeen) return;
+  skyBridgeSeen = v;
+  try {
+    skyBridgeMap = JSON.parse(node.textContent || "{}");
+  } catch (e) {
+    skyBridgeMap = null;
+  }
+}
+
 function processTicket(card) {
-  if (card.querySelector(".fw-sum")) return;
-  const codes = skyCodes(card);
-  if (!codes.length) return;
-  const v = fleetVerdict(codes);
-  if (!v) return;
-  v.noExpand = true;
-  const chip = buildChip(v);
-  chip.classList.add("fw-sum", "fw-sky");
-  chip.setAttribute("data-fw-carrier", codes.join("+"));
-  chip.setAttribute("data-fw-src", "fleet");
+  const existing = card.querySelector(".fw-sum");
+  const id = card.dataset.flightwifiItin;
+  const entry = skyBridgeMap && id ? skyBridgeMap[id] : null;
+  if (existing && (!entry || !existing.__fw || !existing.__fw.fleetwide)) return;
+  const res = entry ? fwLegsVerdict(entry.segs) : null;
+  if (res && res.suppress) {
+    if (existing) existing.remove();
+    FW_TRACE.push(`sky-suppress:${res.ccs}`);
+    return;
+  }
+  let v = res && res.v;
+  let ccs = res && res.ccs;
+  let src = "bridge";
+  if (v) {
+    v.exact = true;
+  } else {
+    if (existing) return;
+    const codes = skyCodes(card);
+    if (!codes.length) return;
+    v = fleetVerdict(codes);
+    if (!v) return;
+    v.noExpand = true;
+    v.expandHint = "The plane isn\u2019t shown here. Open the flight details to see the exact aircraft and Wi-Fi answer.";
+    ccs = codes.join("+");
+    src = "fleet";
+  }
   const anchor = skyAnchor(card);
   if (!anchor) return;
+  if (existing) existing.remove();
+  const chip = buildChip(v);
+  chip.classList.add("fw-sum", "fw-sky");
+  chip.setAttribute("data-fw-carrier", ccs);
+  chip.setAttribute("data-fw-src", src);
+  chip.setAttribute("data-fw-ac", v.aircraft || "");
   anchor.appendChild(chip);
-  FW_TRACE.push(`sky:${codes.join("+")}:${v.cls}`);
+  FW_TRACE.push(`sky:${ccs}:${v.cls}:${src}`);
 }
 
 /* ---------- booking page (/config/): the one Skyscanner view that names the aircraft ---------- */
@@ -171,8 +211,8 @@ function sweep() {
   let processed = 0;
   try {
     if (sweepCount % 30 === 1) syncTheme();
+    skyBridgeRead();
     document.querySelectorAll(SKY_CARD_SEL).forEach((card) => {
-      if (card.querySelector(".fw-sum")) return;
       processed++;
       processTicket(card);
     });
@@ -194,8 +234,24 @@ function sweep() {
 }
 
 var queued = false;
+var stormAt = 0;
+var stormCount = 0;
+var stormHold = false;
 var observer = new MutationObserver(() => {
-  if (queued) return;
+  if (queued || stormHold) return;
+  const now = performance.now();
+  if (now - stormAt > 1000) {
+    stormAt = now;
+    stormCount = 0;
+  }
+  if (++stormCount > 120) {
+    stormHold = true;
+    document.documentElement.setAttribute("data-fw-storm", String(Math.round(now)));
+    setTimeout(() => {
+      stormHold = false;
+    }, 3000);
+    return;
+  }
   queued = true;
   queueMicrotask(() => {
     queued = false;
@@ -205,15 +261,32 @@ var observer = new MutationObserver(() => {
 
 // Behind the per-site setting from the popup. fwBoot lives in core.js so all three site
 // files boot identically; it calls start() when the site is on and stop() when switched off.
-fwBoot(
-  "skyscanner",
-  () => {
-    observer.observe(document.body, { childList: true, subtree: true });
-    document.addEventListener("visibilitychange", sweep);
-    sweep();
-  },
-  () => {
-    observer.disconnect();
-    document.removeEventListener("visibilitychange", sweep);
-  }
-);
+var headerTimer = null;
+
+function unmountHeader() {
+  if (headerTimer) clearInterval(headerTimer);
+  headerTimer = null;
+  fwRemoveHeaderButton();
+}
+
+if (
+  fwBoot(
+    "skyscanner",
+    () => {
+      observer.observe(document.body, { childList: true, subtree: true });
+      document.addEventListener("visibilitychange", sweep);
+      document.addEventListener("fw:sky", sweep);
+      document.dispatchEvent(new CustomEvent("fw:sky-on"));
+      sweep();
+    },
+    () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", sweep);
+      document.removeEventListener("fw:sky", sweep);
+      document.dispatchEvent(new CustomEvent("fw:sky-off"));
+    }
+  )
+) {
+  headerTimer = fwStartHeaderButton("floating");
+  document.addEventListener("fw:takeover", unmountHeader, { once: true });
+}

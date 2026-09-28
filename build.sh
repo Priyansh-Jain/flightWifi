@@ -12,7 +12,7 @@ STAGE="dist/staging"
 rm -rf dist
 mkdir -p "$STAGE"
 
-cp -R extension/data extension/icons extension/popup extension/chip.css extension/core.js extension/header.js extension/google.js extension/google-bridge.js extension/skyscanner.js extension/soar.js extension/uninstall.js "$STAGE/"
+cp -R extension/data extension/icons extension/popup extension/chip.css extension/core.js extension/header.js extension/google.js extension/google-bridge.js extension/skyscanner.js extension/soar.js extension/soar-bridge.js extension/skyscanner-bridge.js extension/uninstall.js "$STAGE/"
 
 python3 - "$STAGE" <<'PY'
 import json, re, sys
@@ -28,12 +28,12 @@ m["background"] = {"service_worker": "uninstall.js"}
 m["name"] = m["name"].replace(" (working title)", "")
 json.dump(m, open(f"{stage}/manifest.json", "w"), indent=2)
 
-FILES = ["core.js", "google.js", "google-bridge.js", "skyscanner.js", "soar.js"]
+FILES = ["core.js", "google.js", "google-bridge.js", "skyscanner.js", "soar.js", "soar-bridge.js", "skyscanner-bridge.js"]
 for fname in FILES:
     src = open(f"{stage}/{fname}").read()
 
     # dev-only stat instrumentation in the bridge becomes a no-op
-    src = re.sub(r"  // FW-DEVSTAT-START[\s\S]*?// FW-DEVSTAT-END", "  const stat = () => {};", src)
+    src = re.sub(r"  // FW-DEVSTAT-START[\s\S]*?// FW-DEVSTAT-END", "  const stat = () => {};\n  const ev = () => {};", src)
 
     # whole debug-attribute block in sweep()
     src = re.sub(
@@ -69,13 +69,13 @@ if (m.host_permissions) throw new Error('host_permissions must stay absent; acti
 if (m.action) {
   const popup = m.action.default_popup;
   if (!popup || !fs.existsSync('$STAGE/' + popup)) throw new Error('manifest declares a popup that is not staged: ' + popup);
-  for (const f of ['popup/popup.html', 'popup/popup.css', 'popup/popup.js']) {
+  for (const f of ['popup/popup.html', 'popup/popup.css', 'popup/popup.js', 'popup/theme.js']) {
     if (!fs.existsSync('$STAGE/' + f)) throw new Error('missing ' + f);
   }
 }
 if (m.background.service_worker !== 'uninstall.js') throw new Error('background is not the uninstall worker');
 if (fs.readFileSync('$STAGE/uninstall.js', 'utf8').includes('importScripts')) throw new Error('dev reloader reached the shipped worker');
-for (const f of ['core.js', 'header.js', 'google.js', 'google-bridge.js', 'skyscanner.js', 'soar.js', 'uninstall.js', 'popup/popup.js']) {
+for (const f of ['core.js', 'header.js', 'google.js', 'google-bridge.js', 'skyscanner.js', 'soar.js', 'soar-bridge.js', 'skyscanner-bridge.js', 'uninstall.js', 'popup/popup.js', 'popup/theme.js']) {
   new Function(fs.readFileSync('$STAGE/' + f, 'utf8'));
   const s = fs.readFileSync('$STAGE/' + f, 'utf8');
   for (const bad of ['FW_TRACE', 'data-fw-', 'FW-DEVSTAT']) if (s.includes(bad)) throw new Error(bad + ' survived the strip in ' + f);

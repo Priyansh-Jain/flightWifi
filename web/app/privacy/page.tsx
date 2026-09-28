@@ -15,7 +15,7 @@ export default function Privacy() {
       <Breadcrumbs crumbs={[{ name: "Home", href: "/" }, { name: "Privacy", href: "/privacy/" }]} />
       <section className="mx-auto w-full max-w-[46rem] px-5 pt-6">
         <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Privacy policy</h1>
-        <p className="mt-2 text-sm text-[var(--muted)]">Last updated: 3 September 2026</p>
+        <p className="mt-2 text-sm text-[var(--muted)]">Last updated: 28 September 2026</p>
       </section>
       <div className="mx-auto w-full max-w-[46rem] px-5 py-8">
         <div className="prose">
@@ -24,14 +24,17 @@ export default function Privacy() {
           <ul>
             <li>No personal information, no account, no sign-up</li>
             <li>No analytics, no telemetry, no crash reporting</li>
-            <li>No cookies. The only thing it stores is your per-site on/off switches, on this device</li>
+            <li>No cookies. The only things it stores are your per-site on/off switches and your light or dark theme choice, on this device</li>
             <li>No browsing history: it only runs on the flight search pages listed in its manifest</li>
           </ul>
           <p>
             All processing happens locally in your browser. The extension reads the flight
-            information already displayed in your own tab, compares it against a wifi registry
-            bundled inside the package, and draws a verdict chip. While you browse it makes no
-            network requests of its own to any server, including ours; it has no server.
+            information in your own tab, compares it against a wifi registry bundled inside the
+            package, and draws a verdict chip. It never contacts our servers while you browse; it
+            has no server. On Skyscanner only, to name the plane on each flight in the results list,
+            it asks Skyscanner for that flight&rsquo;s details, the same request Skyscanner&rsquo;s own
+            page makes when you open a flight. That request goes only to Skyscanner and carries
+            nothing beyond the search you are already looking at.
           </p>
           <p>
             There is one moment it reaches our site, and it is the moment it stops running: if you
@@ -47,7 +50,8 @@ export default function Privacy() {
           <ul>
             <li>
               The storage permission keeps your per-site on/off switches for Google Flights,
-              Skyscanner and Soar on this device. That is the only thing it stores.
+              Skyscanner and Soar on this device. The popup also remembers your light or dark theme
+              choice on this device. Nothing else is stored.
             </li>
             <li>
               The activeTab and scripting permissions let the toolbar popup restart the extension on

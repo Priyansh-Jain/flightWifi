@@ -72,6 +72,7 @@ const SRC_LABEL: Record<SourceKind, string> = {
   trade: "Trade press",
   news: "News",
   blog: "Blog",
+  tracker: "Third-party tracker",
   reference: "Reference",
   other: "Other source"
 };
@@ -106,6 +107,13 @@ function SourceIcon({ kind }: { kind: SourceKind }) {
       <svg {...common}>
         <path d="M12 20h8" />
         <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7.5 18.5 3.5 20l1.5-4z" />
+      </svg>
+    );
+  if (kind === "tracker")
+    return (
+      <svg {...common}>
+        <path d="M3 3v18h18" />
+        <path d="m7 15 4-5 4 3 5-7" />
       </svg>
     );
   if (kind === "other")

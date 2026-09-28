@@ -197,6 +197,31 @@ function bridgeVerdict(li, codes) {
     const stops = cardStops(li);
     if (stops !== null) cands = cands.filter((it) => it.stops === stops);
     if (cands.length > 1) cands = cands.filter((it) => it.segs.some((s) => codes.includes(s.cc)));
+    // itineraries that share every time and stop count still differ by where they connect, and
+    // Google prints those airports on the row ("2 stops PVG, KMG"); requiring every connection
+    // airport to appear in the row text separates them without ever guessing
+    if (cands.length > 1) {
+      const text = li.innerText || "";
+      const via = cands.filter((it) => it.segs.slice(0, -1).every((s) => s.arr && text.includes(s.arr)));
+      if (via.length) cands = via;
+    }
+    // an itinerary that lands at PVG and leaves from SHA has the same arrival airports as one that
+    // connects at PVG, so arrivals alone cannot separate them; Google can, and does, by printing
+    // "Change of airport" on the row instead of the codes
+    if (cands.length > 1) {
+      const text = li.innerText || "";
+      const switches = (it) => it.segs.some((s, i) => i > 0 && s.dep && it.segs[i - 1].arr && s.dep !== it.segs[i - 1].arr);
+      const rowSwitches = /change of airport/i.test(text);
+      const byChange = cands.filter((it) => switches(it) === rowSwitches);
+      if (byChange.length) cands = byChange;
+    }
+    // itineraries that still tie can differ only in flight numbers Google does not print; when
+    // every survivor carries the same carrier and aircraft on every leg, the verdict and the
+    // aircraft shown are the same whichever it is, so answering is not a guess
+    if (cands.length > 1) {
+      const sig = (it) => it.segs.map((s) => `${s.cc}|${s.ac}|${s.dep}|${s.arr}`).join(",");
+      if (new Set(cands.map(sig)).size === 1) cands = [cands[0]];
+    }
   }
   if (cands.length !== 1) return null;
   // the bridge's carriers come from Google's own payload and outrank the card text: "Batik Air"
@@ -208,7 +233,7 @@ function bridgeVerdict(li, codes) {
   // fallback rather than silence.
   const parts = cands[0].segs.map((s) => {
     const cc = regCode(s.cc);
-    return { cc, ac: s.ac, v: verdictFor(cc, s.ac, "nodata") };
+    return { cc, ac: s.ac, dep: s.dep, arr: s.arr, v: verdictFor(cc, s.ac, "nodata") };
   });
   if (parts.some((p) => !WIFI_REGISTRY[p.cc])) return { suppress: true, ccs: parts.map((p) => p.cc).join("+") };
   if (parts.some((p) => !p.v.entry)) return null;
@@ -217,11 +242,30 @@ function bridgeVerdict(li, codes) {
   const differ = new Set(parts.map((p) => p.v.key)).size > 1;
   return {
     v: decorate(differ && key === "PARTIAL" ? "LEG_PARTIAL" : key, {
-      legs: parts.map((p) => ({ code: p.cc, entry: p.v.entry, key: p.v.key })),
+      // each leg keeps its own aircraft and its own typed verdict, so the card can show which leg
+      // is the weak one instead of a joined aircraft string nothing is tied to
+      legs: parts.map((p) => ({ code: p.cc, entry: p.v.entry, key: p.v.key, aircraft: p.ac, v: p.v, dep: p.dep, arr: p.arr })),
       aircraft: parts.map((p) => p.ac).join(" · "),
       entry: null,
     }),
   };
+}
+
+// Google prints a one-stop layover as "2 hr 55 min SHJ" (or "45 min SHJ", "1 hr SHJ"); multi-stop
+// rows list the airports alone. The card shows a duration only when the row states one, so it is
+// Google's number, never one computed across a date line from clock times. The lookahead keeps
+// the total duration ("10 hr 30 min STN–DOH") from being read as a layover at the origin.
+var LAYOVER_RX = /((?:\d+\s*hr)?\s*(?:\d+\s*min)?)\s+([A-Z]{3})\b(?!\s*[–-])/g;
+
+function layoversIn(text) {
+  const out = {};
+  LAYOVER_RX.lastIndex = 0;
+  let m;
+  while ((m = LAYOVER_RX.exec(text))) {
+    const d = m[1].trim().replace(/\s+/g, " ");
+    if (/\d/.test(d)) out[m[2]] = d;
+  }
+  return out;
 }
 
 function processSummaryRow(li) {
@@ -245,7 +289,10 @@ function processSummaryRow(li) {
   if (existing) existing.remove();
   const v = exact || fleetVerdict(found.codes);
   if (!v) return;
-  if (exact) v.exact = true;
+  if (exact) {
+    v.exact = true;
+    v.layovers = layoversIn(li.innerText || "");
+  }
   if (found.unresolved && found.unresolved.length) v.unresolvedOperator = found.unresolved.join(", ");
   const chip = buildChip(v);
   chip.classList.add("fw-sum");
@@ -256,10 +303,20 @@ function processSummaryRow(li) {
   // The columns row is height-capped (42px) and the card is a grid whose next row can hold Google's
   // own full-width CO2e badge, so there is no free line below the airline name: anything placed
   // there overflows the cap straight into the badge and the two draw on top of each other. The chip
-  // therefore never leaves the name line. When the full label does not fit it collapses to the
-  // coloured glyph alone (the hover card and aria-label still carry the verdict), and in the rare
-  // cell already filled by an "Operated by ..." note it tucks in beside the times on line one.
+  // therefore never leaves the name line. When the full label does not fit it tries a short form,
+  // then collapses to the coloured glyph alone (the hover card and aria-label still carry the
+  // verdict), and in the rare cell already filled by an "Operated by ..." note it tucks in beside
+  // the times on line one.
   const fits = () => chip.getBoundingClientRect().right <= found.host.getBoundingClientRect().right + 1;
+  if (!fits()) {
+    // a short form of the same answer before giving up on words altogether; aria-label keeps the
+    // full label either way
+    const short = SHORT_LABEL[v.label];
+    if (short) {
+      chip.textContent = short;
+      chip.classList.add("fw-sum-short");
+    }
+  }
   if (!fits()) {
     chip.classList.add("fw-sum-min");
     if (!fits()) {
@@ -502,19 +559,26 @@ var observer = new MutationObserver(() => {
 // files boot identically; it calls start() when the site is on and stop() when switched off.
 var headerTimer = null;
 
-fwBoot(
-  "google",
-  () => {
-    observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["aria-expanded"] });
-    document.addEventListener("visibilitychange", sweep);
-    sweep();
-    headerTimer = fwStartHeaderButton();
-  },
-  () => {
-    observer.disconnect();
-    document.removeEventListener("visibilitychange", sweep);
-    if (headerTimer) clearInterval(headerTimer);
-    headerTimer = null;
-    fwRemoveHeaderButton();
-  }
-);
+function unmountHeader() {
+  if (headerTimer) clearInterval(headerTimer);
+  headerTimer = null;
+  fwRemoveHeaderButton();
+}
+
+if (
+  fwBoot(
+    "google",
+    () => {
+      observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["aria-expanded"] });
+      document.addEventListener("visibilitychange", sweep);
+      sweep();
+    },
+    () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", sweep);
+    }
+  )
+) {
+  headerTimer = fwStartHeaderButton();
+  document.addEventListener("fw:takeover", unmountHeader, { once: true });
+}

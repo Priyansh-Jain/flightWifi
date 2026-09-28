@@ -43,6 +43,7 @@ const GROUPS: { title: string; items: { href: string; label: string; external?: 
       { href: "/chrome-extension/", label: "Chrome extension" },
       { href: "/about/", label: "About" },
       { href: "/privacy/", label: "Privacy" },
+      { href: "/terms/", label: "Terms" },
       { href: "/contact/", label: "Contact" }
     ]
   }

@@ -10,7 +10,7 @@ const path = require("path");
 const root = path.join(__dirname, "..");
 const registrySrc = fs.readFileSync(path.join(root, "extension/data/registry.js"), "utf8");
 global.WIFI_REGISTRY = JSON.parse(
-  registrySrc.slice(registrySrc.indexOf("{"), registrySrc.lastIndexOf("};", registrySrc.indexOf("const VERDICTS")) + 1)
+  registrySrc.slice(registrySrc.indexOf("{"), registrySrc.lastIndexOf("};", registrySrc.search(/\b(?:const|let|var)\s+VERDICTS\b/)) + 1)
 );
 
 const contentSrc = fs.readFileSync(path.join(root, "extension/core.js"), "utf8");

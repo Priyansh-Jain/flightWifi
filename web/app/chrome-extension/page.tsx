@@ -21,7 +21,7 @@ const FAQ = [
   },
   {
     q: "What does it collect about me?",
-    a: "Nothing. The extension requests zero API permissions, makes no network requests of its own, and has no server. All matching happens locally against a registry bundled in the package."
+    a: "Nothing. It has no server and never sends anything to us. Matching happens locally against a registry bundled in the package. On Skyscanner it asks Skyscanner itself for the details of the flights you are viewing, so it can name each plane. Its permissions only store your per-site switches and let the toolbar button refresh a page after an update."
   },
   {
     q: "Which sites does it work on?",
@@ -55,7 +55,7 @@ export default function ExtensionPage() {
             Add to Chrome, free
           </a>
           <span className="text-sm text-[var(--muted)]">
-            {s.airlines} airlines · no tracking · nothing leaves your browser
+            {s.airlines} airlines · no tracking · nothing sent to us
           </span>
         </div>
       </section>
@@ -109,7 +109,7 @@ export default function ExtensionPage() {
 
       <Section>
         <p className="text-sm text-[var(--muted)]">
-          Privacy in one line: the extension collects nothing, sends nothing, and has no server.
+          Privacy in one line: the extension collects nothing, sends nothing to us, and has no server.
           Read the <Link href="/privacy/">full privacy policy</Link>, or the source on{" "}
           <a href="https://github.com/Priyansh-Jain/flightWifi">GitHub</a>.
         </p>
@@ -122,7 +122,7 @@ export default function ExtensionPage() {
           "@id": `${SITE_URL}/chrome-extension/#app`,
           name: "FlightWifi",
           description:
-            "A free Chrome extension that shows each flight's Wi-Fi verdict inline on Google Flights, Skyscanner and Soar, matched to the exact aircraft. Collects no data and makes no network requests.",
+            "A free Chrome extension that shows each flight's Wi-Fi verdict inline on Google Flights, Skyscanner and Soar, matched to the exact aircraft. Collects no data and has no server.",
           operatingSystem: "Chrome",
           applicationCategory: "BrowserApplication",
           softwareVersion: EXTENSION_VERSION,

@@ -243,7 +243,7 @@
   line-height: 1.5;
   font-weight: 400;
   letter-spacing: 0.1px;
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 .fw-tip-head {
@@ -268,19 +268,7 @@
   color: #5f6368;
 }
 
-.fw-tip-legs {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  margin-bottom: 10px;
-}
 
-.fw-tip-leg {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
 
 .fw-tip-tag {
   flex: none;
@@ -363,9 +351,6 @@
 
 /* provenance is a footnote: present, checkable, and not competing with the answer */
 .fw-tip-src {
-  margin-top: 9px;
-  padding-top: 8px;
-  border-top: 1px solid #e8eaed;
   color: #9aa0a6;
   font-size: 11px;
 }
@@ -468,4 +453,145 @@
 .fw-dark .fw-tip-info {
   background: rgba(147, 197, 253, 0.18);
   color: #93c5fd;
+}
+
+/* ---------- hover card: legs, caption, cost per airline ---------- */
+.fw-tip-caption {
+  margin: -4px 0 9px;
+  color: #80868b;
+  font-size: 11px;
+}
+.fw-tip-who {
+  font-weight: 600;
+  margin-right: 6px;
+}
+.fw-tip-cost + .fw-tip-cost {
+  margin-top: 6px;
+}
+
+/* ---------- hover card: footer with the check date and the link ---------- */
+.fw-tip-foot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin-top: 9px;
+  padding-top: 8px;
+  border-top: 1px solid #e8eaed;
+  font-size: 11px;
+  color: #9aa0a6;
+}
+.fw-tip-act {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-left: auto;
+  white-space: nowrap;
+}
+.fw-tip-brand {
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  color: #5f6368;
+}
+.fw-tip-link {
+  color: #1a73e8;
+  font-weight: 600;
+  text-decoration: none;
+}
+.fw-tip-link:hover,
+.fw-tip-link:focus-visible {
+  text-decoration: underline;
+  outline: none;
+}
+
+/* the short label keeps the glyph and the colour, only the words shrink */
+.fw-sum-short {
+  letter-spacing: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.fw-light) .fw-tip-foot { border-color: #5f6368; }
+  :root:not(.fw-light) .fw-tip-brand { color: #bdc1c6; }
+  :root:not(.fw-light) .fw-tip-caption { color: #9aa0a6; }
+  :root:not(.fw-light) .fw-tip-link { color: #8ab4f8; }
+}
+.fw-dark .fw-tip-foot { border-color: #5f6368; }
+.fw-dark .fw-tip-brand { color: #bdc1c6; }
+.fw-dark .fw-tip-caption { color: #9aa0a6; }
+.fw-dark .fw-tip-link { color: #8ab4f8; }
+
+/* ---------- hover card: one card per leg ---------- */
+.fw-tip {
+  max-height: calc(100vh - 24px);
+  overflow: auto;
+}
+.fw-legs {
+  display: flex;
+  flex-direction: column;
+  margin: 0 0 10px;
+}
+.fw-leg-card {
+  padding: 8px 10px 9px;
+  border: 1px solid #e8eaed;
+  border-radius: 8px;
+  background: rgba(32, 33, 36, 0.025);
+}
+.fw-leg-hd {
+  margin-bottom: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: #80868b;
+}
+.fw-leg-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.fw-leg-main > span {
+  color: #3c4043;
+  overflow-wrap: anywhere;
+}
+.fw-leg-caps {
+  margin-top: 5px;
+  line-height: 1.7;
+}
+.fw-leg-conn {
+  margin: 3px 0 3px 12px;
+  font-size: 11px;
+  color: #80868b;
+}
+.fw-cap-unknown::before {
+  content: "? ";
+  color: #80868b;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not(.fw-light) .fw-leg-card { border-color: #5f6368; background: rgba(232, 234, 237, 0.05); }
+  :root:not(.fw-light) .fw-leg-main > span { color: #e8eaed; }
+  :root:not(.fw-light) .fw-leg-hd,
+  :root:not(.fw-light) .fw-leg-conn,
+  :root:not(.fw-light) .fw-cap-unknown::before { color: #9aa0a6; }
+}
+.fw-dark .fw-leg-card { border-color: #5f6368; background: rgba(232, 234, 237, 0.05); }
+.fw-dark .fw-leg-main > span { color: #e8eaed; }
+.fw-dark .fw-leg-hd,
+.fw-dark .fw-leg-conn,
+.fw-dark .fw-cap-unknown::before { color: #9aa0a6; }
+
+.fw-tip-head .fw-tip-brand {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  color: #9aa0a6;
+}
+
+.fw-chip.fw-sky {
+  flex: none;
+  max-width: none;
+  white-space: nowrap;
+  align-self: center;
 }

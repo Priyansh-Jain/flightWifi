@@ -3,90 +3,195 @@
   <head>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="popup.css" />
+    <script src="theme.js"></script>
     <title>FlightWifi</title>
   </head>
   <body>
-    <header class="hd">
-      <span class="brand">
-        <img src="../icons/icon32.png" alt="" width="20" height="20" />
-        FlightWifi
-      </span>
-      <button id="gear" class="icon-btn" type="button" aria-label="Settings" aria-expanded="false">
-        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="12" cy="12" r="3" />
-          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-        </svg>
+    <nav class="rail" aria-label="FlightWifi">
+      <img class="logo" src="../icons/icon48.png" alt="FlightWifi" width="34" height="34" />
+      <button class="nav" type="button" data-tab="home" aria-label="This page" data-tip-title="This page" data-tip-text="Wi‑Fi verdicts for the flights you're looking at" aria-current="page">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.55a11 11 0 0 1 14.08 0" /><path d="M1.42 9a16 16 0 0 1 21.16 0" /><path d="M8.53 16.11a6 6 0 0 1 6.95 0" /><path d="M12 20h.01" /></svg>
       </button>
-    </header>
+      <button class="nav" type="button" data-tab="lookup" aria-label="Check an airline" data-tip-title="Check an airline" data-tip-text="Wi‑Fi and Starlink for any airline">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="M20.5 20.5 16 16" /></svg>
+      </button>
+      <span class="spacer"></span>
+      <button class="nav" type="button" data-tab="verdicts" aria-label="Verdicts" data-tip-title="Verdicts" data-tip-text="What each Wi‑Fi verdict means">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 17 2 2 4-4" /><path d="m3 7 2 2 4-4" /><path d="M13 6h8" /><path d="M13 12h8" /><path d="M13 18h8" /></svg>
+      </button>
+      <button class="nav" type="button" data-tab="help" aria-label="Help" data-tip-title="Help" data-tip-text="Contact us, rate FlightWifi, privacy and our website">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" /><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3" /><path d="M12 17h.01" /></svg>
+      </button>
+      <button class="nav" type="button" data-tab="settings" aria-label="Settings" data-tip-title="Settings" data-tip-text="Choose sites and switch light or dark mode">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>
+      </button>
+    </nav>
 
-    <main id="main">
-      <p class="status">
-        <span id="dot" class="dot"></span>
-        <span>
-          <span id="statusText" class="status-t">Checking this page</span>
-          <span id="statusSub" class="status-s" hidden></span>
-        </span>
-      </p>
+    <div class="pane">
+      <section id="tab-home" class="tab">
+        <header class="top">
+          <span class="wordmark">FlightWifi</span>
+          <span id="pill" class="pill"><span id="dot" class="dot"></span><span id="statusText">Checking</span></span>
+        </header>
 
-      <!-- supported site, verdicts on, at least one result on screen -->
-      <section id="active" hidden>
-        <p id="found" class="found"></p>
-        <ul id="tally" class="tally"></ul>
-        <button id="explain" class="link-btn" type="button" aria-expanded="false">
-          What do these mean? <span class="arr" aria-hidden="true">→</span>
-        </button>
-        <div id="glossary" class="acc" hidden></div>
+        <main class="body">
+          <!-- supported site, verdicts on, at least one result on screen -->
+          <section id="active" hidden>
+            <div class="hero">
+              <div class="ring" aria-hidden="true">
+                <svg class="ring-svg" viewBox="0 0 100 100"><circle class="ring-track" cx="50" cy="50" r="45" /><circle id="ringArc" class="ring-arc" cx="50" cy="50" r="45" pathLength="100" stroke-dasharray="0 100" /></svg>
+                <span class="ring-icon"><svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0" /><path d="M1.42 9a16 16 0 0 1 21.16 0" /><path d="M8.53 16.11a6 6 0 0 1 6.95 0" /><path d="M12 20h.01" /></svg></span>
+              </div>
+              <p id="heroBig" class="hero-big"></p>
+              <p id="heroLine" class="hero-line"></p>
+              <p id="heroSub" class="hero-sub" hidden></p>
+            </div>
+            <p class="label">On this page <span id="siteName" class="label-note"></span></p>
+            <ul id="tally" class="cards"></ul>
+          </section>
+
+          <!-- supported site, verdicts on, nothing rendered yet -->
+          <section id="waiting" hidden>
+            <div class="hero">
+              <span class="hero-icon pulse" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0" /><path d="M1.42 9a16 16 0 0 1 21.16 0" /><path d="M8.53 16.11a6 6 0 0 1 6.95 0" /><path d="M12 20h.01" /></svg>
+              </span>
+              <p class="hero-title">Waiting for flight results</p>
+              <p class="hero-text">Search for a route and the Wi&#8209;Fi verdict appears next to every result.</p>
+            </div>
+          </section>
+
+          <!-- any other page -->
+          <section id="idle" hidden>
+            <div class="hero">
+              <span class="hero-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0" /><path d="M1.42 9a16 16 0 0 1 21.16 0" /><path d="M8.53 16.11a6 6 0 0 1 6.95 0" /><path d="M12 20h.01" /></svg>
+              </span>
+              <p class="hero-title">Know your flight's Wi&#8209;Fi before you book</p>
+              <p class="hero-text">Search flights normally. FlightWifi adds the Wi&#8209;Fi verdict next to each result.</p>
+              <a class="btn btn-light" href="https://www.google.com/travel/flights" target="_blank" rel="noopener">Open Google Flights</a>
+              <p class="hero-foot">Also works on Skyscanner and Soar</p>
+            </div>
+            <button class="card card-link" type="button" data-go="lookup">
+              <span class="tile tile-brand" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" /><path d="M20.5 20.5 16 16" /></svg></span>
+              <span class="grow">
+                <span class="card-t">Check an airline</span>
+                <span id="lookupTeaser" class="card-s">Wi&#8209;Fi and Starlink for any airline</span>
+              </span>
+              <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
+            </button>
+          </section>
+
+          <!-- supported site that is not answering, even after a repair -->
+          <section id="unreachable" hidden>
+            <div class="hero hero-warn">
+              <span class="hero-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" /><path d="M12 9v4" /><path d="M12 17h.01" /></svg>
+              </span>
+              <p class="hero-title">Can't reach this page</p>
+              <p class="hero-text">This tab isn't answering, which usually means it was open before FlightWifi last updated. Reloading the page fixes it.</p>
+              <button id="reloadTab" class="btn btn-light" type="button">Reload page</button>
+            </div>
+          </section>
+
+          <!-- supported site, switched off in settings -->
+          <section id="off" hidden>
+            <div class="hero hero-muted">
+              <span class="hero-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="m2 2 20 20" /><path d="M8.5 16.5a5 5 0 0 1 7 0" /><path d="M2 8.82a15 15 0 0 1 4.17-2.65" /><path d="M10.66 5c4.01-.36 8.14.9 11.34 3.76" /><path d="M16.85 11.25a10 10 0 0 1 2.22 1.68" /><path d="M5 13a10 10 0 0 1 5.24-2.76" /><path d="M12 20h.01" /></svg>
+              </span>
+              <p id="offTitle" class="hero-title">Verdicts are hidden on this site</p>
+              <button id="turnOn" class="btn btn-light" type="button">Turn them back on</button>
+            </div>
+          </section>
+        </main>
       </section>
 
-      <!-- supported site, verdicts on, nothing rendered yet -->
-      <section id="waiting" hidden>
-        <p class="note">Search for a route and the Wi&#8209;Fi verdict appears next to every result.</p>
+      <section id="tab-lookup" class="tab" hidden>
+        <header class="top">
+          <span class="title">Check an airline</span>
+        </header>
+        <div class="search">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="M20.5 20.5 16 16" /></svg>
+          <input id="q" type="search" autocomplete="off" spellcheck="false" aria-label="Airline name or code" />
+        </div>
+        <main class="body body-tight">
+          <p id="lookupLabel" class="label"></p>
+          <ul id="results" class="cards"></ul>
+          <p id="noResults" class="empty" hidden>No airline matches that. Try the name, like "Qatar", or the two-letter code, like "QR".</p>
+        </main>
       </section>
 
-      <!-- any other page -->
-      <section id="idle" hidden>
-        <p class="note">
-          Search flights normally. FlightWifi adds the Wi&#8209;Fi verdict next to each result.
-        </p>
-        <a class="btn" href="https://www.google.com/travel/flights" target="_blank" rel="noopener">Open Google Flights</a>
-        <p class="chips">Google&nbsp;Flights · Skyscanner · Soar</p>
+      <section id="tab-verdicts" class="tab" hidden>
+        <header class="top">
+          <span class="title">Verdicts</span>
+        </header>
+        <main class="body">
+          <p class="label">What each one means</p>
+          <div id="glossary" class="cards acc"></div>
+        </main>
       </section>
 
-      <!-- supported site that is not answering, even after a repair -->
-      <section id="unreachable" hidden>
-        <p class="note">This tab isn't answering, which usually means it was open before FlightWifi last updated. Reloading the page fixes it.</p>
-        <button id="reloadTab" class="btn btn-solid" type="button">Reload page</button>
+      <section id="tab-help" class="tab" hidden>
+        <header class="top">
+          <span class="title">Help</span>
+        </header>
+        <main class="body">
+          <p class="label">Get in touch</p>
+          <div class="cards">
+            <a class="card card-link" href="https://flightwifi.app/contact/" target="_blank" rel="noopener">
+              <span class="tile tile-brand" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg></span>
+              <span class="grow card-t">Contact us</span>
+              <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg>
+            </a>
+            <a class="card card-link" href="https://chromewebstore.google.com/detail/omoclebljmjljikaoaogdpahjlbmdbin/reviews" target="_blank" rel="noopener">
+              <span class="tile tile-brand" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z" /></svg></span>
+              <span class="grow card-t">Rate FlightWifi</span>
+              <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg>
+            </a>
+          </div>
+
+          <p class="label">About</p>
+          <div class="cards">
+            <a class="card card-link" href="https://flightwifi.app/privacy/" target="_blank" rel="noopener">
+              <span class="tile tile-brand" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 5 6v6c0 4.2 3 7.5 7 9 4-1.5 7-4.8 7-9V6z" /><path d="m9 12 2 2 4-4" /></svg></span>
+              <span class="grow card-t">Privacy</span>
+              <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg>
+            </a>
+            <a class="card card-link" href="https://flightwifi.app/" target="_blank" rel="noopener">
+              <span class="tile tile-brand" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M3 12h18" /><path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18" /></svg></span>
+              <span class="grow card-t">flightwifi.app</span>
+              <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg>
+            </a>
+          </div>
+          <p id="meta" class="meta"></p>
+        </main>
       </section>
 
-      <!-- supported site, switched off in settings -->
-      <section id="off" hidden>
-        <p class="note">Verdicts are hidden on this site.</p>
-        <button id="turnOn" class="btn btn-solid" type="button">Turn them back on</button>
+      <section id="tab-settings" class="tab" hidden>
+        <header class="top">
+          <span class="title">Settings</span>
+        </header>
+        <main class="body">
+          <p class="label">Show verdicts on</p>
+          <div class="cards">
+            <label class="card row"><span class="grow card-t">Google Flights</span><input type="checkbox" id="s-google" class="sw" checked /><span class="track" aria-hidden="true"></span></label>
+            <label class="card row"><span class="grow card-t">Skyscanner</span><input type="checkbox" id="s-skyscanner" class="sw" checked /><span class="track" aria-hidden="true"></span></label>
+            <label class="card row"><span class="grow card-t">Soar</span><input type="checkbox" id="s-soar" class="sw" checked /><span class="track" aria-hidden="true"></span></label>
+          </div>
+          <p class="note">Changes apply to open tabs straight away.</p>
+
+          <p class="label">Appearance</p>
+          <div class="seg" role="radiogroup" aria-label="Appearance">
+            <button type="button" role="radio" data-theme-choice="system">System</button>
+            <button type="button" role="radio" data-theme-choice="light">Light</button>
+            <button type="button" role="radio" data-theme-choice="dark">Dark</button>
+          </div>
+        </main>
       </section>
-    </main>
+    </div>
 
-    <section id="settings" hidden>
-      <p class="sec-label">Show verdicts on</p>
-      <label class="row"><span>Google Flights</span><input type="checkbox" id="s-google" class="sw" checked /><span class="track" aria-hidden="true"></span></label>
-      <label class="row"><span>Skyscanner</span><input type="checkbox" id="s-skyscanner" class="sw" checked /><span class="track" aria-hidden="true"></span></label>
-      <label class="row"><span>Soar</span><input type="checkbox" id="s-soar" class="sw" checked /><span class="track" aria-hidden="true"></span></label>
-      <p class="note tiny">Changes apply to open tabs straight away.</p>
-    </section>
-
-    <footer class="ft">
-      <p id="meta" class="meta"></p>
-      <p class="review">
-        Enjoying FlightWifi?
-        <a href="https://chromewebstore.google.com/detail/omoclebljmjljikaoaogdpahjlbmdbin/reviews" target="_blank" rel="noopener">Review <span class="arr" aria-hidden="true">→</span></a>
-      </p>
-      <p class="links">
-        <a href="https://flightwifi.app/contact/" target="_blank" rel="noopener">Help</a>
-        <span aria-hidden="true">·</span>
-        <a href="https://flightwifi.app/privacy/" target="_blank" rel="noopener">Privacy</a>
-        <span aria-hidden="true">·</span>
-        <a href="https://flightwifi.app/" target="_blank" rel="noopener">Website</a>
-      </p>
-    </footer>
+    <div id="tip" class="tip" role="tooltip"><strong id="tipTitle"></strong><span id="tipText"></span></div>
 
     <script src="../data/registry.js"></script>
     <script src="popup.js"></script>

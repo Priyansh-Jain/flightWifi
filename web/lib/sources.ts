@@ -1,4 +1,4 @@
-export type SourceKind = "airline" | "provider" | "trade" | "news" | "blog" | "reference" | "other";
+export type SourceKind = "airline" | "provider" | "trade" | "news" | "blog" | "tracker" | "reference" | "other";
 
 export const PROVIDER_DOMAINS = [
   "starlink.com", "spacex.com", "viasat.com", "panasonic.aero", "panasonic.com", "intelsat.com",
@@ -46,8 +46,15 @@ const BLOG_DOMAINS = [
   "cestee.com", "cestee.es", "cestee.de", "thealviator.com", "cabincrewhq.com",
   "aviationclubcenter.com", "businessclassjournal.com", "promociones-aereas.com.ar",
   "infoviajera.com", "passageirodeprimeira.com", "algerienomades.com", "voyagerdz.com",
-  "lavoiedalgerie.dz", "seatwifi.com", "inflightwifi.one", "starlinkflights.com",
-  "unitedstarlinktracker.com", "alternativeairlines.com", "aerolopa.com", "seatguru.com", "blog.naver.com", "naver.com", "zhihu.com", "bilibili.com"
+  "lavoiedalgerie.dz", "alternativeairlines.com", "aerolopa.com", "seatguru.com", "blog.naver.com", "naver.com",
+  "zhihu.com", "bilibili.com"
+];
+
+// Hobby and community trackers: useful corroboration, but a dataset compiled by someone else is
+// neither an airline statement nor journalism, and the label should say so.
+const TRACKER_DOMAINS = [
+  "unitedstarlinktracker.com", "alaskastarlinktracker.com", "airlinestarlinktracker.com",
+  "starlinkflights.com", "seatwifi.com", "inflightwifi.one", "unitedfleetsite.com"
 ];
 
 const REFERENCE_DOMAINS = ["wikipedia.org", "wikidata.org", "wikivoyage.org", "britannica.com"];
@@ -328,6 +335,7 @@ export function sourceKind(url: string, airline: string, code?: string): SourceK
   if (on(PROVIDER_DOMAINS, host)) return "provider";
   if (on(REFERENCE_DOMAINS, host)) return "reference";
   if (on(TRADE_DOMAINS, host)) return "trade";
+  if (on(TRACKER_DOMAINS, host)) return "tracker";
   if (on(BLOG_DOMAINS, host)) return "blog";
   if (on(NEWS_DOMAINS, host)) return "news";
   const label = host.split(".")[0];

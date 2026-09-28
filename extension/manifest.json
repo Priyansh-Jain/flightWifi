@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "FlightWifi - Flight WiFi & Starlink Checker",
-  "version": "1.1.7",
+  "version": "1.1.9",
   "description": "Check any flight's WiFi before you book: Starlink or old satellite, free or paid, video calls or not. Google Flights + Skyscanner.",
   "action": {
     "default_popup": "popup/popup.html",
@@ -201,14 +201,77 @@
         "*://www.skyscanner.co.za/transport/*"
       ],
       "js": [
+        "skyscanner-bridge.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": [
+        "*://www.skyscanner.net/transport/*",
+        "*://www.skyscanner.com/transport/*",
+        "*://www.skyscanner.co.uk/transport/*",
+        "*://www.skyscanner.co.in/transport/*",
+        "*://www.skyscanner.de/transport/*",
+        "*://www.skyscanner.fr/transport/*",
+        "*://www.skyscanner.es/transport/*",
+        "*://www.skyscanner.it/transport/*",
+        "*://www.skyscanner.nl/transport/*",
+        "*://www.skyscanner.be/transport/*",
+        "*://www.skyscanner.ch/transport/*",
+        "*://www.skyscanner.at/transport/*",
+        "*://www.skyscanner.se/transport/*",
+        "*://www.skyscanner.no/transport/*",
+        "*://www.skyscanner.dk/transport/*",
+        "*://www.skyscanner.fi/transport/*",
+        "*://www.skyscanner.pl/transport/*",
+        "*://www.skyscanner.pt/transport/*",
+        "*://www.skyscanner.ie/transport/*",
+        "*://www.skyscanner.gr/transport/*",
+        "*://www.skyscanner.cz/transport/*",
+        "*://www.skyscanner.hu/transport/*",
+        "*://www.skyscanner.ro/transport/*",
+        "*://www.skyscanner.ru/transport/*",
+        "*://www.skyscanner.com.au/transport/*",
+        "*://www.skyscanner.ca/transport/*",
+        "*://www.skyscanner.co.nz/transport/*",
+        "*://www.skyscanner.com.br/transport/*",
+        "*://www.skyscanner.com.mx/transport/*",
+        "*://www.skyscanner.com.ar/transport/*",
+        "*://www.skyscanner.cl/transport/*",
+        "*://www.skyscanner.co.id/transport/*",
+        "*://www.skyscanner.com.my/transport/*",
+        "*://www.skyscanner.com.ph/transport/*",
+        "*://www.skyscanner.com.sg/transport/*",
+        "*://www.skyscanner.com.hk/transport/*",
+        "*://www.skyscanner.com.tw/transport/*",
+        "*://www.skyscanner.co.kr/transport/*",
+        "*://www.skyscanner.jp/transport/*",
+        "*://www.skyscanner.co.th/transport/*",
+        "*://www.skyscanner.ae/transport/*",
+        "*://www.skyscanner.com.tr/transport/*",
+        "*://www.skyscanner.co.za/transport/*"
+      ],
+      "js": [
         "data/registry.js",
         "core.js",
+        "header.js",
         "skyscanner.js"
       ],
       "css": [
         "chip.css"
       ],
       "run_at": "document_end"
+    },
+    {
+      "matches": [
+        "*://soar.flights/*"
+      ],
+      "js": [
+        "soar-bridge.js"
+      ],
+      "run_at": "document_end",
+      "world": "MAIN"
     },
     {
       "matches": [
@@ -285,7 +348,50 @@
         "https://www.google.pt/*",
         "https://www.google.ro/*",
         "https://www.google.ru/*",
-        "https://www.google.se/*"
+        "https://www.google.se/*",
+        "*://www.skyscanner.net/*",
+        "*://www.skyscanner.com/*",
+        "*://www.skyscanner.co.uk/*",
+        "*://www.skyscanner.co.in/*",
+        "*://www.skyscanner.de/*",
+        "*://www.skyscanner.fr/*",
+        "*://www.skyscanner.es/*",
+        "*://www.skyscanner.it/*",
+        "*://www.skyscanner.nl/*",
+        "*://www.skyscanner.be/*",
+        "*://www.skyscanner.ch/*",
+        "*://www.skyscanner.at/*",
+        "*://www.skyscanner.se/*",
+        "*://www.skyscanner.no/*",
+        "*://www.skyscanner.dk/*",
+        "*://www.skyscanner.fi/*",
+        "*://www.skyscanner.pl/*",
+        "*://www.skyscanner.pt/*",
+        "*://www.skyscanner.ie/*",
+        "*://www.skyscanner.gr/*",
+        "*://www.skyscanner.cz/*",
+        "*://www.skyscanner.hu/*",
+        "*://www.skyscanner.ro/*",
+        "*://www.skyscanner.ru/*",
+        "*://www.skyscanner.com.au/*",
+        "*://www.skyscanner.ca/*",
+        "*://www.skyscanner.co.nz/*",
+        "*://www.skyscanner.com.br/*",
+        "*://www.skyscanner.com.mx/*",
+        "*://www.skyscanner.com.ar/*",
+        "*://www.skyscanner.cl/*",
+        "*://www.skyscanner.co.id/*",
+        "*://www.skyscanner.com.my/*",
+        "*://www.skyscanner.com.ph/*",
+        "*://www.skyscanner.com.sg/*",
+        "*://www.skyscanner.com.hk/*",
+        "*://www.skyscanner.com.tw/*",
+        "*://www.skyscanner.co.kr/*",
+        "*://www.skyscanner.jp/*",
+        "*://www.skyscanner.co.th/*",
+        "*://www.skyscanner.ae/*",
+        "*://www.skyscanner.com.tr/*",
+        "*://www.skyscanner.co.za/*"
       ]
     }
   ]

@@ -104,17 +104,17 @@ function carrierByName(text) {
 // Amber is the only colour that asks the reader to stop, so it is reserved for the one case that
 // warrants it: part of the fleet has no wifi at all and the schedule will not say which you get.
 var VERDICT_UI = {
-  LEO: { cls: "fast", row: "calls", label: "Video calls work", why: "Low-orbit satellite, quick enough to be treated like ground wifi", latency: "roughly 20-50ms (low orbit)" },
-  MEO: { cls: "fast", row: "calls", label: "Video calls work", why: "Mid-orbit satellite, usually quick enough for a live call", latency: "roughly 120-150ms (mid orbit)" },
-  GEO: { cls: "ok", row: "email", label: "Email & browsing", why: "High-orbit satellite. The lag is the limit, not the speed", latency: "roughly 600ms and up (high orbit)" },
-  A2G: { cls: "ok", row: "email", label: "Email & browsing", why: "Ground-based network beamed up from masts. Fine until you need it live", latency: "air-to-ground, no satellite" },
-  VARIES: { cls: "ok", row: "varies", label: "Varies by aircraft", why: "Every aircraft has wifi. Whether it is the quick kind depends which one turns up", latency: "varies by aircraft" },
-  PARTIAL: { cls: "part", row: "partial", label: "Not on every aircraft", why: "Part of this fleet has no wifi at all, and the schedule will not say which aircraft you get", latency: "varies by aircraft" },
-  LEG_PARTIAL: { cls: "part", row: "partial", label: "Not on every aircraft", why: "The legs of this trip do not match. At least one of them has no wifi at all", latency: "varies by leg" },
-  NONE: { cls: "none", row: "nowifi", label: "No Wi-Fi", why: "No usable internet on this aircraft", latency: null },
-  GOOGLE_YES: { cls: "ok", row: "unsure", label: "Wi-Fi, speed unknown", why: "Google lists wifi here. We have not verified the provider, so we will not claim a speed", latency: null },
-  GOOGLE_NO: { cls: "none", row: "nowifi", label: "No Wi-Fi", why: "Google publishes amenities for this flight and wifi is not among them", latency: null },
-  UNKNOWN: { cls: "unknown", row: "unverified", label: "Not verified", why: "We would rather say nothing than guess", latency: null }
+  LEO: { cls: "fast", row: "calls", label: "Video calls work", why: "Fast connection with low delay. Good for video calls", latency: "roughly 20-50ms (low orbit)" },
+  MEO: { cls: "fast", row: "calls", label: "Video calls work", why: "Fast enough for video calls, with some delay", latency: "roughly 120-150ms (mid orbit)" },
+  GEO: { cls: "ok", row: "email", label: "Email & browsing", why: "Fast enough for normal use, but high delay affects video calls and live streaming", latency: "roughly 600ms and up (high orbit)" },
+  A2G: { cls: "ok", row: "email", label: "Email & browsing", why: "Good for browsing and messaging. The signal comes from the ground, so it can drop out over water", latency: "air-to-ground, no satellite" },
+  VARIES: { cls: "ok", row: "varies", label: "Varies by aircraft", why: "Wi-Fi is available, but some planes are faster than others", latency: "varies by aircraft" },
+  PARTIAL: { cls: "part", row: "partial", label: "Not on every aircraft", why: "Some planes in this fleet have Wi-Fi, others do not", latency: "varies by aircraft" },
+  LEG_PARTIAL: { cls: "part", row: "partial", label: "Not on every aircraft", why: "Wi-Fi differs across your trip. One or more legs have no Wi-Fi", latency: "varies by leg" },
+  NONE: { cls: "none", row: "nowifi", label: "No Wi-Fi", why: "No internet on this plane", latency: null },
+  GOOGLE_YES: { cls: "ok", row: "unsure", label: "Wi-Fi, speed unknown", why: "Google lists Wi-Fi for this flight, but we have not verified its speed", latency: null },
+  GOOGLE_NO: { cls: "none", row: "nowifi", label: "No Wi-Fi", why: "Google does not list Wi-Fi for this flight", latency: null },
+  UNKNOWN: { cls: "unknown", row: "unverified", label: "Not verified", why: "No verified Wi-Fi information for this flight yet", latency: null }
 };
 
 // What the reader is actually deciding. Only latency-bound outcomes belong here: whether an airline
@@ -122,9 +122,9 @@ var VERDICT_UI = {
 var CAPABILITY = {
   LEO: { good: ["Video calls", "Email & chat", "Browsing"], bad: [] },
   MEO: { good: ["Video calls", "Email & chat", "Browsing"], bad: [] },
-  GEO: { good: ["Email & chat", "Browsing"], bad: ["Video calls", "Anything live"] },
-  A2G: { good: ["Email & chat", "Browsing"], bad: ["Video calls", "Anything live"] },
-  VARIES: { good: ["Email & chat", "Browsing"], bad: ["Counting on a video call"] }
+  GEO: { good: ["Email & chat", "Browsing"], bad: ["Video calls", "Live streaming"] },
+  A2G: { good: ["Email & chat", "Browsing"], bad: ["Video calls", "Live streaming"] },
+  VARIES: { good: ["Email & chat", "Browsing"], bad: ["Video calls"] }
 };
 
 // Whether the link can carry a call and whether the airline lets you make one are separate
@@ -160,9 +160,9 @@ var CALL_POLICY = {
 };
 
 var CALL_POLICY_TEXT = {
-  no: "Not permitted by the airline",
-  yes: "Permitted, headphones expected",
-  voice: "Voice permitted, video not"
+  no: "Not allowed by the airline",
+  yes: "Allowed, headphones recommended",
+  voice: "Voice calls allowed, video not"
 };
 
 // Where the airline's policy is known the chip says what you may actually do, which matters because
@@ -181,14 +181,42 @@ var CALL_LABEL = {
 var TYPED_UI = {
   VARIES: {
     label: "Varies by aircraft",
-    why: "Every plane of this type has wifi, but some carry the fast system and some still have the older one"
+    why: "Every plane of this type has Wi-Fi, but some are faster than others"
   },
   PARTIAL: {
-    why: "Some planes of this type have no wifi at all, and the schedule will not say which one you get"
+    why: "Some planes of this type have Wi-Fi, others do not"
   }
 };
 
 var RANK = { NONE: 0, PARTIAL: 1, UNKNOWN: 2, GEO: 3, A2G: 3, VARIES: 4, MEO: 5, LEO: 6 };
+
+// Codeshare rows ("Qatar Airways · British Airways") leave the amenity column too narrow for the
+// full label, and the old fallback went straight to a bare glyph, which turned eight Qatar nonstops
+// with two different answers into eight identical icons. A short form keeps the answer legible one
+// step longer; the glyph-only form is now the last resort, not the second.
+var SHORT_LABEL = {
+  "Video calls work": "Calls ok",
+  "Fast, but no calls": "Fast, no calls",
+  "Voice calls only": "Voice only",
+  "Email & browsing": "Email",
+  "Varies by aircraft": "Varies",
+  "Not on every aircraft": "Not all",
+  "No Wi-Fi": "None",
+  "Wi-Fi, speed unknown": "Wi-Fi ?",
+  "Not verified": "Unverified"
+};
+
+// Same rule as web/lib/slugs.ts, so the card can link straight to the airline page. Checked against
+// all 235 entries: no name collides, so no code suffix is ever needed.
+function slugify(name) {
+  return String(name)
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
 
 function classifyOrbit(orbit) {
   if (!orbit) return "UNKNOWN";
@@ -315,6 +343,9 @@ function trimTo(s, n) {
 }
 
 function costOf(text) {
+  // "not disclosed: no source states whether any tier is complimentary" is a statement of absence,
+  // and matching the word inside it produced a "Free" badge over a sentence saying nobody knows
+  if (/not disclosed|no source (found )?states|not published/i.test(text) && !/US\$|\$\d|EUR ?\d|CHF ?\d|£\d|€\d/i.test(text)) return null;
   const free = /\bfree\b|complimentary|no charge|at no cost/i.test(text);
   const paid = /\bpaid\b|\bfor a fee\b|US\$|\$\d|EUR ?\d|CHF ?\d|£\d|€\d/i.test(text);
   return free && paid ? "Free tier, then paid" : paid ? "Paid" : free ? "Free" : null;
@@ -346,8 +377,73 @@ function cleanProvider(p) {
   );
 }
 
+var PROVIDER_BRANDS = [
+  ["Starlink", /\bstarlink\b/i],
+  ["Panasonic", /\bpanasonic\b/i],
+  ["Viasat", /\bviasat\b/i],
+  ["Inmarsat", /\binmarsat\b/i],
+  ["Intelsat", /\bintelsat\b/i],
+  ["Eutelsat OneWeb", /\boneweb\b/i],
+  ["SES", /\bSES\b/],
+  ["SITA OnAir", /\bsita\b/i],
+  ["Anuvu", /\banuvu\b/i],
+  ["Thales", /\bthales\b/i],
+  ["Gogo", /\bgogo\b/i],
+  ["Hughes", /\bhughes\b/i],
+  ["Nelco", /\bnelco\b/i],
+  ["Immfly", /\bimmfly\b/i],
+  ["Telesat", /\btelesat\b/i],
+  ["Iridium", /\biridium\b/i],
+  ["Kuiper", /\bkuiper\b/i],
+  ["Gilat", /\bgilat\b/i],
+  ["FlyNet", /\bflynet\b/i],
+  ["European Aviation Network", /\beuropean aviation network\b|\bEAN\b/],
+  ["China Satcom", /\bchina satcom\b/i]
+];
+
+var BRAND_GONE_RX = /\b(removed|deactivated|no longer|retired|discontinued|withdrawn|until fitted|until the|pending)\b/i;
+var BRAND_LATER_RX = /\b(announced|planned|plans|due|targeted|expected|scheduled|trial|trials|rollout|retrofit|order|ordered|upcoming|to be decided|not yet|no confirmed|from H[12]|under way|underway)\b/i;
+var BRAND_NOW_RX = /\b(in service|in passenger service|live|flying|equipped|fitted|installed|available|complete|completed|today|currently|on most|on all|on select|paid|free)\b/i;
+var PROVIDER_BRAND_MAX = 2;
+
+function brandsIn(text) {
+  const clean = String(text || "").replace(/\s*\([^)]*\)/g, " ");
+  const found = [];
+  const add = (name) => {
+    if (name && found.indexOf(name) === -1) found.push(name);
+  };
+  for (const [name, rx] of PROVIDER_BRANDS) {
+    const m = rx.exec(clean);
+    if (m && m.index === 0) add(name);
+  }
+  for (const c of splitClauses(clean)) {
+    if (BRAND_GONE_RX.test(c)) continue;
+    if (BRAND_LATER_RX.test(c) && !BRAND_NOW_RX.test(c)) continue;
+    for (const [name, rx] of PROVIDER_BRANDS) if (rx.test(c)) add(name);
+  }
+  return found;
+}
+
+function orderBrands(names) {
+  const i = names.indexOf("Starlink");
+  if (i > 0) names.splice(i, 1), names.unshift("Starlink");
+  const use = names.slice(0, PROVIDER_BRAND_MAX);
+  return use.length > 1 ? use.join(" and ") : use[0] || "";
+}
+
+function brandLine(text) {
+  return orderBrands(brandsIn(text));
+}
+
 // joined across a fleet, "None" alongside a real provider reads as a product name
 function providerLine(rules) {
+  const live = [];
+  for (const r of rules) {
+    if (classifyOrbit(r.orbit) === "NONE") continue;
+    for (const n of brandsIn(r.provider)) if (live.indexOf(n) === -1) live.push(n);
+  }
+  const brands = orderBrands(live);
+  if (brands) return brands;
   const names = [...new Set(rules.map((r) => cleanProvider(r.provider)).filter(Boolean))];
   const real = names.filter((n) => !/^none\b/i.test(n));
   const use = real.length ? real : names;
@@ -362,6 +458,26 @@ function providerLine(rules) {
 // DEL-DOH-FRA-STN on IndiGo, Qatar and Ryanair came out as "Not guaranteed", which describes one
 // uncertain aircraft when the truth is that two of the three legs are certainly dark and the third
 // has Starlink. When the legs disagree the label says so and sends the reader to the breakdown.
+function fwLegsVerdict(segs) {
+  const parts = segs.map((s) => {
+    const cc = regCode(s.cc || "");
+    return { cc, ac: s.ac, dep: s.dep, arr: s.arr, v: verdictFor(cc, s.ac || "", "nodata") };
+  });
+  if (parts.some((p) => !p.cc || !WIFI_REGISTRY[p.cc])) return { suppress: true, ccs: parts.map((p) => p.cc).join("+") };
+  if (parts.some((p) => !p.ac || !p.v || !p.v.entry)) return null;
+  if (parts.length === 1) return { v: parts[0].v, ccs: parts[0].cc };
+  const key = rollup(parts.map((p) => p.v.key));
+  const differ = new Set(parts.map((p) => p.v.key)).size > 1;
+  return {
+    ccs: [...new Set(parts.map((p) => p.cc))].join("+"),
+    v: decorate(differ && key === "PARTIAL" ? "LEG_PARTIAL" : key, {
+      legs: parts.map((p) => ({ code: p.cc, entry: p.v.entry, key: p.v.key, aircraft: p.ac, v: p.v, dep: p.dep, arr: p.arr })),
+      aircraft: parts.map((p) => p.ac).join(" \u00b7 "),
+      entry: null
+    })
+  };
+}
+
 function fleetVerdict(codes) {
   // two legs on the same carrier are one fleet answer, not a repeated row; deduping here also
   // keeps the single-carrier path (with its provider and cost detail) for an out-and-back on one airline
@@ -386,6 +502,27 @@ function fleetVerdict(codes) {
 // whole point of the chip is to answer the question without expanding the card. One fixed-position
 // node on <body> keeps this entirely outside Google's own layout.
 var tip = null;
+var activeChip = null;
+// Leaving the chip does not close the card at once: the pointer needs a moment to cross the gap
+// into the card, and once it is inside, the card stays until the pointer leaves it. This is how
+// Google's own airport-code tooltips behave on the same page, so it is what people expect here.
+var HIDE_GRACE_MS = 180;
+var hideTimer = null;
+
+function cancelHide() {
+  if (hideTimer) {
+    clearTimeout(hideTimer);
+    hideTimer = null;
+  }
+}
+
+function scheduleHide() {
+  cancelHide();
+  hideTimer = setTimeout(() => {
+    hideTimer = null;
+    hideTip();
+  }, HIDE_GRACE_MS);
+}
 
 // `html` is for markup this file builds itself; anything page- or registry-derived goes through `v`
 function tipRow(k, v, html) {
@@ -393,20 +530,23 @@ function tipRow(k, v, html) {
 }
 
 function escapeHtml(s) {
-  return String(s).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c]);
+  return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 }
 
-// Across several airlines the honest headline is the weakest link, not a concatenation of every
-// airline's provenance, which runs to three lines and says nothing the reader can act on.
+var MONTHS_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+function monthOf(asOf) {
+  const m = /^(\d{4})-(\d{2})/.exec(asOf || "");
+  return m && MONTHS_SHORT[+m[2] - 1] ? `${MONTHS_SHORT[+m[2] - 1]} ${m[1]}` : asOf || "";
+}
+
+// The footnote used to read "sourced, verification pending · as of 2026-08 · 6 refs", which is our
+// bookkeeping rather than anything a traveller can weigh. What they can weigh is when the entry
+// was last checked. Across several airlines the oldest check date
+// is the honest one.
 function sourceLine(entries) {
-  const refs = entries.reduce((n, e) => n + (e.sources ? e.sources.length : 0), 0);
-  const confidence = entries.some((e) => e.confidence === "reported") ? "reported" : "sourced";
-  const pending = entries.some((e) => e.needs_verification);
-  const asOf = entries.map((e) => e.as_of).sort()[0];
-  return (
-    `${confidence}${pending ? ", verification pending" : ""} · as of ${asOf}` +
-    (refs ? ` · ${refs} ref${refs > 1 ? "s" : ""}` : "")
-  );
+  const asOf = entries.map((e) => e.as_of).filter(Boolean).sort()[0];
+  return asOf ? `Checked ${monthOf(asOf)}` : "Registry entry";
 }
 
 function capRow(kind, items) {
@@ -417,113 +557,239 @@ function capRow(kind, items) {
   );
 }
 
+// The rows below the verdict describe one airline's system. On a connection that airline is the
+// one whose leg set the verdict: the weakest link is what the reader is going to hit.
+function weakestLeg(legs) {
+  return legs.reduce((a, b) => (RANK[a.key] <= RANK[b.key] ? a : b));
+}
+
+function legLabel(leg) {
+  return (leg.v && leg.v.label) || VERDICT_UI[leg.key].label;
+}
+
+// What a leg can and cannot carry, one line per item, so the reader can tie each answer to a
+// specific flight instead of inferring it from a rolled-up verdict.
+function legCaps(key) {
+  if (key === "NONE") return [["bad", "No internet on this plane"]];
+  if (key === "PARTIAL") return [["bad", "Some planes of this type have no Wi-Fi"]];
+  if (key === "UNKNOWN") return [["unknown", "Not verified"]];
+  const cap = CAPABILITY[key];
+  if (!cap) return [];
+  return [...cap.good.map((g) => ["good", g]), ...cap.bad.map((b) => ["bad", b])];
+}
+
+// The header line on a connection describes the journey, not the satellite: the reader wants to
+// know whether the legs agree before they read them.
+function journeyWhy(v) {
+  const legs = v.legs;
+  const none = legs.filter((l) => l.key === "NONE").length;
+  const keys = new Set(legs.map((l) => l.key));
+  if (none && none < legs.length) {
+    return none === 1
+      ? "One leg has no Wi-Fi, so it sets the trip result."
+      : `${none} legs have no Wi-Fi, so they set the trip result.`;
+  }
+  if (keys.size > 1) return "Wi-Fi differs across your trip. The weakest leg sets the result.";
+  return `Same result on every leg. ${v.why}`;
+}
+
+// One card per leg, numbered and labelled by route, so each verdict is tied to a flight segment
+// rather than to an airline name that may appear twice. Per-leg ticks appear only when the legs
+// actually differ; when they agree, the shared rows below say it once. A fleet-level connection on
+// one airline (no route, no aircraft, one answer) has nothing a card per leg could add.
+function legCards(v) {
+  const legs = v.legs;
+  const differ = new Set(legs.map((l) => l.key)).size > 1;
+  const airlinesDiffer = new Set(legs.map((l) => l.code)).size > 1;
+  const detailed = legs.some((l) => (l.dep && l.arr) || l.aircraft);
+  if (!detailed && !differ && !airlinesDiffer) return "";
+  const lay = v.layovers || {};
+  return (
+    `<div class="fw-legs">` +
+    legs
+      .map((leg, i) => {
+        const route = leg.dep && leg.arr ? ` · ${escapeHtml(leg.dep)} → ${escapeHtml(leg.arr)}` : "";
+        const main = escapeHtml(leg.entry.airline) + (leg.aircraft ? ` · ${escapeHtml(leg.aircraft)}` : "");
+        const ui = VERDICT_UI[leg.key];
+        const caps = differ
+          ? `<div class="fw-leg-caps">${legCaps(leg.key)
+              .map(([k, t]) => `<span class="fw-cap fw-cap-${k}">${escapeHtml(t)}</span>`)
+              .join("")}</div>`
+          : "";
+        const last = i === legs.length - 1;
+        const conn = last
+          ? ""
+          : `<div class="fw-leg-conn">↓ ${leg.arr ? (lay[leg.arr] ? `${escapeHtml(lay[leg.arr])} at ${escapeHtml(leg.arr)}` : `connect at ${escapeHtml(leg.arr)}`) : "connection"}</div>`;
+        return (
+          `<div class="fw-leg-card"><div class="fw-leg-hd">Leg ${i + 1}${route}</div>` +
+          `<div class="fw-leg-main"><span>${main}</span><b class="fw-tip-tag fw-${ui.cls}">${escapeHtml(legLabel(leg))}</b></div>` +
+          caps +
+          `</div>` +
+          conn
+        );
+      })
+      .join("") +
+    `</div>`
+  );
+}
+
+function aircraftText(v, legsShown) {
+  const legs = v.legs || [];
+  if (legs.length > 1 && legs.every((l) => l.aircraft)) {
+    if (legsShown) return null;
+    const acs = legs.map((l) => l.aircraft);
+    const uniq = [...new Set(acs)];
+    return uniq.length === 1 ? `${uniq[0]} on every leg` : acs.join(", then ");
+  }
+  if (v.aircraft) return v.aircraft;
+  if (!v.fleetwide) return "not shown";
+  return v.aircraftNote || (v.noExpand ? "whole fleet, this view never names it" : "whole fleet, not named until you expand");
+}
+
+var CARD_ACCESS_LEN = 74;
+
+function accessLine(entry, cost) {
+  const short = String(entry.access_short || "").trim();
+  if (short) return short;
+  const pts = accessPoints(entry.access, cost).filter((t) => t.indexOf("\u2026") === -1 && t.length <= CARD_ACCESS_LEN);
+  return pts.length ? pts[0] : "";
+}
+
+function costHtml(entry, withPoints, withBadge) {
+  const cost = costOf(entry.access);
+  const line = withPoints ? accessLine(entry, cost) : "";
+  return (
+    (cost && withBadge !== false ? `<b class="fw-cost">${escapeHtml(cost)}</b>` : "") +
+    (line ? `<ul class="fw-pts"><li>${escapeHtml(line)}</li></ul>` : "")
+  );
+}
+
 function tipHtml(v) {
   const rows = [];
-  const multi = v.legs && v.legs.length > 1;
+  const legs = v.legs && v.legs.length > 1 ? v.legs : null;
+  const weak = legs ? weakestLeg(legs) : null;
+  const entry = legs ? weak.entry : v.entry;
+  const code = legs ? weak.code : v.code;
+  const airlines = legs ? [...new Map(legs.map((l) => [l.code, l])).values()] : [];
+  const airlinesDiffer = airlines.length > 1;
+  const legsHtml = legs ? legCards(v) : "";
+  const keysDiffer = Boolean(legs) && new Set(legs.map((l) => l.key)).size > 1;
   const cap = CAPABILITY[v.key];
-  const policy = !multi && v.code ? CALL_POLICY[v.code] : null;
-  // a connection is only as good as its worst leg, and hiding which leg is the bad one would
-  // leave the reader unable to act on the verdict
-  const legs = multi
-    ? `<div class="fw-tip-legs">` +
-      v.legs
-        .map(
-          (leg) =>
-            `<div class="fw-tip-leg"><span>${escapeHtml(leg.entry.airline)}</span>` +
-            `<b class="fw-tip-tag fw-${VERDICT_UI[leg.key].cls}">${escapeHtml(VERDICT_UI[leg.key].label)}</b></div>`
-        )
-        .join("") +
-      `</div>`
-    : "";
-  // what you can do with it comes first, because that is the question; who supplies it comes after
-  if (cap && !multi) {
+
+  // what you can do with it comes first, because that is the question; who supplies it comes after.
+  // On a connection whose legs disagree the ticks already sit on each leg card, so they are not
+  // repeated here for the weakest one.
+  if (cap && !keysDiffer) {
     if (cap.good.length) rows.push(capRow("good", cap.good));
     if (cap.bad.length) rows.push(capRow("bad", cap.bad));
   }
-  // the capability rows above say what the link can carry; this says what you are allowed to do
-  // with it, which is a different answer and usually the more restrictive one
-  if (policy && v.key !== "NONE") {
-    rows.push(tipRow("Calls", CALL_POLICY_TEXT[policy.calls] + (policy.check ? " (unconfirmed)" : "")));
+
+  // The capability rows say what the link can carry; this says what you are allowed to do with it.
+  // Only a policy taken from the airline's own pages is stated as a row: "permitted (unconfirmed)"
+  // tells the reader nothing they can act on. A reported ban still surfaces below as a hedged note,
+  // because on that side the cost of staying quiet is someone planning a call they cannot make.
+  const policyRows = (legs ? airlines : code ? [{ code, entry }] : [])
+    .map((l) => ({ l, policy: CALL_POLICY[l.code] }))
+    .filter((x) => x.policy && !x.policy.check);
+  if (v.key !== "NONE") {
+    for (const { l, policy } of policyRows) {
+      const who = airlinesDiffer ? `<span class="fw-tip-who">${escapeHtml(l.entry.airline)}</span>` : "";
+      rows.push(tipRow("Calls", "", who + escapeHtml(CALL_POLICY_TEXT[policy.calls])));
+    }
   }
-  if (!multi && v.entry) {
-    const p = cleanProvider(v.provider);
+
+  if (entry) {
+    const raw = legs ? (weak.v ? weak.v.provider : providerLine(weak.entry.rules)) : v.provider;
     // for a no-wifi verdict the field usually carries the nuance that matters (a streaming LAN with
     // no uplink, say); a bare "None" only repeats the label
-    if (p && !/^none$/i.test(p)) rows.push(tipRow(v.key === "NONE" ? "Onboard" : "Provider", p));
+    const dark = v.key === "NONE" || (legs && weak.key === "NONE");
+    const p = dark ? cleanProvider(raw) : brandLine(raw) || cleanProvider(raw);
+    if (p && !/^none$/i.test(p)) rows.push(tipRow(dark ? "Onboard" : "Provider", p));
   }
-  rows.push(
-    tipRow(
-      "Aircraft",
-      v.aircraft ||
-        (v.fleetwide
-          ? v.aircraftNote || (v.noExpand ? "whole fleet, this view never names it" : "whole fleet, not named until you expand")
-          : "not shown")
-    )
-  );
-  if (!multi && v.entry && v.entry.access) {
-    const cost = costOf(v.entry.access);
-    const pts = accessPoints(v.entry.access, cost);
-    rows.push(
-      tipRow(
-        "Cost",
-        "",
-        (cost ? `<b class="fw-cost">${escapeHtml(cost)}</b>` : "") +
-          (pts.length ? `<ul class="fw-pts">${pts.map((p) => `<li>${escapeHtml(p)}</li>`).join("")}</ul>` : "")
-      )
-    );
+
+  const ac = aircraftText(v, Boolean(legsHtml));
+  if (ac) rows.push(tipRow("Aircraft", ac));
+
+  // Cost is the row a connection card used to drop entirely, and it is the one people compare on.
+  // With two airlines on the trip each gets its badge; the fine print follows only the airline
+  // whose leg set the verdict, so the card does not double in height.
+  // a price on a no-wifi card is the entertainment portal's, not internet's, so the row says what
+  // is on board rather than what internet costs. Only when every leg is dark, though: an airline
+  // whose 787 sells Wi-Fi and whose 737 has none is quoting the 787's price, and that is a cost.
+  const noWifi = legs ? legs.every((l) => l.key === "NONE") : v.key === "NONE";
+  if (airlinesDiffer) {
+    const cells = airlines
+      .filter((l) => l.entry && l.entry.access)
+      .map((l) => `<div class="fw-tip-cost"><span class="fw-tip-who">${escapeHtml(l.entry.airline)}</span>${costHtml(l.entry, l.code === weak.code, l.key !== "NONE")}</div>`);
+    if (cells.length) rows.push(tipRow("Cost", "", cells.join("")));
+  } else if (entry && entry.access) {
+    const html = costHtml(entry, true, !noWifi);
+    if (html) rows.push(tipRow(noWifi ? "Onboard" : "Cost", "", html));
   }
 
   const notes = [];
   // the gap between "the link can carry this" and "the airline allows this" is the one people get
-  // caught by, so it is stated outright rather than left for the reader to infer
-  // only worth a note where the link would otherwise carry the call: on a slow or absent one the
-  // policy changes nothing, and the Calls row above already states it
+  // caught by, so it is stated outright rather than left for the reader to infer. Only worth a note
+  // where the link would otherwise carry the call: on a slow or absent one the policy changes nothing.
   const fastLink = v.key === "LEO" || v.key === "MEO" || v.key === "VARIES";
-  // an unverified policy is hedged in the note as well as the row: a confident sentence is the one
-  // people quote back at us, and we only have the airline's own wording for some of these
-  const says = policy && policy.check ? "is reported to restrict" : "restricts";
-  if (policy && policy.calls === "no" && fastLink) {
-    notes.push(`📵 ${v.entry.airline} ${says} voice and video calls over wifi. The link can carry one; the airline is the limit.`);
+  if (fastLink) {
+    const barred = [];
+    const reported = [];
+    const voiceOnly = [];
+    for (const l of legs ? airlines : code ? [{ code, entry }] : []) {
+      const policy = CALL_POLICY[l.code];
+      if (!policy || !l.entry) continue;
+      if (policy.calls === "no") (policy.check ? reported : barred).push(l.entry.airline);
+      if (policy.calls === "voice") voiceOnly.push(l.entry.airline);
+    }
+    const names = (list) => (list.length > 1 ? `${list.slice(0, -1).join(", ")} and ${list[list.length - 1]}` : list[0]);
+    const verb = (list, one, many) => (list.length > 1 ? many : one);
+    if (barred.length && reported.length) {
+      notes.push(`📵 Airline policy: ${names(barred)} ${verb(barred, "does", "do")} not allow voice or video calls and ${names(reported)} ${verb(reported, "is", "are")} reported not to, however fast the Wi-Fi is.`);
+    } else if (barred.length) {
+      notes.push(`📵 Airline policy: ${names(barred)} ${verb(barred, "does", "do")} not allow voice or video calls, however fast the Wi-Fi is.`);
+    } else if (reported.length) {
+      notes.push(`📵 Airline policy: ${names(reported)} ${verb(reported, "is", "are")} reported not to allow voice or video calls, however fast the Wi-Fi is.`);
+    }
+    if (voiceOnly.length) notes.push(`📵 Airline policy: ${names(voiceOnly)} ${verb(voiceOnly, "allows", "allow")} voice calls but not video calls.`);
   }
-  if (policy && policy.calls === "voice" && fastLink) {
-    notes.push(`📵 ${v.entry.airline} permits voice calls but not video calls over wifi.`);
-  }
-  if (v.conflict) notes.push("Google lists wifi on this flight and our aircraft-level data does not. Treat as uncertain.");
-  if (v.viaGoogle) notes.push("This verdict is Google's. Our registry has no confirmed provider for this aircraft.");
+  if (v.conflict) notes.push("⚠️ Google lists Wi-Fi for this flight, but our data for this plane says there is none. Treat it as uncertain.");
+  if (v.viaGoogle) notes.push("This answer comes from Google. We have not verified the Wi-Fi on this plane ourselves.");
   if (v.unresolvedOperator) {
-    notes.push(`Flown by ${v.unresolvedOperator}, which is not in the registry yet. This is the marketing airline's fleet answer, not that operator's.`);
+    notes.push(`⚠️ Operated by ${v.unresolvedOperator}, which we have not verified yet. The answer above is for the airline that sold the ticket.`);
   }
-  // saying plainly what we do not know is the part that earns the rest of the card. On a connection
-  // it also has to explain the mismatch the reader is about to hit: a carrier whose fleet is part
-  // fitted reads "Not guaranteed" here and can still turn out to be a Starlink aircraft on expansion.
+
+  // saying plainly what we do not know is the part that earns the rest of the card
   const info = !v.fleetwide
     ? ""
     : v.expandHint ||
       (v.noExpand
-        ? "Fleet-level verdict. This view never names the aircraft, so the exact one flying is unknown."
-        : multi
-          ? "Each airline above is its whole fleet. Expand to see the aircraft actually flying each leg."
-          : "Expand the flight for the verdict on the exact aircraft.");
+        ? "This is the answer for the whole fleet. This view never names the plane, so we cannot tell which one you get."
+        : legs
+          ? airlinesDiffer
+            ? "Each airline above is its whole fleet. Expand the flight to see the plane on each leg."
+            : "Whole fleet on every leg. Expand the flight to see the plane on each."
+          : "Expand the flight for the answer on the exact plane.");
+
+  const caption = airlinesDiffer && weak.entry ? `<div class="fw-tip-caption">Details below are for ${escapeHtml(weak.entry.airline)}, the leg that sets the result.</div>` : "";
 
   // provenance is the footnote, not a field: it matters enormously to us and to almost no reader
-  const src = multi
-    ? sourceLine(v.legs.map((l) => l.entry))
-    : v.entry
-      ? sourceLine([v.entry])
-      : "Google's own amenity data, not our own verification";
+  const src = legs ? sourceLine(legs.map((l) => l.entry)) : entry ? sourceLine([entry]) : "From Google's flight data, not our own checks";
+  const href = entry ? `https://flightwifi.app/airlines/${slugify(entry.airline)}/` : "https://flightwifi.app/";
+  const act = `<a class="fw-tip-link" href="${href}" target="_blank" rel="noopener">${entry ? escapeHtml(entry.airline) + " Wi-Fi details" : "Wi-Fi details"} ↗</a>`;
 
   return (
-    `<div class="fw-tip-head fw-${v.cls}"><span class="fw-tip-dot"></span>${escapeHtml(v.label)}</div>` +
-    `<div class="fw-tip-why">${escapeHtml(v.why)}</div>` +
-    legs +
+    `<div class="fw-tip-head fw-${v.cls}"><span class="fw-tip-dot"></span>${escapeHtml(v.label)}<span class="fw-tip-brand">FlightWifi</span></div>` +
+    `<div class="fw-tip-why">${escapeHtml(legs ? journeyWhy(v) : v.why)}</div>` +
+    legsHtml +
+    caption +
     `<div class="fw-tip-grid">${rows.join("")}</div>` +
     notes.map((n) => `<div class="fw-tip-note">${escapeHtml(n)}</div>`).join("") +
     (info ? `<div class="fw-tip-info">${escapeHtml(info)}</div>` : "") +
-    `<div class="fw-tip-src">${escapeHtml(src)}${v.latency ? ` · ${escapeHtml(v.latency)}` : ""}</div>`
+    `<div class="fw-tip-foot"><span class="fw-tip-src">${escapeHtml(src)}</span>` +
+    `<span class="fw-tip-act">${act}</span></div>`
   );
 }
-
-var activeChip = null;
 
 function placeTip(chip) {
   const r = chip.getBoundingClientRect();
@@ -536,10 +802,13 @@ function placeTip(chip) {
 
 function showTip(chip) {
   const v = chip.__fw;
-  if (!v) return;
+  if (!v) return false;
   if (!tip || !tip.isConnected) {
     tip = document.createElement("div");
     tip.className = "fw-tip";
+    tip.setAttribute("role", "tooltip");
+    tip.addEventListener("mouseenter", cancelHide);
+    tip.addEventListener("mouseleave", scheduleHide);
     document.body.appendChild(tip);
   }
   if (activeChip !== chip) tip.innerHTML = tipHtml(v);
@@ -548,9 +817,11 @@ function showTip(chip) {
   tip.style.display = "block";
   placeTip(chip);
   tip.style.visibility = "visible";
+  return true;
 }
 
 function hideTip() {
+  cancelHide();
   if (!activeChip) return;
   activeChip = null;
   if (tip) tip.style.display = "none";
@@ -571,13 +842,23 @@ document.addEventListener(
   "mouseover",
   (e) => {
     const chip = e.target.closest && e.target.closest(".fw-chip");
-    if (chip) showTip(chip);
-    else if (!(e.target.closest && e.target.closest(".fw-tip"))) hideTip();
+    if (chip) {
+      cancelHide();
+      showTip(chip);
+    } else if (e.target.closest && e.target.closest(".fw-tip")) {
+      cancelHide();
+    } else {
+      scheduleHide();
+    }
   },
   true
 );
-// chips are not focusable, so any focus change means attention moved elsewhere
-document.addEventListener("focusin", hideTip);
+// chips are not focusable, so any focus change means attention moved elsewhere; focus landing
+// inside the card (its link) is the one exception
+document.addEventListener("focusin", (e) => {
+  if (tip && tip.contains(e.target)) return;
+  hideTip();
+});
 document.addEventListener("scroll", trackTip, true);
 window.addEventListener("resize", trackTip);
 
@@ -680,7 +961,7 @@ function fwBoot(site, start, stop) {
   } catch (e) {
     previousIsAlive = false;
   }
-  if (previousIsAlive) return;
+  if (previousIsAlive) return false;
   window.__fwPing = () => {
     try {
       return !!(chrome.runtime && chrome.runtime.id);
@@ -734,4 +1015,5 @@ function fwBoot(site, start, stop) {
     if (!msg || msg.type !== "FW_STATUS") return;
     reply({ site, label: FW_SITE_LABEL[site], enabled: on === true, counts: fwCounts() });
   });
+  return true;
 }

@@ -1016,6 +1016,8 @@ details.faq > div {
 .src-news .src-pill { background: #1a212b; color: #93a3b8; }
 .src-blog .src-ico { border-color: #4a3f52; background: #1b1620; color: #b9a3c4; }
 .src-blog .src-pill { background: #221b29; color: #b9a3c4; }
+.src-tracker .src-ico { border-color: #2f4a4a; background: #121c1c; color: #8fc4c0; }
+.src-tracker .src-pill { background: #172424; color: #8fc4c0; }
 .src-reference .src-ico { border-color: #44423a; background: #1a1915; color: #bcb49a; }
 .src-reference .src-pill { background: #23211a; color: #bcb49a; }
 .src-other .src-ico { border-color: #3d3a3a; background: #171616; color: #9a9494; }
@@ -1108,6 +1110,8 @@ details.faq > div {
   .src-news .src-pill { background: #eef1f4; color: #5b6774; }
   .src-blog .src-ico { border-color: #ddd4e4; background: #f4eff7; color: #6c5780; }
   .src-blog .src-pill { background: #f4eff7; color: #6c5780; }
+  .src-tracker .src-ico { border-color: #c9dedd; background: #e9f4f3; color: #2f6b68; }
+  .src-tracker .src-pill { background: #e9f4f3; color: #2f6b68; }
   .src-reference .src-ico { border-color: #ded9c8; background: #f5f2e7; color: #6d6647; }
   .src-reference .src-pill { background: #f5f2e7; color: #6d6647; }
   .src-other .src-ico { border-color: #ded9d9; background: #f3f1f1; color: #6b6565; }

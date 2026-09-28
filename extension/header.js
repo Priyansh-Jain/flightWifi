@@ -12,6 +12,7 @@
 
 var FW_BTN_ID = "fw-header-btn";
 var FW_CELL_ID = "fw-header-cell";
+var FW_COUNT_ID = "fw-header-count";
 
 // Google's global bar namespaces every class with gb_, and while the suffix letters rotate between
 // releases the prefix has been stable for years. Rather than pin to one class, find the right-hand
@@ -64,7 +65,9 @@ var FW_HEADER_CSS =
   "border-color:var(--fw-ring)!important;background:var(--fw-bg)!important}" +
   "#fw-header-btn:hover{background:var(--fw-hover)!important}" +
   "body[data-theme=\"dark\"] #fw-header-btn{--fw-ring:#5f6368;--fw-bg:transparent;--fw-hover:rgba(232,234,237,.08);--fw-glyph:#e8eaed}" +
-  "@media (prefers-color-scheme:dark){body:not([data-theme=\"light\"]) #fw-header-btn{--fw-ring:#5f6368;--fw-bg:transparent;--fw-hover:rgba(232,234,237,.08);--fw-glyph:#e8eaed}}";
+  "@media (prefers-color-scheme:dark){body:not([data-theme=\"light\"]) #fw-header-btn{--fw-ring:#5f6368;--fw-bg:transparent;--fw-hover:rgba(232,234,237,.08);--fw-glyph:#e8eaed}}" +
+  "#fw-header-cell.fw-float #fw-header-btn{--fw-ring:#202124;--fw-bg:#202124;--fw-hover:#303134;--fw-glyph:#ffffff}" +
+  ":root.fw-dark #fw-header-cell.fw-float #fw-header-btn{--fw-ring:#ffffff;--fw-bg:#ffffff;--fw-hover:#f1f3f4;--fw-glyph:#0a0a0a}";
 
 function fwEnsureHeaderStyle() {
   if (document.getElementById(FW_STYLE_ID)) return;
@@ -105,8 +108,8 @@ function fwOpenHeaderPanel(btn) {
   const r = btn.getBoundingClientRect();
   host.style.cssText = [
     "position:fixed",
-    `top:${Math.round(r.bottom + 8)}px`,
-    `right:${Math.max(8, Math.round(window.innerWidth - r.right))}px`,
+    r.top < window.innerHeight / 2 ? `top:${Math.round(r.bottom + 8)}px` : `bottom:${Math.round(window.innerHeight - r.top + 8)}px`,
+    r.left < window.innerWidth / 2 ? `left:${Math.max(8, Math.round(r.left))}px` : `right:${Math.max(8, Math.round(window.innerWidth - r.right))}px`,
     "z-index:2147483647",
     "border-radius:12px",
     "overflow:hidden",
@@ -121,8 +124,8 @@ function fwOpenHeaderPanel(btn) {
   frame.id = "fw-header-frame";
   frame.src = chrome.runtime.getURL("popup/popup.html");
   frame.setAttribute("title", "FlightWifi");
-  // 320 matches the popup's own width; the height is provisional until the popup reports its own.
-  frame.style.cssText = "width:320px;height:320px;border:0;display:block;background:transparent;color-scheme:normal";
+  // 400 matches the popup's own width; the height is provisional until the popup reports its own.
+  frame.style.cssText = "width:400px;height:540px;border:0;display:block;background:transparent;color-scheme:normal";
   host.appendChild(frame);
   document.body.appendChild(host);
   btn.setAttribute("aria-expanded", "true");
@@ -257,6 +260,50 @@ async function fwOpenToolbarPopup(btn) {
   }
 }
 
+function fwMakeButton() {
+  const btn = document.createElement("button");
+  btn.id = FW_BTN_ID;
+  btn.type = "button";
+  btn.title = "FlightWifi";
+  btn.setAttribute("aria-label", "FlightWifi summary");
+  btn.setAttribute("aria-expanded", "false");
+
+  /* The glyph lives in a shadow root. Google's stylesheet has rules like `.gb_Ra svg { color: ... }`
+     that match any svg inside its header, ours included, and they beat an inline colour on the
+     button. Nothing outside a shadow tree can select what is inside it, so the glyph keeps the
+     colour we give it. The colour arrives through a custom property, which does inherit across the
+     boundary. */
+  const mark = document.createElement("span");
+  mark.id = FW_MARK_ID;
+  mark.style.cssText = "display:block;line-height:0";
+  /* The spinner is the answer to "did my click register?": it is on screen in the first frame after
+     the click, while the real popup takes anything from a third of a second to two. It fades the
+     glyph and turns a thin arc around it; under reduced motion it is a still ring instead. */
+  mark.attachShadow({ mode: "open" }).innerHTML =
+    "<style>" +
+    ":host{display:block;line-height:0;position:relative}" +
+    "svg{display:block;color:var(--fw-glyph,#0a0a0a);transition:opacity .12s}" +
+    ":host([data-busy]) svg{opacity:.3}" +
+    ".ring{position:absolute;left:50%;top:50%;width:32px;height:32px;margin:-16px 0 0 -16px;border-radius:50%;" +
+    "border:2px solid transparent;border-top-color:var(--fw-glyph,#0a0a0a);opacity:0;pointer-events:none}" +
+    ":host([data-busy]) .ring{opacity:.85;animation:fw-spin .65s linear infinite}" +
+    "@keyframes fw-spin{to{transform:rotate(360deg)}}" +
+    "@media (prefers-reduced-motion:reduce){:host([data-busy]) .ring{animation:none;border-color:var(--fw-glyph,#0a0a0a);opacity:.3}}" +
+    "</style>" + FW_MARK + '<span class="ring"></span>';
+  btn.appendChild(mark);
+
+  btn.addEventListener("pointerenter", fwWarmWorker);
+  btn.addEventListener("focus", fwWarmWorker);
+  btn.addEventListener("click", (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    if (document.getElementById("fw-header-panel")) fwCloseHeaderPanel();
+    else void fwOpenToolbarPopup(btn);
+  });
+
+  return btn;
+}
+
 function fwInjectHeaderButton() {
   /* After the extension reloads or updates, this copy of the script lives on in the tab with no
      chrome.runtime behind it. Its button could open nothing, so take it away rather than leave a
@@ -293,12 +340,7 @@ function fwInjectHeaderButton() {
     "line-height:0"
   ].join(";");
 
-  const btn = document.createElement("button");
-  btn.id = FW_BTN_ID;
-  btn.type = "button";
-  btn.title = "FlightWifi";
-  btn.setAttribute("aria-label", "FlightWifi summary");
-  btn.setAttribute("aria-expanded", "false");
+  const btn = fwMakeButton();
   btn.style.cssText = [
     "display:inline-grid",
     "place-items:center",
@@ -314,40 +356,6 @@ function fwInjectHeaderButton() {
     "line-height:0",
     "vertical-align:middle"
   ].join(";");
-
-  /* The glyph lives in a shadow root. Google's stylesheet has rules like `.gb_Ra svg { color: ... }`
-     that match any svg inside its header, ours included, and they beat an inline colour on the
-     button. Nothing outside a shadow tree can select what is inside it, so the glyph keeps the
-     colour we give it. The colour arrives through a custom property, which does inherit across the
-     boundary. */
-  const mark = document.createElement("span");
-  mark.id = FW_MARK_ID;
-  mark.style.cssText = "display:block;line-height:0";
-  /* The spinner is the answer to "did my click register?": it is on screen in the first frame after
-     the click, while the real popup takes anything from a third of a second to two. It fades the
-     glyph and turns a thin arc around it; under reduced motion it is a still ring instead. */
-  mark.attachShadow({ mode: "open" }).innerHTML =
-    "<style>" +
-    ":host{display:block;line-height:0;position:relative}" +
-    "svg{display:block;color:var(--fw-glyph,#0a0a0a);transition:opacity .12s}" +
-    ":host([data-busy]) svg{opacity:.3}" +
-    ".ring{position:absolute;left:50%;top:50%;width:32px;height:32px;margin:-16px 0 0 -16px;border-radius:50%;" +
-    "border:2px solid transparent;border-top-color:var(--fw-glyph,#0a0a0a);opacity:0;pointer-events:none}" +
-    ":host([data-busy]) .ring{opacity:.85;animation:fw-spin .65s linear infinite}" +
-    "@keyframes fw-spin{to{transform:rotate(360deg)}}" +
-    "@media (prefers-reduced-motion:reduce){:host([data-busy]) .ring{animation:none;border-color:var(--fw-glyph,#0a0a0a);opacity:.3}}" +
-    "</style>" + FW_MARK + '<span class="ring"></span>';
-  btn.appendChild(mark);
-
-  btn.addEventListener("pointerenter", fwWarmWorker);
-  btn.addEventListener("focus", fwWarmWorker);
-  btn.addEventListener("click", (ev) => {
-    ev.preventDefault();
-    ev.stopPropagation();
-    if (document.getElementById("fw-header-panel")) fwCloseHeaderPanel();
-    else void fwOpenToolbarPopup(btn);
-  });
-
   cell.appendChild(btn);
   const peerBefore = peerBox ? Math.round(peerBox.top) : null;
   row.insertBefore(cell, row.firstChild);
@@ -359,6 +367,59 @@ function fwInjectHeaderButton() {
   const peerAfter = peer ? Math.round(peer.getBoundingClientRect().top) : null;
   const shiftedGoogle = peerBefore !== null && peerAfter !== null && Math.abs(peerAfter - peerBefore) > 4;
   if (placed.top < 0 || placed.top > 80 || placed.height < 20 || shiftedGoogle) cell.remove();
+}
+
+function fwInjectFloatingButton() {
+  if (!chrome.runtime || !chrome.runtime.id) {
+    fwRemoveHeaderButton();
+    return;
+  }
+  const existing = document.getElementById(FW_BTN_ID);
+  if (existing) {
+    fwRefreshFloatCount(existing);
+    return;
+  }
+  if (!document.body) return;
+  fwEnsureHeaderStyle();
+  const host = document.createElement("div");
+  host.id = FW_CELL_ID;
+  host.classList.add("fw-float");
+  host.style.cssText = "position:fixed;left:16px;bottom:32px;z-index:2147483646;line-height:0";
+  const btn = fwMakeButton();
+  btn.style.cssText = [
+    "display:inline-flex",
+    "align-items:center",
+    "gap:6px",
+    "height:36px",
+    "padding:0 10px 0 8px",
+    "border-radius:18px",
+    "border-width:1px",
+    "border-style:solid",
+    "cursor:pointer",
+    "box-sizing:border-box",
+    "line-height:0",
+    "box-shadow:0 4px 14px rgba(0,0,0,.18)",
+    "font:600 12px/1 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif"
+  ].join(";");
+  const count = document.createElement("span");
+  count.id = FW_COUNT_ID;
+  count.style.cssText = "display:none;min-width:12px;text-align:center;line-height:1;color:var(--fw-glyph,#0a0a0a)";
+  btn.appendChild(count);
+  host.appendChild(btn);
+  document.body.appendChild(host);
+  fwRefreshFloatCount(btn);
+}
+
+function fwRefreshFloatCount(btn) {
+  const count = document.getElementById(FW_COUNT_ID);
+  if (!count) return;
+  const counts = typeof fwCounts === "function" ? fwCounts() : {};
+  const n = Object.keys(counts).reduce((sum, k) => sum + counts[k], 0);
+  const text = n ? String(n) : "";
+  if (count.textContent === text) return;
+  count.textContent = text;
+  count.style.display = n ? "inline-block" : "none";
+  btn.setAttribute("aria-label", n ? "FlightWifi summary, " + n + " flights checked on this page" : "FlightWifi summary");
 }
 
 function fwRemoveHeaderButton() {
@@ -373,8 +434,9 @@ function fwRemoveHeaderButton() {
 // Google re-renders its header on navigation inside the app, which drops anything we added, so the
 // button is re-checked on the same cheap interval the adapters already use rather than on its own
 // observer.
-function fwStartHeaderButton() {
-  fwInjectHeaderButton();
+function fwStartHeaderButton(mode) {
+  const inject = mode === "floating" ? fwInjectFloatingButton : fwInjectHeaderButton;
+  inject();
   fwStartKeepalive();
-  return setInterval(fwInjectHeaderButton, 2000);
+  return setInterval(inject, 2000);
 }

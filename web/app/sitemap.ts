@@ -35,6 +35,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     page("/about/", 0.4),
     page("/contact/", 0.4),
     page("/privacy/", 0.2),
+    page("/terms/", 0.2),
     ...airlineSlugs().map((s) => page(`/airlines/${s}/`, 0.7)),
     ...allPairs().map((p) => page(`/airlines/${p.airlineSlug}/${p.family.slug}/`, 0.6)),
     ...PROVIDERS.map((p) => page(`/providers/${p.slug}/`, 0.6)),

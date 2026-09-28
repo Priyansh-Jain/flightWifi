@@ -46,22 +46,58 @@ function soarAnchor(offer) {
   return offer;
 }
 
+var soarBridgeSeen = "";
+var soarBridgeMap = null;
+
+function soarBridgeRead() {
+  const node = document.getElementById("__fwSOAR");
+  if (!node) return;
+  const v = node.getAttribute("v") || "";
+  if (v === soarBridgeSeen) return;
+  soarBridgeSeen = v;
+  try {
+    soarBridgeMap = JSON.parse(node.textContent || "{}");
+  } catch (e) {
+    soarBridgeMap = null;
+  }
+}
+
 function processOffer(offer) {
-  if (offer.querySelector(".fw-sum")) return;
-  const codes = soarCodes(offer);
-  if (!codes.length) return;
-  const v = fleetVerdict(codes);
-  if (!v) return;
-  // the list view has no expansion of its own; the aircraft only appears once the offer is opened
-  v.expandHint = "Open the flight for the verdict on the exact aircraft.";
+  const existing = offer.querySelector(".fw-sum");
+  const entry = soarBridgeMap ? soarBridgeMap[offer.getAttribute("data-id")] : null;
+  if (existing && (!entry || !existing.__fw || !existing.__fw.fleetwide)) return;
+  const res = entry ? fwLegsVerdict(entry.segs) : null;
+  if (res && res.suppress) {
+    if (existing) existing.remove();
+    FW_TRACE.push(`soar-suppress:${res.ccs}`);
+    return;
+  }
+  let v = res && res.v;
+  let ccs = res && res.ccs;
+  let src = "bridge";
+  if (v) {
+    v.exact = true;
+  } else {
+    if (existing) return;
+    const codes = soarCodes(offer);
+    if (!codes.length) return;
+    v = fleetVerdict(codes);
+    if (!v) return;
+    // the list view has no expansion of its own; the aircraft only appears once the offer is opened
+    v.expandHint = "Open the flight for the verdict on the exact aircraft.";
+    ccs = codes.join("+");
+    src = "fleet";
+  }
+  if (existing) existing.remove();
   const chip = buildChip(v);
   chip.classList.add("fw-sum", "fw-soar", "fw-soar-badge");
-  chip.setAttribute("data-fw-carrier", codes.join("+"));
-  chip.setAttribute("data-fw-src", "fleet");
+  chip.setAttribute("data-fw-carrier", ccs);
+  chip.setAttribute("data-fw-src", src);
+  chip.setAttribute("data-fw-ac", v.aircraft || "");
   const anchor = soarAnchor(offer);
   if (!anchor) return;
   anchor.appendChild(chip);
-  FW_TRACE.push(`soar:${codes.join("+")}:${v.cls}`);
+  FW_TRACE.push(`soar:${ccs}:${v.cls}:${src}`);
 }
 
 /* ---------- detail panel: the one Soar view that names the aircraft ---------- */
@@ -103,14 +139,14 @@ function processSegment(node) {
   const seg = parseSoarSegment(node.textContent || "");
   if (!seg) return;
 
-  // the operating flight number is the stronger signal: on a codeshare the marketing name in the
-  // same line belongs to a different carrier than the metal
+  // the airline name is the stronger signal: on a codeshare Soar prints the operating carrier's
+  // name beside the marketing flight number ("United Airlines · … · LH 7603")
   let code = null;
-  if (seg.flight) {
+  if (seg.airline) code = carrierExact(seg.airline) || carrierByName(seg.airline);
+  if (!code && seg.flight) {
     const c = regCode(SOAR_FLIGHTNO_RX.exec(seg.flight)[1]);
     if (WIFI_REGISTRY[c]) code = c;
   }
-  if (!code && seg.airline) code = carrierExact(seg.airline) || carrierByName(seg.airline);
   if (!code) return;
 
   const v = verdictFor(code, seg.aircraft || "", "nodata");
@@ -135,8 +171,8 @@ function sweep() {
   let processed = 0;
   try {
     if (sweepCount % 30 === 1) syncTheme();
+    soarBridgeRead();
     document.querySelectorAll(SOAR_OFFER_SEL).forEach((offer) => {
-      if (offer.querySelector(".fw-sum")) return;
       processed++;
       processOffer(offer);
     });
@@ -144,6 +180,7 @@ function sweep() {
     soarLeaves(document.body).forEach((e) => {
       const t = e.textContent || "";
       if (t.length > 160 || t.indexOf("·") === -1 || !SOAR_AC_RX.test(t)) return;
+      if (e.closest(".fw-tip, .fw-chip")) return;
       processed++;
       processSegment(e);
     });
@@ -177,10 +214,12 @@ fwBoot(
   () => {
     observer.observe(document.body, { childList: true, subtree: true });
     document.addEventListener("visibilitychange", sweep);
+    document.addEventListener("fw:soar", sweep);
     sweep();
   },
   () => {
     observer.disconnect();
     document.removeEventListener("visibilitychange", sweep);
+    document.removeEventListener("fw:soar", sweep);
   }
 );
