@@ -23,7 +23,7 @@ function norm(s) {
 // normalising will bridge. Added only when a route sweep shows a real gap, never guessed.
 // "lot" is safe only because these lookups match the whole cell text exactly; as a substring it
 // would fire on the English word.
-var TRADE_NAMES = { "scandinavian airlines": "SK", lot: "LO", "air baltic corporation a/s": "BT" };
+var TRADE_NAMES = { "scandinavian airlines": "SK", lot: "LO", "air baltic corporation a/s": "BT", "ba cityflyer": "BA" };
 
 // Sister AOCs flying the same branded fleet under a second code. This is NOT for lookalike names
 // (Batik Malaysia is a different airline from Batik Indonesia and stays out): an alias is only
@@ -138,6 +138,8 @@ var CALL_POLICY = {
   WS: { calls: "no", src: "westjet.com" },
   SK: { calls: "no", src: "flysas.com" },
   NZ: { calls: "no", src: "airnewzealand.com" },
+  LX: { calls: "no", src: "swiss.com" },
+  OS: { calls: "no", src: "austrianairlines.ag" },
   VS: { calls: "voice", src: "virginatlantic.com" },
   BT: { calls: "yes", src: "airbaltic.com" },
   // consistently reported, airline page not retrievable for direct verification
@@ -431,16 +433,36 @@ function orderBrands(names) {
   return use.length > 1 ? use.join(" and ") : use[0] || "";
 }
 
-function brandLine(text) {
-  return orderBrands(brandsIn(text));
+function brandsFor(text, entry) {
+  const sl = entry && entry.starlink;
+  return brandsIn(text).filter((n) => n !== "Starlink" || !sl || sl.status === "flying");
+}
+
+function brandLine(text, entry) {
+  return orderBrands(brandsFor(text, entry));
+}
+
+function mixedBrandLine(text, key, orbit, entry) {
+  const names = brandsFor(text, entry);
+  if (names.indexOf("Starlink") === -1 || key === "LEO" || key === "MEO") return "";
+  const rest = names.filter((n) => n !== "Starlink").slice(0, PROVIDER_BRAND_MAX).join(" and ");
+  const partial = key === "PARTIAL" || key === "LEG_PARTIAL";
+  const older = rest || (!partial || /GEO|MEO|A2G/.test(orbit || "") ? "older Wi-Fi" : "");
+  if (!older) return "Starlink on some planes only";
+  return `Starlink on some planes, ${older}${partial ? " or none" : ""} on others`;
+}
+
+function providerRow(raw, key, orbit, entry) {
+  if (key === "NONE") return { k: "Onboard", p: cleanProvider(raw) };
+  return { k: "Provider", p: mixedBrandLine(raw, key, orbit, entry) || brandLine(raw, entry) || cleanProvider(raw) };
 }
 
 // joined across a fleet, "None" alongside a real provider reads as a product name
-function providerLine(rules) {
+function providerLine(rules, entry) {
   const live = [];
   for (const r of rules) {
     if (classifyOrbit(r.orbit) === "NONE") continue;
-    for (const n of brandsIn(r.provider)) if (live.indexOf(n) === -1) live.push(n);
+    for (const n of brandsFor(r.provider, entry)) if (live.indexOf(n) === -1) live.push(n);
   }
   const brands = orderBrands(live);
   if (brands) return brands;
@@ -490,7 +512,7 @@ function fleetVerdict(codes) {
   return decorate(legsDiffer && key === "PARTIAL" ? "LEG_PARTIAL" : key, {
     legs,
     entry: only,
-    provider: only ? providerLine(only.rules) : null,
+    provider: only ? providerLine(only.rules, only) : null,
     orbit: only ? only.rules.map((r) => r.orbit).join(" / ") : null,
     fleetwide: true
   });
@@ -699,12 +721,12 @@ function tipHtml(v) {
   }
 
   if (entry) {
-    const raw = legs ? (weak.v ? weak.v.provider : providerLine(weak.entry.rules)) : v.provider;
+    const raw = legs ? (weak.v ? weak.v.provider : providerLine(weak.entry.rules, weak.entry)) : v.provider;
+    const orbit = legs ? (weak.v ? weak.v.orbit : weak.entry.rules.map((r) => r.orbit).join(" / ")) : v.orbit;
     // for a no-wifi verdict the field usually carries the nuance that matters (a streaming LAN with
     // no uplink, say); a bare "None" only repeats the label
-    const dark = v.key === "NONE" || (legs && weak.key === "NONE");
-    const p = dark ? cleanProvider(raw) : brandLine(raw) || cleanProvider(raw);
-    if (p && !/^none$/i.test(p)) rows.push(tipRow(dark ? "Onboard" : "Provider", p));
+    const row = providerRow(raw, legs ? weak.key : v.key, orbit, entry);
+    if (row.p && !/^none$/i.test(row.p)) rows.push(tipRow(row.k, row.p));
   }
 
   const ac = aircraftText(v, Boolean(legsHtml));
@@ -933,7 +955,7 @@ var FW_TRACE = [];
    not what we attempted. Also gates each site behind its own setting, kept here rather than in the
    three site files so their boot tails stay identical. */
 
-var FW_SITE_LABEL = { google: "Google Flights", skyscanner: "Skyscanner", soar: "Soar" };
+var FW_SITE_LABEL = { google: "Google Flights", skyscanner: "Skyscanner", soar: "Rift" };
 
 function fwCounts() {
   const out = {};

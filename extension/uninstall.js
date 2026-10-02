@@ -1,5 +1,6 @@
-/* The shipped background worker. It owns the two moments Chrome gives us: the install and the
-   removal. It asks for no permissions, which is why build.sh swaps it in for the dev reloader. */
+/* The shipped background worker. It owns the two moments Chrome gives us, the install and the
+   removal, plus the Rift scripts once the user allows that site. It asks for no permissions beyond
+   the manifest's, which is why build.sh swaps it in for the dev reloader. */
 
 const UNINSTALL_PAGE = "https://flightwifi.app/uninstall/";
 
@@ -44,6 +45,30 @@ function onInstalled(details) {
 setUninstallPage();
 chrome.runtime.onInstalled.addListener(onInstalled);
 chrome.runtime.onStartup.addListener(setUninstallPage);
+
+const RIFT_ORIGINS = ["https://rift.co/*"];
+const RIFT_SCRIPTS = [
+  { id: "fw-rift-bridge", matches: RIFT_ORIGINS, js: ["soar-bridge.js"], runAt: "document_end", world: "MAIN" },
+  { id: "fw-rift", matches: RIFT_ORIGINS, js: ["data/registry.js", "core.js", "soar.js"], css: ["chip.css"], runAt: "document_end" }
+];
+
+async function syncRiftScripts() {
+  try {
+    const granted = await chrome.permissions.contains({ origins: RIFT_ORIGINS });
+    const have = await chrome.scripting.getRegisteredContentScripts({ ids: RIFT_SCRIPTS.map((s) => s.id) });
+    if (have.length && (!granted || have.length !== RIFT_SCRIPTS.length)) {
+      await chrome.scripting.unregisterContentScripts({ ids: have.map((s) => s.id) });
+    }
+    if (granted && have.length !== RIFT_SCRIPTS.length) {
+      await chrome.scripting.registerContentScripts(RIFT_SCRIPTS);
+    }
+  } catch (e) {}
+}
+
+chrome.permissions.onAdded.addListener(syncRiftScripts);
+chrome.permissions.onRemoved.addListener(syncRiftScripts);
+chrome.runtime.onInstalled.addListener(syncRiftScripts);
+chrome.runtime.onStartup.addListener(syncRiftScripts);
 
 /* Clicking the in-page header button should open this extension's real popup, anchored to the
    toolbar the way clicking the icon does. A content script cannot do that itself, but

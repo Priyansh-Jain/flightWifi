@@ -46,19 +46,23 @@ const SITE_INJECT = [
     rx: /^https:\/\/www\.google\.[a-z.]{2,7}\/travel\/flights/,
     label: "Google Flights",
     main: ["google-bridge.js"],
-    iso: ["data/registry.js", "core.js", "header.js", "google.js"]
+    iso: ["data/registry.js", "core.js", "header.js", "google.js"],
+    css: ["chip.css"]
   },
   {
     rx: /^https?:\/\/www\.skyscanner\.[a-z.]{2,7}\/transport\//,
     label: "Skyscanner",
     main: ["skyscanner-bridge.js"],
-    iso: ["data/registry.js", "core.js", "header.js", "skyscanner.js"]
+    iso: ["data/registry.js", "core.js", "header.js", "skyscanner.js"],
+    css: ["chip.css"]
   },
   {
-    rx: /^https?:\/\/soar\.flights\//,
-    label: "Soar",
+    rx: /^https:\/\/rift\.co\//,
+    label: "Rift",
     main: ["soar-bridge.js"],
-    iso: ["data/registry.js", "core.js", "soar.js"]
+    iso: ["data/registry.js", "core.js", "soar.js"],
+    css: ["chip.css"],
+    optional: ["https://rift.co/*"]
   }
 ];
 
@@ -104,6 +108,15 @@ function svg(paths, className) {
   node.innerHTML = paths;
   return node;
 }
+
+$("siteAuto").addEventListener("click", async () => {
+  const btn = $("siteAuto");
+  const origins = (btn.dataset.origins || "").split(" ").filter(Boolean);
+  if (!origins.length) return;
+  try {
+    if (await chrome.permissions.request({ origins })) btn.hidden = true;
+  } catch {}
+});
 
 /* ---------- footer meta, read from the bundled registry so it can never drift ---------- */
 
@@ -239,6 +252,7 @@ async function loadStatus() {
     }
 
     currentSite = status ? status.site : null;
+    syncAutoButton(site);
 
     const signature = JSON.stringify([status || null, site ? site.label : null]);
     if (signature === lastPainted) return;
@@ -264,6 +278,23 @@ async function loadStatus() {
   }
 }
 
+async function syncAutoButton(site) {
+  const btn = $("siteAuto");
+  if (!site || !site.optional) {
+    btn.hidden = true;
+    return;
+  }
+  let granted = false;
+  try {
+    granted = await chrome.permissions.contains({ origins: site.optional });
+  } catch {
+    granted = false;
+  }
+  $("siteAutoTitle").textContent = `Show verdicts on ${site.label} automatically`;
+  btn.dataset.origins = site.optional.join(" ");
+  btn.hidden = granted;
+}
+
 // Puts the content script back into an orphaned tab. Only the top frame is touched, which is where
 // the manifest puts it too. Silently does nothing anywhere the caller could not match a site.
 async function repair(tab, site) {
@@ -272,6 +303,7 @@ async function repair(tab, site) {
       await chrome.scripting.executeScript({ target: { tabId: tab.id, frameIds: [0] }, files: site.main, world: "MAIN" });
     }
     await chrome.scripting.executeScript({ target: { tabId: tab.id, frameIds: [0] }, files: site.iso });
+    if (site.css) await chrome.scripting.insertCSS({ target: { tabId: tab.id, frameIds: [0] }, files: site.css });
   } catch {
     return null;
   }

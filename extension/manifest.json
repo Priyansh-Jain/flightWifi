@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "FlightWifi - Flight WiFi & Starlink Checker",
-  "version": "1.1.9",
+  "version": "1.2.1",
   "description": "Check any flight's WiFi before you book: Starlink or old satellite, free or paid, video calls or not. Google Flights + Skyscanner.",
   "action": {
     "default_popup": "popup/popup.html",
@@ -24,6 +24,9 @@
     "storage",
     "activeTab",
     "scripting"
+  ],
+  "optional_host_permissions": [
+    "https://rift.co/*"
   ],
   "background": {
     "service_worker": "dev-reload.js"
@@ -257,30 +260,6 @@
         "core.js",
         "header.js",
         "skyscanner.js"
-      ],
-      "css": [
-        "chip.css"
-      ],
-      "run_at": "document_end"
-    },
-    {
-      "matches": [
-        "*://soar.flights/*"
-      ],
-      "js": [
-        "soar-bridge.js"
-      ],
-      "run_at": "document_end",
-      "world": "MAIN"
-    },
-    {
-      "matches": [
-        "*://soar.flights/*"
-      ],
-      "js": [
-        "data/registry.js",
-        "core.js",
-        "soar.js"
       ],
       "css": [
         "chip.css"

@@ -35,6 +35,14 @@
         </header>
 
         <main class="body">
+          <button id="siteAuto" class="card card-link" type="button" hidden>
+            <span class="tile tile-brand" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" /></svg></span>
+            <span class="grow">
+              <span id="siteAutoTitle" class="card-t">Show verdicts on Rift automatically</span>
+              <span class="card-s">Or open FlightWifi on each search</span>
+            </span>
+            <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
+          </button>
           <!-- supported site, verdicts on, at least one result on screen -->
           <section id="active" hidden>
             <div class="hero">
@@ -70,7 +78,7 @@
               <p class="hero-title">Know your flight's Wi&#8209;Fi before you book</p>
               <p class="hero-text">Search flights normally. FlightWifi adds the Wi&#8209;Fi verdict next to each result.</p>
               <a class="btn btn-light" href="https://www.google.com/travel/flights" target="_blank" rel="noopener">Open Google Flights</a>
-              <p class="hero-foot">Also works on Skyscanner and Soar</p>
+              <p class="hero-foot">Also works on Skyscanner and Rift</p>
             </div>
             <button class="card card-link" type="button" data-go="lookup">
               <span class="tile tile-brand" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" /><path d="M20.5 20.5 16 16" /></svg></span>
@@ -177,7 +185,7 @@
           <div class="cards">
             <label class="card row"><span class="grow card-t">Google Flights</span><input type="checkbox" id="s-google" class="sw" checked /><span class="track" aria-hidden="true"></span></label>
             <label class="card row"><span class="grow card-t">Skyscanner</span><input type="checkbox" id="s-skyscanner" class="sw" checked /><span class="track" aria-hidden="true"></span></label>
-            <label class="card row"><span class="grow card-t">Soar</span><input type="checkbox" id="s-soar" class="sw" checked /><span class="track" aria-hidden="true"></span></label>
+            <label class="card row"><span class="grow card-t">Rift</span><input type="checkbox" id="s-soar" class="sw" checked /><span class="track" aria-hidden="true"></span></label>
           </div>
           <p class="note">Changes apply to open tabs straight away.</p>
 

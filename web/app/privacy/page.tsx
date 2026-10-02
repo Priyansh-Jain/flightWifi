@@ -15,7 +15,7 @@ export default function Privacy() {
       <Breadcrumbs crumbs={[{ name: "Home", href: "/" }, { name: "Privacy", href: "/privacy/" }]} />
       <section className="mx-auto w-full max-w-[46rem] px-5 pt-6">
         <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Privacy policy</h1>
-        <p className="mt-2 text-sm text-[var(--muted)]">Last updated: 28 September 2026</p>
+        <p className="mt-2 text-sm text-[var(--muted)]">Last updated: 29 September 2026</p>
       </section>
       <div className="mx-auto w-full max-w-[46rem] px-5 py-8">
         <div className="prose">
@@ -44,20 +44,27 @@ export default function Privacy() {
           </p>
           <h3>Permissions</h3>
           <p>
-            The extension asks Chrome for three permissions. None of them reads, stores or sends
-            anything about you, and none of them shows an install warning.
+            The extension asks Chrome for three permissions, plus one optional site you can allow
+            later. None of them reads, stores or sends anything about you, and none of them shows an
+            install warning.
           </p>
           <ul>
             <li>
               The storage permission keeps your per-site on/off switches for Google Flights,
-              Skyscanner and Soar on this device. The popup also remembers your light or dark theme
+              Skyscanner and Rift on this device. The popup also remembers your light or dark theme
               choice on this device. Nothing else is stored.
             </li>
             <li>
               The activeTab and scripting permissions let the toolbar popup restart the extension on
               a flight search tab that was already open when the extension last updated, so you do
-              not have to reload the page. They apply only to the tab you clicked the icon on, only
-              at that moment, and never grant standing access to any site.
+              not have to reload the page. On Rift they are also how the verdicts appear when you
+              click the icon there. They apply only to the tab you clicked the icon on, only at that
+              moment, and never grant standing access to any site.
+            </li>
+            <li>
+              Rift (rift.co) is optional. The extension runs there by itself only if you allow it
+              from the popup, and that access covers rift.co pages and nothing else. You can take it
+              back at any time in Chrome&rsquo;s extension settings.
             </li>
           </ul>
           <p>

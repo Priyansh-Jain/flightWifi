@@ -116,7 +116,7 @@ export const ARTICLES: Record<string, BlogArticle> = {
       "- Login fails. Turn the VPN off to sign in, then reconnect it. Air France calls this out explicitly.",
       "- You are online and the call drops. Not a fault. High-orbit systems add around 600 ms of delay, and Delta and United prohibit calls even on fast Wi-Fi. [Here is what latency decides](/blog/can-you-work-on-plane-wifi/).",
       "## One more thing: free on which plane?",
-      "Eight of the 13 airlines above are somewhere between two systems. The same route can be a Starlink aircraft one day and a decade-old satellite system the next, and the airline's Wi-Fi page describes both as if you will get the better one. The [FlightWifi extension](/chrome-extension/) reads the exact aircraft on every Google Flights, Skyscanner and Soar result and shows which one you are actually booking. It is free, collects nothing, and the [dataset behind it is open](/data.json).",
+      "Eight of the 13 airlines above are somewhere between two systems. The same route can be a Starlink aircraft one day and a decade-old satellite system the next, and the airline's Wi-Fi page describes both as if you will get the better one. The [FlightWifi extension](/chrome-extension/) reads the exact aircraft on every Google Flights, Skyscanner and Rift result and shows which one you are actually booking. It is free, collects nothing, and the [dataset behind it is open](/data.json).",
       "Method: every connection step above comes from the airline's own Wi-Fi instructions or newsroom, read in September 2026. The fleet and pricing facts come from the same registry that powers the extension, with sources listed on each airline's page."
     ],
     faqs: [
@@ -171,7 +171,7 @@ export const ARTICLES: Record<string, BlogArticle> = {
       "## Fast without Starlink",
       "Starlink isn't the only low-orbit game. [Amazon's Kuiper](/providers/kuiper/) reaches JetBlue from 2027. [Eutelsat OneWeb](/providers/oneweb/) capacity is already flying in a multi-orbit setup at [Avianca](/airlines/avianca/), which had 10 A320-family aircraft live as of December 2025. [SES's mid-orbit O3b mPOWER](/providers/ses/) already flies at [Thai Airways](/airlines/thai-airways/) and is coming to Air Astana. And the old guard's [high-orbit systems](/providers/viasat/) remain perfectly fine for mail and browsing, just not for a video call.",
       "## Want to know before you book?",
-      "Fleet-level truth does not survive the booking screen. That's why the [FlightWifi extension](/chrome-extension/) reads the exact aircraft on every Google Flights, Skyscanner and Soar result and shows the verdict inline: video calls work, email and browsing, varies by aircraft, or no Wi-Fi at all.",
+      "Fleet-level truth does not survive the booking screen. That's why the [FlightWifi extension](/chrome-extension/) reads the exact aircraft on every Google Flights, Skyscanner and Rift result and shows the verdict inline: video calls work, email and browsing, varies by aircraft, or no Wi-Fi at all.",
       "{{image:tooltip}}",
       "Method: every claim traces to a source listed on that airline's page, checked airline by airline, with the airline's own publications preferred over anything written about them. The live tables on this page update with the registry, and the [full dataset is open](/data.json). Spotted something that has since changed? Tell me and I'll correct it."
     ],

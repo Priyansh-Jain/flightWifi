@@ -1,8 +1,8 @@
 # FlightWifi Privacy Policy
 
-Last updated: 28 September 2026
+Last updated: 29 September 2026
 
-FlightWifi is a browser extension that shows in-flight wifi quality verdicts on flight search results on Google Flights, Skyscanner and Soar.
+FlightWifi is a browser extension that shows in-flight wifi quality verdicts on flight search results on Google Flights, Skyscanner and Rift.
 
 ## Data collection
 
@@ -33,15 +33,17 @@ Setting that page requires no additional permissions.
 
 ## Permissions
 
-The extension requests three permissions. None of them reads, stores or sends anything about you:
+The extension requests three permissions, plus one optional site you can allow later. None of them reads, stores or sends anything about you:
 
-- `storage` keeps your per-site on/off switches (Google Flights, Skyscanner, Soar) on this device only. The popup also remembers your light or dark theme choice on this device
-- `activeTab` and `scripting` let the toolbar popup restart the extension on a flight search tab that was already open when the extension last updated. They apply only to the tab you clicked the icon on, only at that moment, and never grant standing access to any site
+- `storage` keeps your per-site on/off switches (Google Flights, Skyscanner, Rift) on this device only. The popup also remembers your light or dark theme choice on this device
+- `activeTab` and `scripting` let the toolbar popup restart the extension on a flight search tab that was already open when the extension last updated. On Rift they are also how the verdicts appear when you click the icon there. They apply only to the tab you clicked the icon on, only at that moment, and never grant standing access to any site
+- `rift.co` is an optional host permission. The extension runs on Rift by itself only if you allow it from the popup, and that access covers rift.co pages and nothing else. You can take it back at any time in Chrome's extension settings
 
 Beyond that, its only access is content scripts on the flight search pages it annotates:
 
 - `www.google.com/travel/flights*`
 - `www.skyscanner.net`, `www.skyscanner.com`, `www.skyscanner.co.uk`, `www.skyscanner.co.in` under `/transport/flights/*`
+- `rift.co`, only after you allow it from the popup
 
 ## Third parties
 

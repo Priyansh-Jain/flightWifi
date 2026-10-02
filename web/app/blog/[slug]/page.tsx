@@ -166,7 +166,7 @@ function InlineCta() {
         <strong>Want this on the flight you are about to book?</strong>
         <span>
           The free extension shows the verdict for the exact aircraft on Google
-          Flights, Skyscanner and Soar.
+          Flights, Skyscanner and Rift.
         </span>
       </div>
       <a href={CHROME_STORE_URL} rel="noopener">

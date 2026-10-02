@@ -2,7 +2,7 @@
  "name": "FlightWifi airline wifi registry",
  "license": "CC-BY-4.0",
  "attribution": "FlightWifi, https://flightwifi.app",
- "compiled": "2026-09-28",
+ "compiled": "2026-10-02",
  "airlines": {
   "TK": {
    "airline": "Turkish Airlines",
@@ -272,14 +272,19 @@
     "status": "flying",
     "access": "free",
     "progress": {
-     "done": 5,
-     "of": 30,
-     "scope": "787 fleet, first phase (12 787-8s, then 18 787-9s)",
-     "as_of": "2026-06",
+     "done": 17,
+     "of": 300,
+     "scope": "whole fleet except the London City Embraer 190s by March 2028; so far 11 of 12 787-8s and 6 of 18 A350s",
+     "as_of": "2026-09-30",
      "basis": "trade",
-     "source": "https://simpleflying.com/british-airways-suspends-starlink-installations-later-this-year/"
+     "source": "https://www.paddleyourownkanoo.com/2026/09/30/british-airways-resumes-starlink-rollout-airbus-a350s-now-being-equipped-with-free-ultra-fast-in-flight-wi-fi/"
     },
     "milestones": [
+     {
+      "date": "2026-09-30",
+      "text": "Installations resumed after the summer pause: 11 of 12 787-8s and the first six A350s now fitted, per passenger reports BA has not yet confirmed",
+      "source": "https://www.paddleyourownkanoo.com/2026/09/30/british-airways-resumes-starlink-rollout-airbus-a350s-now-being-equipped-with-free-ultra-fast-in-flight-wi-fi/"
+     },
      {
       "date": "2026-06",
       "text": "Installations paused for the summer after five 787-8s; resume at the end of October",
@@ -295,18 +300,47 @@
    "airline": "British Airways",
    "rules": [
     {
-     "fleet": "rollout",
-     "provider": "Legacy GEO wifi on most aircraft; Starlink in service since 19 March 2026 on five Boeing 787-8s (installations paused for summer, resuming end of October 2026 with the remaining seven 787-8s, then the 18 787-9s), free in every cabin on equipped aircraft",
+     "types": "787",
+     "provider": "Starlink on 11 of 12 787-8s (trade reports by registration, 30 September 2026); older satellite Wi-Fi on 14 of 18 787-9s and every 787-10; no Wi-Fi on the remaining 787-8 and four 787-9s",
+     "orbit": "mixed LEO/GEO/none"
+    },
+    {
+     "types": "A350",
+     "provider": "Starlink on 6 of 18 A350-1000s (passenger reports, 30 September 2026, not yet confirmed by BA); older satellite Wi-Fi on the rest",
      "orbit": "mixed GEO/LEO"
+    },
+    {
+     "types": "A380",
+     "provider": "Older satellite Wi-Fi on every A380 (no Starlink yet: the A380 still needs certification)",
+     "orbit": "GEO"
+    },
+    {
+     "types": "777",
+     "provider": "Older satellite Wi-Fi on every 777 (no Starlink yet)",
+     "orbit": "GEO"
+    },
+    {
+     "types": "A319|A320|A321",
+     "provider": "Standard Wi-Fi on most A319/A320/A321s; none on some of the newest aircraft (no Starlink yet)",
+     "orbit": "mixed GEO/none"
+    },
+    {
+     "types": "Embraer 190|ERJ-190|E190",
+     "provider": "None (BA CityFlyer's London City Embraer 190s have never had Wi-Fi, and Starlink is not planned for them)",
+     "orbit": "NONE"
     }
    ],
-   "access": "Paid GEO packages on unequipped aircraft with free messaging for Executive Club members; free full wifi in all cabins on Starlink-equipped aircraft.",
-   "access_short": "Free on Starlink planes. Paid packages on the rest",
+   "access": "Paid on planes without Starlink (about £7.99 for an hour up to £23.99 for the whole flight); free messaging for British Airways Club members, and free in First. Free in every cabin on Starlink planes.",
+   "access_short": "Paid on most planes, free on Starlink ones. Free messaging for BA Club",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
     "https://mediacentre.britishairways.com/news/06112025/british-airways-signs-major-deal-with-starlink-to-provide-every-customer-in-every-cabin-free-wi-fi-that-feels-like-home-another-big-investment-for-the-airline-as-part-of-its-7bn-transformation-journey",
-    "https://mediacentre.britishairways.com/news/19032026/british-airways-first-starlink-flight-takes-off-making-the-airline-the-first-in-the-uk-to-launch-the-fastest-wi-fi-in-the-sky"
+    "https://mediacentre.britishairways.com/news/19032026/british-airways-first-starlink-flight-takes-off-making-the-airline-the-first-in-the-uk-to-launch-the-fastest-wi-fi-in-the-sky",
+    "https://www.headforpoints.com/2026/02/01/which-british-airways-flights-have-wifi/",
+    "https://www.paddleyourownkanoo.com/2026/09/30/british-airways-resumes-starlink-rollout-airbus-a350s-now-being-equipped-with-free-ultra-fast-in-flight-wi-fi/",
+    "https://pointszilla.com/which-ba-flights-have-starlink-internet-onboard",
+    "https://simpleflying.com/british-airways-suspends-starlink-installations-later-this-year/"
    ]
   },
   "LH": {
@@ -1677,8 +1711,15 @@
   },
   "LX": {
    "starlink": {
-    "status": "announced",
-    "access": "free_with_account"
+    "status": "flying",
+    "access": "free_with_account",
+    "milestones": [
+     {
+      "date": "2026-09-28",
+      "text": "First Starlink flight, A320neo HB-JDM; the rest of the fleet follows in stages",
+      "source": "https://www.swiss.com/content/lx/markets/sg/en/fly/on-board/lhg-wifi"
+     }
+    ]
    },
    "airline": "SWISS",
    "rules": [
@@ -1688,21 +1729,22 @@
      "orbit": "GEO"
     },
     {
-     "types": "A220|A320|A321",
+     "types": "A220",
      "provider": "European Aviation Network (Viasat S-band + LTE ground)",
      "orbit": "GEO"
     },
     {
-     "fleet": "rollout",
-     "provider": "Starlink under the Lufthansa Group deal from H2 2026, completing 2029",
+     "types": "A320|A321",
+     "provider": "Starlink on the A320neo HB-JDM since 28 September 2026, the rest of the fleet in stages through 2029; European Aviation Network (Viasat S-band + LTE ground) on the others",
      "orbit": "mixed GEO/LEO"
     }
    ],
-   "access": "Today: free unlimited messaging in the FlyNet portal for Travel ID / Miles & More customers, full internet is paid on a tiered scale (roughly EUR 4 to 35 by flight length; SWISS Connect data packs CHF 9 / CHF 19; First gets a complimentary 50MB voucher). Once Starlink lands it is free in all classes for status and Travel ID customers.",
+   "access": "Free in every class on Starlink planes when you sign in with Travel ID or Miles & More. Elsewhere: free unlimited messaging in the FlyNet portal for Travel ID / Miles & More customers, full internet is paid on a tiered scale (roughly EUR 4 to 35 by flight length; SWISS Connect data packs CHF 9 / CHF 19; First gets a complimentary 50MB voucher).",
    "access_short": "Free messaging with Travel ID. Full internet paid, about EUR 4 to 35",
    "confidence": "sourced",
    "as_of": "2026-09",
    "sources": [
+    "https://www.swiss.com/content/lx/markets/sg/en/fly/on-board/lhg-wifi",
     "https://runwaygirlnetwork.com/2026/02/lufthansa-group-to-retain-existing-ifc-until-starlink-pivot-is-complete/",
     "https://runwaygirlnetwork.com/2026/01/lufthansa-group-hands-massive-fleet-wide-ifc-contract-to-starlink/",
     "https://www.businesstraveller.com/business-travel/swiss-a220-and-a320-family-aircraft-to-get-inflight-wifi/",
@@ -1711,8 +1753,23 @@
   },
   "OS": {
    "starlink": {
-    "status": "announced",
-    "access": "free_with_account"
+    "status": "flying",
+    "access": "free_with_account",
+    "progress": {
+     "done": 1,
+     "of": 20,
+     "scope": "aircraft to be fitted by the end of the 2026/27 winter schedule",
+     "as_of": "2026-09-07",
+     "basis": "airline",
+     "source": "https://www.austrianairlines.ag/en/2026/09/07/austrian-airlines-has-taken-off-for-the-first-time-with-starlink-high-speed-internet-on-board/"
+    },
+    "milestones": [
+     {
+      "date": "2026-09-07",
+      "text": "First Starlink flight, new A320neo OE-LXF from Vienna to Porto",
+      "source": "https://www.austrianairlines.ag/en/2026/09/07/austrian-airlines-has-taken-off-for-the-first-time-with-starlink-high-speed-internet-on-board/"
+     }
+    ]
    },
    "airline": "Austrian Airlines",
    "rules": [
@@ -1723,20 +1780,16 @@
     },
     {
      "types": "A320|A321",
-     "provider": "European Aviation Network",
-     "orbit": "GEO"
-    },
-    {
-     "fleet": "rollout",
-     "provider": "Starlink under the Lufthansa Group deal from H2 2026",
+     "provider": "Starlink since 7 September 2026, first on the new A320neo OE-LXF (20 aircraft due by the end of the 2026/27 winter schedule); European Aviation Network on the rest",
      "orbit": "mixed GEO/LEO"
     }
    ],
-   "access": "Today: free unlimited FlyNet messaging for Travel ID / Miles & More customers on equipped A320-family and 787 flights; full internet is paid by flight length (about EUR 4 to 10 short, 10 to 20 medium, 20 to 35 long-haul). Starlink will be free in all classes for status and Travel ID customers.",
+   "access": "Free in every class on Starlink planes for Miles & More members and Travel ID users. Elsewhere: free unlimited FlyNet messaging for Travel ID / Miles & More customers on equipped A320-family and 787 flights; full internet is paid by flight length (about EUR 4 to 10 short, 10 to 20 medium, 20 to 35 long-haul).",
    "access_short": "Free messaging with Travel ID. Full internet paid, about EUR 4 to 35",
    "confidence": "reported",
    "as_of": "2026-09",
    "sources": [
+    "https://www.austrianairlines.ag/en/2026/09/07/austrian-airlines-has-taken-off-for-the-first-time-with-starlink-high-speed-internet-on-board/",
     "https://www.austrianairlines.ag/en/2026/01/14/free-high-speed-internet-above-the-clouds-austrian-airlines-to-use-starlink-for-all-passengers-in-the-future/",
     "https://www.austrian.com/us/en/internet-on-board",
     "https://runwaygirlnetwork.com/2026/02/lufthansa-group-to-retain-existing-ifc-until-starlink-pivot-is-complete/"
@@ -1945,13 +1998,8 @@
    "rules": [
     {
      "types": "A350|A330|A320|A321|A220",
-     "provider": "Viasat GX Ka (Honeywell JetWave)",
+     "provider": "Viasat GX Ka (Honeywell JetWave); Starlink announced under the Lufthansa Group deal, phased 2026-2029",
      "orbit": "GEO"
-    },
-    {
-     "fleet": "rollout",
-     "provider": "Starlink under the Lufthansa Group deal, phased 2026-2029",
-     "orbit": "mixed GEO/LEO"
     }
    ],
    "access": "Paid packages for most passengers today; free messaging for business class on long-haul and on international flights over three hours. Starlink will be free in all travel classes for Travel ID registrants and loyalty status holders as it rolls out.",

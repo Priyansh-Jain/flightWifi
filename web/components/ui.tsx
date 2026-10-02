@@ -113,7 +113,7 @@ export function Cta({ secondary = { href: "/starlink/", label: "Starlink on flig
       <div className="relative mx-auto w-full max-w-[760px] px-5 text-center sm:px-6">
         <h2 className="sec-title">Know before you book.</h2>
         <p className="mx-auto mt-5 max-w-[580px] text-base text-[var(--muted)]">
-          FlightWifi shows these verdicts inline on Google Flights, Skyscanner and Soar, matched to
+          FlightWifi shows these verdicts inline on Google Flights, Skyscanner and Rift, matched to
           the exact aircraft on your flight.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">

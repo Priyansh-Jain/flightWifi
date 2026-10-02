@@ -59,7 +59,7 @@ export default function Terms() {
           </p>
           <p>
             FlightWifi is independent. It is not affiliated with, endorsed by or connected to
-            Google, Skyscanner, Soar, any airline or any connectivity provider.
+            Google, Skyscanner, Rift, any airline or any connectivity provider.
           </p>
 
           <h2>Using the site and the data</h2>

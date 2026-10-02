@@ -409,6 +409,7 @@ svg {
 .card-link { cursor: pointer; transition: background 0.15s ease, border-color 0.15s ease; }
 .card-link:hover { border-color: color-mix(in srgb, var(--brand-solid) 35%, var(--line)); background: var(--card-hover); text-decoration: none; }
 #idle .card-link { margin-top: 12px; }
+#siteAuto { margin-bottom: 12px; }
 
 .grow { flex: 1; min-width: 0; }
 .card-t { display: block; font-weight: 600; }

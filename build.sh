@@ -66,6 +66,8 @@ const m = JSON.parse(fs.readFileSync('$STAGE/manifest.json', 'utf8'));
 const WANT = ['storage', 'activeTab', 'scripting'];
 if (JSON.stringify(m.permissions) !== JSON.stringify(WANT)) throw new Error('permissions are ' + JSON.stringify(m.permissions) + ', expected ' + JSON.stringify(WANT));
 if (m.host_permissions) throw new Error('host_permissions must stay absent; activeTab is the point');
+const WANT_OPTIONAL = ['https://rift.co/*'];
+if (JSON.stringify(m.optional_host_permissions) !== JSON.stringify(WANT_OPTIONAL)) throw new Error('optional_host_permissions are ' + JSON.stringify(m.optional_host_permissions) + ', expected ' + JSON.stringify(WANT_OPTIONAL));
 if (m.action) {
   const popup = m.action.default_popup;
   if (!popup || !fs.existsSync('$STAGE/' + popup)) throw new Error('manifest declares a popup that is not staged: ' + popup);

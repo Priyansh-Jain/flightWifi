@@ -8,7 +8,7 @@ import { CHROME_STORE_URL, SITE_URL, og, EXTENSION_VERSION, clampDesc } from "@/
 export const metadata: Metadata = {
   title: "Chrome extension: Wi-Fi verdicts as you search",
   description:clampDesc(
-    "Free extension that shows whether each flight's Wi-Fi handles video calls, per exact aircraft, inline on Google Flights, Skyscanner and Soar. Zero permissions, no tracking."
+    "Free extension that shows whether each flight's Wi-Fi handles video calls, per exact aircraft, inline on Google Flights, Skyscanner and Rift. Zero permissions, no tracking."
     ),
   alternates: { canonical: "/chrome-extension/" },
     openGraph: og("/chrome-extension/")
@@ -25,7 +25,7 @@ const FAQ = [
   },
   {
     q: "Which sites does it work on?",
-    a: "Google Flights (results, expanded cards and the booking page), Skyscanner, and soar.flights. The verdict follows the exact aircraft wherever the page names it."
+    a: "Google Flights (results, expanded cards and the booking page), Skyscanner, and Rift (rift.co, formerly Soar). The verdict follows the exact aircraft wherever the page names it."
   },
   {
     q: "Why do some flights say Varies by aircraft?",
@@ -122,7 +122,7 @@ export default function ExtensionPage() {
           "@id": `${SITE_URL}/chrome-extension/#app`,
           name: "FlightWifi",
           description:
-            "A free Chrome extension that shows each flight's Wi-Fi verdict inline on Google Flights, Skyscanner and Soar, matched to the exact aircraft. Collects no data and has no server.",
+            "A free Chrome extension that shows each flight's Wi-Fi verdict inline on Google Flights, Skyscanner and Rift, matched to the exact aircraft. Collects no data and has no server.",
           operatingSystem: "Chrome",
           applicationCategory: "BrowserApplication",
           softwareVersion: EXTENSION_VERSION,
