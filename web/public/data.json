@@ -2,7 +2,7 @@
  "name": "FlightWifi airline wifi registry",
  "license": "CC-BY-4.0",
  "attribution": "FlightWifi, https://flightwifi.app",
- "compiled": "2026-10-02",
+ "compiled": "2026-10-29",
  "airlines": {
   "TK": {
    "airline": "Turkish Airlines",
@@ -272,14 +272,19 @@
     "status": "flying",
     "access": "free",
     "progress": {
-     "done": 17,
+     "done": 29,
      "of": 300,
-     "scope": "whole fleet except the London City Embraer 190s by March 2028; so far 11 of 12 787-8s and 6 of 18 A350s",
-     "as_of": "2026-09-30",
+     "scope": "whole fleet except the London City Embraer 190s by March 2028; so far 11 of 12 787-8s and all 18 A350s",
+     "as_of": "2026-10-21",
      "basis": "trade",
-     "source": "https://www.paddleyourownkanoo.com/2026/09/30/british-airways-resumes-starlink-rollout-airbus-a350s-now-being-equipped-with-free-ultra-fast-in-flight-wi-fi/"
+     "source": "https://www.paddleyourownkanoo.com/2026/10/21/flying-on-a-british-airways-airbus-a350-you-are-now-guaranteed-ultra-fast-starlink-wi-fi-as-airline-completes-rollout-across-the-fleet/"
     },
     "milestones": [
+     {
+      "date": "2026-10-21",
+      "text": "Starlink rollout completed on all 18 A350-1000s",
+      "source": "https://www.paddleyourownkanoo.com/2026/10/21/flying-on-a-british-airways-airbus-a350-you-are-now-guaranteed-ultra-fast-starlink-wi-fi-as-airline-completes-rollout-across-the-fleet/"
+     },
      {
       "date": "2026-09-30",
       "text": "Installations resumed after the summer pause: 11 of 12 787-8s and the first six A350s now fitted, per passenger reports BA has not yet confirmed",
@@ -306,8 +311,8 @@
     },
     {
      "types": "A350",
-     "provider": "Starlink on 6 of 18 A350-1000s (passenger reports, 30 September 2026, not yet confirmed by BA); older satellite Wi-Fi on the rest",
-     "orbit": "mixed GEO/LEO"
+     "provider": "Starlink on all 18 A350-1000s (rollout completed 21 October 2026)",
+     "orbit": "LEO"
     },
     {
      "types": "A380",
@@ -333,14 +338,16 @@
    "access": "Paid on planes without Starlink (about £7.99 for an hour up to £23.99 for the whole flight); free messaging for British Airways Club members, and free in First. Free in every cabin on Starlink planes.",
    "access_short": "Paid on most planes, free on Starlink ones. Free messaging for BA Club",
    "confidence": "sourced",
-   "as_of": "2026-09",
+   "as_of": "2026-10",
    "sources": [
     "https://mediacentre.britishairways.com/news/06112025/british-airways-signs-major-deal-with-starlink-to-provide-every-customer-in-every-cabin-free-wi-fi-that-feels-like-home-another-big-investment-for-the-airline-as-part-of-its-7bn-transformation-journey",
     "https://mediacentre.britishairways.com/news/19032026/british-airways-first-starlink-flight-takes-off-making-the-airline-the-first-in-the-uk-to-launch-the-fastest-wi-fi-in-the-sky",
     "https://www.headforpoints.com/2026/02/01/which-british-airways-flights-have-wifi/",
     "https://www.paddleyourownkanoo.com/2026/09/30/british-airways-resumes-starlink-rollout-airbus-a350s-now-being-equipped-with-free-ultra-fast-in-flight-wi-fi/",
     "https://pointszilla.com/which-ba-flights-have-starlink-internet-onboard",
-    "https://simpleflying.com/british-airways-suspends-starlink-installations-later-this-year/"
+    "https://simpleflying.com/british-airways-suspends-starlink-installations-later-this-year/",
+    "https://www.paddleyourownkanoo.com/2026/10/21/flying-on-a-british-airways-airbus-a350-you-are-now-guaranteed-ultra-fast-starlink-wi-fi-as-airline-completes-rollout-across-the-fleet/",
+    "https://aviationa2z.com/index.php/2026/10/22/british-airways-completes-new-starlink-rollout-on-all-a350s/"
    ]
   },
   "LH": {
@@ -1966,27 +1973,40 @@
       "date": "2026-03-29",
       "text": "First Starlink flight, A330 EI-EIN Dublin to New York",
       "source": "https://mediacentre.aerlingus.com/news/work-stream-or-game-aer-lingus-takes-off-with-starlink-the-fastest-wi-fi-in-the-sky/29032026"
+     },
+     {
+      "date": "2026-10",
+      "text": "Starlink rollout completed across the transatlantic fleet: all 12 A330-300s, all 8 A321LRs and all 6 A321XLRs (the two A330-200s are being parked without it)",
+      "source": "https://www.aerlingus.com/experience/onboard-features/wifi-in-the-sky/starlink-wifi/"
      }
     ]
    },
    "airline": "Aer Lingus",
    "rules": [
     {
-     "fleet": "rollout",
      "types": "A330|A321",
-     "provider": "Starlink (first flight 29 March 2026, A330 EI-EIN DUB-JFK; all Shannon transatlantic A330s equipped and 100% of the long-haul fleet targeted by end of 2026, shorthaul to follow); legacy Panasonic GEO until retrofit",
-     "orbit": "mixed GEO/LEO"
+     "provider": "Starlink on the transatlantic fleet: all 12 A330-300s, all 8 A321LRs and all 6 A321XLRs (first flight 29 March 2026, A330 EI-EIN DUB-JFK)",
+     "orbit": "LEO"
+    },
+    {
+     "types": "A330-200|A332",
+     "provider": "No Starlink on the two remaining A330-200s (EI-DAA, EI-DUO), which are being parked; legacy Panasonic GEO",
+     "orbit": "GEO"
     }
    ],
    "access": "Free for all passengers on Starlink-equipped aircraft.",
    "access_short": "Free for everyone on Starlink planes",
    "confidence": "sourced",
-   "as_of": "2026-09",
+   "as_of": "2026-10",
    "sources": [
+    "https://travelupdate.com/aer-lingus-has-starlink-usa/",
+    "https://www.thecontrail.org/aer-lingus-starlink-wifi/",
     "https://mediacentre.aerlingus.com/news/work-stream-or-game-aer-lingus-takes-off-with-starlink-the-fastest-wi-fi-in-the-sky/29032026",
     "https://runwaygirlnetwork.com/2026/03/press-release-aer-lingus-takes-off-with-starlink-inflight-wi-fi/",
     "https://onemileatatime.com/news/aer-lingus-free-starlink-wi-fi/",
-    "https://apex.aero/articles/aer-lingus-marks-starlink-wi-fi-go-live/"
+    "https://apex.aero/articles/aer-lingus-marks-starlink-wi-fi-go-live/",
+    "https://www.aerlingus.com/experience/onboard-features/wifi-in-the-sky/starlink-wifi/",
+    "https://www.travelextra.ie/aer-lingus-completes-starlink-rollout-across-narrowbody-transatlantic-fleet/"
    ]
   },
   "AZ": {
